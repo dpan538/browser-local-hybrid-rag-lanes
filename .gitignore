@@ -1,0 +1,45 @@
+# Dependencies and local build output
+node_modules/
+dist/
+build/
+.next/
+.turbo/
+coverage/
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Browser/runtime caches
+.cache/
+cache/
+browser-cache/
+IndexedDB/
+Service Worker/
+GPUCache/
+Code Cache/
+
+# Model weights and large runtime artifacts
+*.bin
+*.safetensors
+*.onnx
+*.gguf
+*.mlc-chat-config.json
+*.wasm
+*.data
+*.zip
+
+# Temporary exports and screenshots
+*.tmp
+*.log
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.gif
+
+# OS/editor noise
+.DS_Store
+.vscode/
+.idea/
