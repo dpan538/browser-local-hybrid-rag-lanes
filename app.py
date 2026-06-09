@@ -23,6 +23,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 from flask import Flask, jsonify, request, send_from_directory
+from jsonschema import Draft202012Validator
 
 from scripts.auto_contract_check import check_contract, contract_metrics_from_auto
 
@@ -33,6 +34,7 @@ LANE_RULES_PATH = ROOT / "config" / "lane_rules_v1.yaml"
 REFUSAL_MATRIX_PATH = ROOT / "config" / "refusal_decision_matrix.csv"
 PROMPT_PACK_PATH = ROOT / "config" / "condition_prompt_pack_v1.json"
 ANALYSIS_PLAN_PATH = ROOT / "docs" / "EXPERIMENT_EXECUTION_PLAN.md"
+RUN_RECORD_SCHEMA_PATH = ROOT / "schemas" / "run_record_schema.json"
 
 
 def repo_path_from_env(env_name: str, default: str) -> Path:
@@ -102,6 +104,11 @@ def load_json(path: Path) -> Dict[str, Any]:
     if not path.exists():
         return {}
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def run_record_validator() -> Draft202012Validator | None:
+    schema = load_json(RUN_RECORD_SCHEMA_PATH)
+    return Draft202012Validator(schema) if schema else None
 
 
 def sha256_file(path: Path) -> str | None:
@@ -335,12 +342,17 @@ def environment_flags(payload: Dict[str, Any]) -> Dict[str, Any]:
     SERVER_STATE["request_count"] += 1
     client_env = payload.get("client_environment", {}) or {}
     warm_state = payload.get("warm_state", "warm")
+    long_task_delta = int(client_env.get("long_task_count_delta", 0) or 0)
+    long_task_total = int(client_env.get("long_task_count", 0) or 0)
     return {
         "cold_start": SERVER_STATE["request_count"] == 1 or warm_state == "cold_start",
         "warmup": warm_state == "warmup",
         "warm": warm_state == "warm",
-        "tab_backgrounded": client_env.get("visibility_state") == "hidden",
-        "long_task_gc": bool(client_env.get("long_task_count", 0)),
+        "tab_backgrounded": (
+            client_env.get("visibility_state") == "hidden"
+            or bool(client_env.get("was_backgrounded", False))
+        ),
+        "long_task_gc": bool(long_task_delta or long_task_total),
         "network_variance": False,
         "manual_interruption": False,
         "client_environment": client_env,
@@ -481,13 +493,49 @@ def api_save_runs() -> Any:
 
     requested_run_id = str(payload.get("run_id") or records[0].get("run_id") or "browser_pilot_run")
     run_id = safe_run_id(requested_run_id)
+    validator = run_record_validator()
+    if validator:
+        for index, record in enumerate(records):
+            errors = sorted(validator.iter_errors(record), key=lambda item: list(item.path))
+            if errors:
+                return jsonify({
+                    "error": "run record schema validation failed",
+                    "record_index": index,
+                    "record_query_id": record.get("query_id"),
+                    "message": errors[0].message,
+                    "path": list(errors[0].path),
+                }), 400
+
+    record_run_ids = {str(record.get("run_id", "")) for record in records}
+    if len(record_run_ids) != 1:
+        return jsonify({
+            "error": "records must share one run_id",
+            "run_ids": sorted(record_run_ids),
+        }), 400
+    if safe_run_id(next(iter(record_run_ids))) != run_id:
+        return jsonify({
+            "error": "payload run_id does not match record run_id",
+            "payload_run_id": run_id,
+            "record_run_id": next(iter(record_run_ids)),
+        }), 400
+
     output_dir = RUNS_DIR / run_id
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / f"{run_id}_records.jsonl"
-    with output_path.open("w", encoding="utf-8") as handle:
+    allow_overwrite = bool(payload.get("allow_overwrite", False))
+    if output_path.exists() and not allow_overwrite:
+        return jsonify({
+            "error": "run output already exists",
+            "path": str(output_path.relative_to(ROOT) if output_path.is_relative_to(ROOT) else output_path),
+            "hint": "set allow_overwrite=true only for an intentional rerun",
+        }), 409
+
+    temp_path = output_path.with_suffix(".jsonl.tmp")
+    with temp_path.open("w", encoding="utf-8") as handle:
         for record in records:
             handle.write(json.dumps(record, ensure_ascii=False, separators=(",", ":")))
             handle.write("\n")
+    temp_path.replace(output_path)
 
     return jsonify({
         "ok": True,

@@ -85,6 +85,7 @@ The first can be checked mechanically. The second requires source audit.
 - [Protocol freeze v0](docs/PROTOCOL_FREEZE_V0.md)
 - [Research push log](docs/RESEARCH_PUSH_LOG.md)
 - [Browser pilot run plan v0](docs/BROWSER_PILOT_RUN_PLAN_V0.md)
+- [Preflight script hardening v0](docs/PREFLIGHT_SCRIPT_HARDENING_V0.md)
 - [Fixture expansion plan v0](docs/FIXTURE_EXPANSION_PLAN_V0.md)
 - [Source audit and promotion gate v0](docs/SOURCE_AUDIT_AND_PROMOTION_GATE_V0.md)
 - [Experiment execution plan](docs/EXPERIMENT_EXECUTION_PLAN.md)

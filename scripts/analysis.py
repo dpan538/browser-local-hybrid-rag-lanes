@@ -30,7 +30,14 @@ def load_jsonl(path: Path) -> List[Dict[str, Any]]:
 def grouped_by_query(records: List[Dict[str, Any]]) -> Dict[str, Dict[str, Dict[str, Any]]]:
     grouped: Dict[str, Dict[str, Dict[str, Any]]] = {}
     for record in records:
-        grouped.setdefault(record["query_id"], {})[record["condition"]] = record
+        query_id = record["query_id"]
+        condition = record["condition"]
+        by_condition = grouped.setdefault(query_id, {})
+        if condition in by_condition:
+            raise ValueError(
+                f"duplicate run record for query_id={query_id} condition={condition}"
+            )
+        by_condition[condition] = record
     return grouped
 
 

@@ -227,7 +227,8 @@
       pilotRows: [],
       pilotRecords: [],
       wasBackgrounded: false,
-      longTaskCount: 0
+      longTaskCount: 0,
+      lastLongTaskCount: 0
     };
 
     if ("PerformanceObserver" in window) {
@@ -372,10 +373,13 @@
     }
 
     function clientEnvironment(extra) {
+      const longTaskCountDelta = Math.max(0, state.longTaskCount - state.lastLongTaskCount);
+      state.lastLongTaskCount = state.longTaskCount;
       return {
         visibility_state: document.visibilityState,
         was_backgrounded: state.wasBackgrounded,
         long_task_count: state.longTaskCount,
+        long_task_count_delta: longTaskCountDelta,
         user_agent: navigator.userAgent,
         ...(extra || {})
       };
@@ -403,6 +407,8 @@
       const conditions = ["all_generation", "hybrid_without_refusal", "full_hybrid"];
       const runId = el("runId").value || "browser_pilot_v0";
       state.pilotRecords = [];
+      state.wasBackgrounded = document.visibilityState === "hidden";
+      state.lastLongTaskCount = state.longTaskCount;
       el("runPilotBtn").disabled = true;
       el("runBtn").disabled = true;
       el("downloadPilotBtn").disabled = true;

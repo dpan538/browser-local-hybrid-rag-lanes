@@ -151,3 +151,31 @@ Known limitations:
 - The backend remains `stub`, so this is not a WebLLM/Qwen result.
 - Raw browser pilot outputs remain ignored under `runs/`.
 - The current browser pilot still uses synthetic, not source-audited records.
+
+## 2026-06-10: preflight script hardening
+
+Purpose:
+
+- Patch script and panel loopholes before starting a real local-model smoke run.
+- Prevent browser pilot saves from silently overwriting an existing run output.
+- Validate saved run records at save time and fail analysis on duplicate
+  `query_id + condition` rows.
+- Improve browser environment flags so long-task data includes a per-request
+  delta and backgrounding is not missed.
+
+Validation target before push:
+
+- Python script compilation passes;
+- Flask save endpoint returns HTTP 200 for the first save and HTTP 409 for a
+  duplicate run ID;
+- existing browser pilot run records still validate against
+  `schemas/run_record_schema.json`;
+- analysis still works on the existing browser pilot record file;
+- duplicate analysis records intentionally raise an error;
+- protocol bundle validation and `git diff --check` pass.
+
+Known limitations:
+
+- This hardening does not implement the real WebLLM/Qwen backend.
+- It improves pipeline integrity but does not change the synthetic fixture or
+  source-audit limitation.
