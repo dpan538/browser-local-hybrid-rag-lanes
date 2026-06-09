@@ -1,0 +1,83 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/dpan538/browser-local-hybrid-rag-lanes/schemas/golden_answers_schema.json",
+  "title": "Golden Answers",
+  "type": "object",
+  "required": ["version", "calibration_set", "full_set"],
+  "properties": {
+    "version": { "type": "string" },
+    "status": { "type": "string" },
+    "purpose": { "type": "string" },
+    "guidelines": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "calibration_set": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/golden_answer" }
+    },
+    "full_set": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/full_set_answer"
+      }
+    }
+  },
+  "definitions": {
+    "golden_answer": {
+      "type": "object",
+      "required": [
+        "query_id",
+        "task_description",
+        "ideal_answer",
+        "key_elements",
+        "refusal_expected",
+        "qualified_allowed"
+      ],
+      "properties": {
+        "query_id": { "type": "string" },
+        "task_description": { "type": "string" },
+        "ideal_answer": { "type": "string" },
+        "key_elements": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "refusal_expected": { "type": "boolean" },
+        "qualified_allowed": { "type": "boolean" },
+        "review_notes": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "full_set_answer": {
+      "type": "object",
+      "required": [
+        "ideal_answer_structure",
+        "minimum_acceptable_helpfulness"
+      ],
+      "properties": {
+        "ideal_answer_structure": {
+          "type": "object",
+          "properties": {
+            "should_contain_fields": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "should_not_contain_hallucination": { "type": "boolean" },
+            "acceptable_variations": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          },
+          "additionalProperties": false
+        },
+        "minimum_acceptable_helpfulness": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 5
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

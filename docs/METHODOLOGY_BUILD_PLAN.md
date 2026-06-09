@@ -59,13 +59,13 @@ Tasks:
 
 Deliverables:
 
-- `fixtures/records.jsonl`;
-- `fixtures/queries.jsonl`;
-- `fixtures/labels.jsonl`;
+- `fixtures/experiment_fixture.jsonl`;
 - fixture README.
-- fixture schemas for records, queries, and labels.
+- canonical `schemas/experiment_fixture_schema.json`.
+- normalized-reference schemas for records, queries, and labels.
 - 10 mixed-intent draft queries.
 - 5 reviewer calibration examples.
+- validation scripts for fixture shape and evidence-state aggregation.
 
 ## Phase 3: Execution Policy Specification
 
@@ -224,9 +224,15 @@ slow-row causes before making claims.
 - `schemas/run_record_schema.json`: run-level output schema.
 - `schemas/environment_stability_log_schema.json`: browser/runtime anomaly
   schema.
+- `schemas/experiment_fixture_schema.json`: canonical self-contained fixture
+  row schema.
+- `schemas/golden_answers_schema.json`: task-level golden-answer schema.
 - `review/golden_answers.json`: template for reviewer calibration answers.
 - `fixtures/drafts/mixed_intent_query_drafts.jsonl`: routing ambiguity draft
   set before full fixture construction.
+- `fixtures/experiment_fixture.jsonl`: sample self-contained fixture row.
+- `scripts/evidence_aggregator.py`: field-checklist to evidence-state logic.
+- `scripts/validate_fixture.py`: schema and logic validator for fixture rows.
 - `notebooks/analysis_notebook.ipynb`: placeholder for reproducible tables and
   figures.
 - `docs/LANE_DECISION_FLOW.md`: paper-facing architecture flowchart.

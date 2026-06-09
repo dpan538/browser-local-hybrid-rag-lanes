@@ -86,14 +86,31 @@ The first can be checked mechanically. The second requires source audit.
 
 - [Rule table v1](config/lane_rules_v1.yaml)
 - [Refusal decision matrix](config/refusal_decision_matrix.csv)
+- [Experiment fixture schema](schemas/experiment_fixture_schema.json)
 - [Run record schema](schemas/run_record_schema.json)
 - [Environment stability log schema](schemas/environment_stability_log_schema.json)
 - [Fixture record schema](schemas/fixture_record_schema.json)
 - [Fixture query schema](schemas/fixture_query_schema.json)
 - [Fixture label schema](schemas/fixture_label_schema.json)
+- [Golden answers schema](schemas/golden_answers_schema.json)
+- [Sample experiment fixture](fixtures/experiment_fixture.jsonl)
 - [Golden answers template](review/golden_answers.json)
 - [Mixed-intent query drafts](fixtures/drafts/mixed_intent_query_drafts.jsonl)
 - [Analysis notebook placeholder](notebooks/analysis_notebook.ipynb)
+
+## Validation
+
+Install fixture-validation dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Validate the sample fixture:
+
+```bash
+python scripts/validate_fixture.py fixtures/experiment_fixture.jsonl
+```
 
 ## Boundaries
 

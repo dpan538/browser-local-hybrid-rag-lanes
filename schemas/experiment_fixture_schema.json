@@ -1,0 +1,196 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/dpan538/browser-local-hybrid-rag-lanes/schemas/experiment_fixture_schema.json",
+  "title": "Hybrid Lane Experiment Fixture Row",
+  "type": "object",
+  "required": [
+    "fixture_version",
+    "query_id",
+    "query",
+    "evidence_packet",
+    "expected_behavior"
+  ],
+  "properties": {
+    "fixture_version": { "type": "string", "const": "1.0" },
+    "query_id": { "type": "string", "pattern": "^q[0-9]{3}$" },
+    "applicable_conditions": {
+      "type": "array",
+      "items": { "type": "integer", "minimum": 1, "maximum": 3 },
+      "default": [1, 2, 3]
+    },
+    "query": {
+      "type": "object",
+      "required": ["text", "intent_label", "primary_lane"],
+      "properties": {
+        "text": { "type": "string" },
+        "intent_label": {
+          "type": "string",
+          "enum": [
+            "source/rights",
+            "refusal_required",
+            "comparison",
+            "recommendation",
+            "explanation",
+            "mixed"
+          ]
+        },
+        "primary_lane": {
+          "type": "string",
+          "enum": [
+            "deterministic_exact",
+            "deterministic_refusal",
+            "generative",
+            "compound"
+          ]
+        },
+        "secondary_lanes": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "mixed_intent": { "type": "boolean" },
+        "routing_ambiguity_notes": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "evidence_packet": {
+      "type": "object",
+      "required": [
+        "records",
+        "field_checklist",
+        "aggregated_evidence_state"
+      ],
+      "properties": {
+        "records": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/record" },
+          "minItems": 0
+        },
+        "field_checklist": {
+          "type": "object",
+          "description": "Per-field state across all records, aggregated for the user task.",
+          "additionalProperties": {
+            "type": "string",
+            "enum": [
+              "present_and_consistent",
+              "present_but_conflicting",
+              "absent",
+              "not_applicable"
+            ]
+          }
+        },
+        "aggregated_evidence_state": {
+          "type": "string",
+          "enum": [
+            "sufficient",
+            "partial",
+            "missing",
+            "contradictory",
+            "not_applicable"
+          ]
+        },
+        "retrieved_snippets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["snippet_id", "record_id", "text"],
+            "properties": {
+              "snippet_id": { "type": "string" },
+              "record_id": { "type": "string" },
+              "text": { "type": "string" },
+              "rank": { "type": "integer", "minimum": 1 }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "expected_behavior": {
+      "type": "object",
+      "description": "Per-condition expectations used for automated compliance checking.",
+      "properties": {
+        "condition_1_all_generation": { "$ref": "#/definitions/expectation" },
+        "condition_2_hybrid_no_refusal": { "$ref": "#/definitions/expectation" },
+        "condition_3_full_hybrid": { "$ref": "#/definitions/expectation" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "definitions": {
+    "record": {
+      "type": "object",
+      "required": ["record_id", "source", "rights_label"],
+      "properties": {
+        "record_id": { "type": "string" },
+        "title": { "type": "string" },
+        "date_text": { "type": "string" },
+        "source": { "type": "string" },
+        "source_citation": { "type": "string" },
+        "source_name": { "type": "string" },
+        "source_domain": { "type": "string" },
+        "rights_label": { "type": "string" },
+        "rights_state": { "type": "string" },
+        "reuse_permission": { "type": "string" },
+        "public_domain_status": { "type": "string" },
+        "image_state_code": { "type": "string" },
+        "image_state_label": { "type": "string" },
+        "chronology_proof": { "type": "boolean" },
+        "source_audit_status": {
+          "type": "string",
+          "enum": ["not_audited", "pass", "fail", "uncertain"]
+        },
+        "source_audit_notes": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "expectation": {
+      "type": "object",
+      "properties": {
+        "should_refuse": { "type": "boolean" },
+        "deterministic_fields_required": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "allowed_output_modes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "exact_render",
+              "qualified_answer",
+              "refusal",
+              "generative"
+            ]
+          }
+        },
+        "compound_parts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["part", "mode"],
+            "properties": {
+              "part": { "type": "string" },
+              "mode": {
+                "type": "string",
+                "enum": ["deterministic", "generative"]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "expect_no_evidence": { "type": "boolean" },
+        "min_helpfulness_score": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "contract_compliance_required": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

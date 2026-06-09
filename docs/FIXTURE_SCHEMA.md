@@ -6,43 +6,52 @@ This document defines the first public-safe fixture format for the hybrid
 answer-lane experiments. The fixture is intentionally small and synthetic or
 source-auditable; it must not depend on private archive product state.
 
-## Files
+## Canonical V1 Format
 
-Planned fixture files:
+The canonical v1 fixture is a single self-contained JSONL file:
 
-- `fixtures/records.jsonl`
-- `fixtures/queries.jsonl`
-- `fixtures/labels.jsonl`
+- `fixtures/experiment_fixture.jsonl`
 
-Draft files:
+Each line is one complete test case containing:
+
+- `query`;
+- `evidence_packet`;
+- `expected_behavior`.
+
+This avoids cross-file join errors between records, queries, and labels. It
+also makes each row independently reproducible.
+
+## Supporting Files
+
+Draft and calibration files:
 
 - `fixtures/drafts/mixed_intent_query_drafts.jsonl`
 - `review/golden_answers.json`
 
 Schemas:
 
+- `schemas/experiment_fixture_schema.json`
+- `schemas/golden_answers_schema.json`
 - `schemas/fixture_record_schema.json`
 - `schemas/fixture_query_schema.json`
 - `schemas/fixture_label_schema.json`
 
-## Record Object
+The three separated fixture schemas are retained as normalized-reference
+schemas. The first runnable experiment should use
+`schemas/experiment_fixture_schema.json`.
 
-Each record represents archive-like evidence, not model output.
+## Experiment Fixture Row
 
-Required concepts:
+Required top-level fields:
 
-- stable `record_id`;
-- descriptive metadata such as title, date, region, object type;
-- source/provenance fields;
-- rights/reuse fields;
-- image-state fields;
-- field-state checklist;
-- source-audit status.
+- `fixture_version`;
+- `query_id`;
+- `applicable_conditions`;
+- `query`;
+- `evidence_packet`;
+- `expected_behavior`.
 
-Important distinction:
-
-The record can be syntactically valid while evidence correctness remains
-`not_audited` or `uncertain`. Valid fixture shape does not imply source truth.
+The current version is `1.0`.
 
 ## Query Object
 
@@ -50,40 +59,82 @@ Each query represents a user task.
 
 Required concepts:
 
-- stable `query_id`;
-- natural-language query text;
+- natural-language text;
 - `intent_label`;
 - `primary_lane`;
-- optional secondary lanes for mixed-intent rows;
-- referenced records;
-- user task features such as `rights`, `history`, `comparison`, or
-  `recommendation`.
+- optional `secondary_lanes`;
+- `mixed_intent`;
+- `routing_ambiguity_notes`.
 
 Mixed-intent rows must include:
 
 - `mixed_intent=true`;
-- a manually assigned `primary_lane`;
+- `primary_lane="compound"` when the expected behavior is a compound answer;
 - at least one `secondary_lane`;
-- `routing_ambiguity_notes`.
+- notes explaining why the router may be ambiguous.
 
-## Label Object
+## Evidence Packet
 
-Each label defines the expected execution and review state for one query.
+The evidence packet contains records and task-level evidence state.
 
 Required concepts:
 
-- `query_id`;
-- expected `evidence_state`;
-- `field_state_checklist`;
-- expected execution mode under each condition:
-  - `all_generation`;
-  - `hybrid_without_refusal`;
-  - `full_hybrid`;
-- refusal expectation;
-- deterministic required fields;
-- review focus.
+- `records`: the record subset for this query;
+- `field_checklist`: the field-state checklist aggregated for the user task;
+- `aggregated_evidence_state`: the result of applying the evidence aggregation
+  rules;
+- optional `retrieved_snippets`, for analyzing retrieval-stage evidence.
 
-Labels are not answers. They define what should be checked.
+Record fields may include:
+
+- `record_id`;
+- `title`;
+- `date_text`;
+- `source`;
+- `source_citation`;
+- `source_name`;
+- `source_domain`;
+- `rights_label`;
+- `rights_state`;
+- `reuse_permission`;
+- `public_domain_status`;
+- `image_state_code`;
+- `image_state_label`;
+- `chronology_proof`;
+- `source_audit_status`;
+- `source_audit_notes`.
+
+Important distinction:
+
+The record can be syntactically valid while evidence correctness remains
+`not_audited` or `uncertain`. Valid fixture shape does not imply source truth.
+
+## Expected Behavior
+
+Expected behavior is condition-specific:
+
+- `condition_1_all_generation`;
+- `condition_2_hybrid_no_refusal`;
+- `condition_3_full_hybrid`.
+
+Each condition can specify:
+
+- `should_refuse`;
+- `deterministic_fields_required`;
+- `allowed_output_modes`;
+- `compound_parts`;
+- `expect_no_evidence`;
+- `min_helpfulness_score`;
+- `contract_compliance_required`.
+
+For compound answers, use:
+
+```json
+"compound_parts": [
+  { "part": "rights_and_permissions", "mode": "deterministic" },
+  { "part": "historical_importance", "mode": "generative" }
+]
+```
 
 ## Field-State Checklist
 
@@ -113,7 +164,21 @@ Initial contract-bearing fields:
 
 ## Evidence-State Aggregation
 
-Use the following first-version aggregation:
+Evidence-state aggregation depends on the intent-to-required-fields mapping in
+`scripts/evidence_aggregator.py`.
+
+Current mapping:
+
+| Intent | Required Fields |
+|---|---|
+| `source/rights` | `source`, `rights_label`, `reuse_permission` |
+| `refusal_required` | `chronology_proof`, `comparison_corpus` |
+| `comparison` | `date_text`, `title` |
+| `recommendation` | `research_context` |
+| `explanation` | `image_state_label` |
+| `mixed` | v1 defaults to sufficient; compound parts and review labels carry the ambiguity |
+
+First-version aggregation:
 
 | Evidence State | Checklist Basis |
 |---|---|
@@ -131,6 +196,9 @@ If multiple states apply, use this precedence:
 4. `sufficient`;
 5. `not_applicable`.
 
+The validation script checks whether `aggregated_evidence_state` matches the
+computed state from the checklist and intent.
+
 ## Calibration Examples
 
 The 5-example calibration set should cover:
@@ -143,8 +211,34 @@ The 5-example calibration set should cover:
 
 These examples are not experiment results. They are reviewer calibration tools.
 
+`review/golden_answers.json` stores task-level ideal answers. They are not
+condition-specific outputs.
+
 ## Mixed-Intent Drafts
 
 The first 10 mixed-intent drafts are used to test routing ambiguity before
 building the full 50-query fixture. They should not be used alone to claim
 deterministic lane success.
+
+## Validation
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Validate the sample fixture:
+
+```bash
+python scripts/validate_fixture.py fixtures/experiment_fixture.jsonl
+```
+
+The validator checks:
+
+- JSON Schema validity;
+- evidence-state aggregation consistency;
+- mixed-intent `secondary_lanes`;
+- deterministic-refusal/intent compatibility;
+- compound answer `compound_parts`;
+- deterministic required fields against the field checklist.

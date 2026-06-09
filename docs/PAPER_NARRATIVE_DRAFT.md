@@ -226,6 +226,9 @@ The first versions of tasks 1-3 are now represented as:
 - `review/golden_answers.json`;
 - `fixtures/drafts/mixed_intent_query_drafts.jsonl`;
 - `docs/FIXTURE_SCHEMA.md`;
+- `schemas/experiment_fixture_schema.json`;
 - `schemas/fixture_record_schema.json`;
 - `schemas/fixture_query_schema.json`;
-- `schemas/fixture_label_schema.json`.
+- `schemas/fixture_label_schema.json`;
+- `scripts/evidence_aggregator.py`;
+- `scripts/validate_fixture.py`.
