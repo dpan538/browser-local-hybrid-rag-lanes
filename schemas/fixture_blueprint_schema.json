@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dpan538/browser-local-hybrid-rag-lanes/schemas/fixture_blueprint_schema.json",
+  "title": "Fixture Expansion Blueprint Row",
+  "type": "object",
+  "required": [
+    "blueprint_version",
+    "status",
+    "query_id",
+    "role",
+    "stratum",
+    "query_text",
+    "intent_label",
+    "primary_lane",
+    "mixed_intent",
+    "evidence_state",
+    "decisive_fields",
+    "record_count_target",
+    "refusal_expected",
+    "conflict_expected",
+    "source_audit_status",
+    "record_origin",
+    "deterministic_fields"
+  ],
+  "properties": {
+    "blueprint_version": { "type": "string" },
+    "status": { "type": "string", "const": "draft_slot_not_fixture_row" },
+    "query_id": { "type": "string", "pattern": "^q[0-9]{3}$" },
+    "role": { "type": "string", "enum": ["dev", "eval", "warmup"] },
+    "stratum": {
+      "type": "string",
+      "enum": [
+        "source_rights",
+        "no_evidence_refusal",
+        "first_earliest_refusal",
+        "comparison",
+        "recommendation",
+        "explanation",
+        "more_context",
+        "mixed_intent"
+      ]
+    },
+    "query_text": { "type": "string", "minLength": 1 },
+    "intent_label": {
+      "type": "string",
+      "enum": [
+        "source/rights",
+        "refusal_required",
+        "comparison",
+        "recommendation",
+        "explanation",
+        "mixed"
+      ]
+    },
+    "primary_lane": {
+      "type": "string",
+      "enum": [
+        "deterministic_exact",
+        "deterministic_refusal",
+        "generative",
+        "compound"
+      ]
+    },
+    "secondary_lanes": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "mixed_intent": { "type": "boolean" },
+    "evidence_state": {
+      "type": "string",
+      "enum": ["sufficient", "partial", "missing", "contradictory", "not_applicable"]
+    },
+    "decisive_fields": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "record_count_target": { "type": "integer", "minimum": 0 },
+    "refusal_expected": { "type": "boolean" },
+    "conflict_expected": { "type": "boolean" },
+    "source_audit_status": {
+      "type": "string",
+      "enum": ["not_audited", "pass", "fail", "uncertain"]
+    },
+    "record_origin": {
+      "type": "string",
+      "enum": ["synthetic", "source_audited", "derived_from_public_source"]
+    },
+    "audit_caveat": { "type": "string" },
+    "deterministic_fields": {
+      "type": "object",
+      "required": [
+        "source",
+        "rights_label",
+        "reuse_permission",
+        "public_domain_status",
+        "image_state_label",
+        "source_citation"
+      ],
+      "properties": {
+        "source": { "type": "string" },
+        "rights_label": { "type": "string" },
+        "reuse_permission": { "type": "string" },
+        "public_domain_status": { "type": "string" },
+        "image_state_label": { "type": "string" },
+        "source_citation": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "authoring_notes": { "type": "string" }
+  },
+  "additionalProperties": false
+}

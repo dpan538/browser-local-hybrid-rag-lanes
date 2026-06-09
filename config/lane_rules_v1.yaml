@@ -35,6 +35,7 @@ rules:
     priority: 10
     condition:
       intent_label:
+        - source/rights
         - source_rights
         - source_rights_question
         - rights_only
@@ -98,6 +99,7 @@ rules:
     priority: 40
     condition:
       intent_label:
+        - refusal_required
         - first_earliest_claim
       required_evidence_state:
         chronology_proof:
@@ -116,6 +118,7 @@ rules:
     priority: 50
     condition:
       intent_label:
+        - mixed
         - mixed_intent
         - ambiguous
       evidence_has_any:
@@ -145,6 +148,8 @@ rules:
     condition:
       intent_label:
         - comparison
+        - recommendation
+        - explanation
         - region_period_recommendation
         - current_object_explanation
         - more_context

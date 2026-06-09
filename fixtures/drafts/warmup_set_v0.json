@@ -1,0 +1,594 @@
+[
+  {
+    "fixture_version": "1.0",
+    "query_id": "q002",
+    "applicable_conditions": [
+      1,
+      2,
+      3
+    ],
+    "fixture_meta": {
+      "blueprint_version": "query_strata_v0",
+      "stratum": "source_rights",
+      "role": "dev",
+      "target_evidence_state": "partial",
+      "refusal_expected": false,
+      "conflict_expected": false,
+      "audit_caveat": "Synthetic blueprint row; not source-audited."
+    },
+    "query": {
+      "text": "Can you show the reuse and public-domain status for this item?",
+      "intent_label": "source/rights",
+      "primary_lane": "deterministic_exact",
+      "mixed_intent": false,
+      "routing_ambiguity_notes": "Fill evidence_packet, field_checklist, source_audit_status, and expected_behavior before promotion."
+    },
+    "evidence_packet": {
+      "records": [
+        {
+          "record_id": "syn_q002_01",
+          "title": "Synthetic source_rights record q002",
+          "date_text": "1936",
+          "source": "https://example.org/archive/q002",
+          "source_citation": "Synthetic fixture source, record q002",
+          "source_name": "Synthetic Public Health Archive",
+          "source_domain": "example.org",
+          "rights_label": "Fixture rights label; source audit required",
+          "rights_state": "fixture_metadata_only",
+          "reuse_permission": "source verification required before reuse",
+          "public_domain_status": "not independently determined",
+          "record_origin": "synthetic",
+          "image_state_code": "IMG-META",
+          "chronology_proof": false,
+          "source_audit_status": "not_audited",
+          "source_audit_notes": "Synthetic blueprint row; not source-audited."
+        }
+      ],
+      "field_checklist": {
+        "source": "present_and_consistent",
+        "rights_label": "present_and_consistent",
+        "reuse_permission": "present_and_consistent",
+        "public_domain_status": "present_and_consistent",
+        "image_state_label": "absent",
+        "research_context": "not_applicable",
+        "chronology_proof": "not_applicable",
+        "comparison_corpus": "not_applicable",
+        "date_text": "not_applicable",
+        "title": "not_applicable"
+      },
+      "decisive_fields": [
+        "source",
+        "rights_label",
+        "reuse_permission",
+        "public_domain_status",
+        "image_state_label"
+      ],
+      "aggregated_evidence_state": "partial",
+      "retrieved_snippets": [
+        {
+          "snippet_id": "snip_q002_001",
+          "record_id": "syn_q002_01",
+          "text": "Synthetic snippet for source_rights with partial evidence.",
+          "rank": 1
+        }
+      ]
+    },
+    "expected_behavior": {
+      "condition_1_all_generation": {
+        "should_refuse": false,
+        "deterministic_fields_required": [],
+        "allowed_output_modes": [
+          "generative",
+          "qualified_answer"
+        ],
+        "expect_no_evidence": false,
+        "min_helpfulness_score": 3,
+        "contract_compliance_required": true
+      },
+      "condition_2_hybrid_no_refusal": {
+        "should_refuse": false,
+        "deterministic_fields_required": [
+          "source",
+          "rights_label",
+          "reuse_permission",
+          "public_domain_status"
+        ],
+        "allowed_output_modes": [
+          "exact_render",
+          "generative",
+          "qualified_answer"
+        ],
+        "expect_no_evidence": false,
+        "min_helpfulness_score": 3,
+        "contract_compliance_required": true
+      },
+      "condition_3_full_hybrid": {
+        "should_refuse": false,
+        "deterministic_fields_required": [
+          "source",
+          "rights_label",
+          "reuse_permission",
+          "public_domain_status"
+        ],
+        "allowed_output_modes": [
+          "exact_render",
+          "generative",
+          "qualified_answer"
+        ],
+        "expect_no_evidence": false,
+        "min_helpfulness_score": 3,
+        "contract_compliance_required": true
+      }
+    }
+  },
+  {
+    "fixture_version": "1.0",
+    "query_id": "q022",
+    "applicable_conditions": [
+      1,
+      2,
+      3
+    ],
+    "fixture_meta": {
+      "blueprint_version": "query_strata_v0",
+      "stratum": "comparison",
+      "role": "dev",
+      "target_evidence_state": "sufficient",
+      "refusal_expected": false,
+      "conflict_expected": false,
+      "audit_caveat": "Synthetic blueprint row; not source-audited."
+    },
+    "query": {
+      "text": "Compare these items without adding unsupported context.",
+      "intent_label": "comparison",
+      "primary_lane": "generative",
+      "mixed_intent": false,
+      "routing_ambiguity_notes": "Fill evidence_packet, field_checklist, source_audit_status, and expected_behavior before promotion."
+    },
+    "evidence_packet": {
+      "records": [
+        {
+          "record_id": "syn_q022_01",
+          "title": "Synthetic comparison record q022",
+          "date_text": "1936",
+          "source": "https://example.org/archive/q022",
+          "source_citation": "Synthetic fixture source, record q022",
+          "source_name": "Synthetic Public Health Archive",
+          "source_domain": "example.org",
+          "rights_label": "Fixture rights label; source audit required",
+          "rights_state": "fixture_metadata_only",
+          "reuse_permission": "source verification required before reuse",
+          "public_domain_status": "not independently determined",
+          "record_origin": "synthetic",
+          "image_state_code": "IMG-META",
+          "image_state_label": "metadata-only; image not downloaded",
+          "chronology_proof": false,
+          "source_audit_status": "not_audited",
+          "source_audit_notes": "Synthetic blueprint row; not source-audited."
+        },
+        {
+          "record_id": "syn_q022_02",
+          "title": "Synthetic comparison record q022",
+          "date_text": "1936",
+          "source": "https://example.org/archive/q022",
+          "source_citation": "Synthetic fixture source, record q022",
+          "source_name": "Synthetic Public Health Archive",
+          "source_domain": "example.org",
+          "rights_label": "Fixture rights label; source audit required",
+          "rights_state": "fixture_metadata_only",
+          "reuse_permission": "source verification required before reuse",
+          "public_domain_status": "not independently determined",
+          "record_origin": "synthetic",
+          "image_state_code": "IMG-META",
+          "image_state_label": "metadata-only; image not downloaded",
+          "chronology_proof": false,
+          "source_audit_status": "not_audited",
+          "source_audit_notes": "Synthetic blueprint row; not source-audited."
+        }
+      ],
+      "field_checklist": {
+        "source": "not_applicable",
+        "rights_label": "not_applicable",
+        "reuse_permission": "not_applicable",
+        "public_domain_status": "not_applicable",
+        "image_state_label": "not_applicable",
+        "research_context": "present_and_consistent",
+        "chronology_proof": "not_applicable",
+        "comparison_corpus": "not_applicable",
+        "date_text": "present_and_consistent",
+        "title": "present_and_consistent"
+      },
+      "decisive_fields": [
+        "title",
+        "date_text",
+        "research_context"
+      ],
+      "aggregated_evidence_state": "sufficient",
+      "retrieved_snippets": [
+        {
+          "snippet_id": "snip_q022_001",
+          "record_id": "syn_q022_01",
+          "text": "Synthetic snippet for comparison with sufficient evidence.",
+          "rank": 1
+        }
+      ]
+    },
+    "expected_behavior": {
+      "condition_1_all_generation": {
+        "should_refuse": false,
+        "deterministic_fields_required": [],
+        "allowed_output_modes": [
+          "generative",
+          "qualified_answer"
+        ],
+        "expect_no_evidence": false,
+        "min_helpfulness_score": 3,
+        "contract_compliance_required": true
+      },
+      "condition_2_hybrid_no_refusal": {
+        "should_refuse": false,
+        "deterministic_fields_required": [],
+        "allowed_output_modes": [
+          "exact_render",
+          "generative",
+          "qualified_answer"
+        ],
+        "expect_no_evidence": false,
+        "min_helpfulness_score": 3,
+        "contract_compliance_required": true
+      },
+      "condition_3_full_hybrid": {
+        "should_refuse": false,
+        "deterministic_fields_required": [],
+        "allowed_output_modes": [
+          "exact_render",
+          "generative",
+          "qualified_answer"
+        ],
+        "expect_no_evidence": false,
+        "min_helpfulness_score": 3,
+        "contract_compliance_required": true
+      }
+    }
+  },
+  {
+    "fixture_version": "1.0",
+    "query_id": "q026",
+    "applicable_conditions": [
+      1,
+      2,
+      3
+    ],
+    "fixture_meta": {
+      "blueprint_version": "query_strata_v0",
+      "stratum": "recommendation",
+      "role": "dev",
+      "target_evidence_state": "sufficient",
+      "refusal_expected": false,
+      "conflict_expected": false,
+      "audit_caveat": "Synthetic blueprint row; not source-audited."
+    },
+    "query": {
+      "text": "Which source should I inspect next for this region and period?",
+      "intent_label": "recommendation",
+      "primary_lane": "generative",
+      "mixed_intent": false,
+      "routing_ambiguity_notes": "Fill evidence_packet, field_checklist, source_audit_status, and expected_behavior before promotion."
+    },
+    "evidence_packet": {
+      "records": [
+        {
+          "record_id": "syn_q026_01",
+          "title": "Synthetic recommendation record q026",
+          "date_text": "1936",
+          "source": "https://example.org/archive/q026",
+          "source_citation": "Synthetic fixture source, record q026",
+          "source_name": "Synthetic Public Health Archive",
+          "source_domain": "example.org",
+          "rights_label": "Fixture rights label; source audit required",
+          "rights_state": "fixture_metadata_only",
+          "reuse_permission": "source verification required before reuse",
+          "public_domain_status": "not independently determined",
+          "record_origin": "synthetic",
+          "image_state_code": "IMG-META",
+          "image_state_label": "metadata-only; image not downloaded",
+          "chronology_proof": false,
+          "source_audit_status": "not_audited",
+          "source_audit_notes": "Synthetic blueprint row; not source-audited."
+        }
+      ],
+      "field_checklist": {
+        "source": "present_and_consistent",
+        "rights_label": "not_applicable",
+        "reuse_permission": "not_applicable",
+        "public_domain_status": "not_applicable",
+        "image_state_label": "not_applicable",
+        "research_context": "present_and_consistent",
+        "chronology_proof": "not_applicable",
+        "comparison_corpus": "not_applicable",
+        "date_text": "not_applicable",
+        "title": "not_applicable"
+      },
+      "decisive_fields": [
+        "source",
+        "research_context"
+      ],
+      "aggregated_evidence_state": "sufficient",
+      "retrieved_snippets": [
+        {
+          "snippet_id": "snip_q026_001",
+          "record_id": "syn_q026_01",
+          "text": "Synthetic snippet for recommendation with sufficient evidence.",
+          "rank": 1
+        }
+      ]
+    },
+    "expected_behavior": {
+      "condition_1_all_generation": {
+        "should_refuse": false,
+        "deterministic_fields_required": [],
+        "allowed_output_modes": [
+          "generative",
+          "qualified_answer"
+        ],
+        "expect_no_evidence": false,
+        "min_helpfulness_score": 3,
+        "contract_compliance_required": true
+      },
+      "condition_2_hybrid_no_refusal": {
+        "should_refuse": false,
+        "deterministic_fields_required": [
+          "source"
+        ],
+        "allowed_output_modes": [
+          "exact_render",
+          "generative",
+          "qualified_answer"
+        ],
+        "expect_no_evidence": false,
+        "min_helpfulness_score": 3,
+        "contract_compliance_required": true
+      },
+      "condition_3_full_hybrid": {
+        "should_refuse": false,
+        "deterministic_fields_required": [
+          "source"
+        ],
+        "allowed_output_modes": [
+          "exact_render",
+          "generative",
+          "qualified_answer"
+        ],
+        "expect_no_evidence": false,
+        "min_helpfulness_score": 3,
+        "contract_compliance_required": true
+      }
+    }
+  },
+  {
+    "fixture_version": "1.0",
+    "query_id": "q031",
+    "applicable_conditions": [
+      1,
+      2,
+      3
+    ],
+    "fixture_meta": {
+      "blueprint_version": "query_strata_v0",
+      "stratum": "explanation",
+      "role": "dev",
+      "target_evidence_state": "sufficient",
+      "refusal_expected": false,
+      "conflict_expected": false,
+      "audit_caveat": "Synthetic blueprint row; not source-audited."
+    },
+    "query": {
+      "text": "Explain what is known about this object from the supplied evidence.",
+      "intent_label": "explanation",
+      "primary_lane": "generative",
+      "mixed_intent": false,
+      "routing_ambiguity_notes": "Fill evidence_packet, field_checklist, source_audit_status, and expected_behavior before promotion."
+    },
+    "evidence_packet": {
+      "records": [
+        {
+          "record_id": "syn_q031_01",
+          "title": "Synthetic explanation record q031",
+          "date_text": "1936",
+          "source": "https://example.org/archive/q031",
+          "source_citation": "Synthetic fixture source, record q031",
+          "source_name": "Synthetic Public Health Archive",
+          "source_domain": "example.org",
+          "rights_label": "Fixture rights label; source audit required",
+          "rights_state": "fixture_metadata_only",
+          "reuse_permission": "source verification required before reuse",
+          "public_domain_status": "not independently determined",
+          "record_origin": "synthetic",
+          "image_state_code": "IMG-META",
+          "image_state_label": "metadata-only; image not downloaded",
+          "chronology_proof": false,
+          "source_audit_status": "not_audited",
+          "source_audit_notes": "Synthetic blueprint row; not source-audited."
+        }
+      ],
+      "field_checklist": {
+        "source": "not_applicable",
+        "rights_label": "not_applicable",
+        "reuse_permission": "not_applicable",
+        "public_domain_status": "not_applicable",
+        "image_state_label": "present_and_consistent",
+        "research_context": "present_and_consistent",
+        "chronology_proof": "not_applicable",
+        "comparison_corpus": "not_applicable",
+        "date_text": "present_and_consistent",
+        "title": "present_and_consistent"
+      },
+      "decisive_fields": [
+        "title",
+        "date_text",
+        "image_state_label",
+        "research_context"
+      ],
+      "aggregated_evidence_state": "sufficient",
+      "retrieved_snippets": [
+        {
+          "snippet_id": "snip_q031_001",
+          "record_id": "syn_q031_01",
+          "text": "Synthetic snippet for explanation with sufficient evidence.",
+          "rank": 1
+        }
+      ]
+    },
+    "expected_behavior": {
+      "condition_1_all_generation": {
+        "should_refuse": false,
+        "deterministic_fields_required": [],
+        "allowed_output_modes": [
+          "generative",
+          "qualified_answer"
+        ],
+        "expect_no_evidence": false,
+        "min_helpfulness_score": 3,
+        "contract_compliance_required": true
+      },
+      "condition_2_hybrid_no_refusal": {
+        "should_refuse": false,
+        "deterministic_fields_required": [],
+        "allowed_output_modes": [
+          "exact_render",
+          "generative",
+          "qualified_answer"
+        ],
+        "expect_no_evidence": false,
+        "min_helpfulness_score": 3,
+        "contract_compliance_required": true
+      },
+      "condition_3_full_hybrid": {
+        "should_refuse": false,
+        "deterministic_fields_required": [],
+        "allowed_output_modes": [
+          "exact_render",
+          "generative",
+          "qualified_answer"
+        ],
+        "expect_no_evidence": false,
+        "min_helpfulness_score": 3,
+        "contract_compliance_required": true
+      }
+    }
+  },
+  {
+    "fixture_version": "1.0",
+    "query_id": "q037",
+    "applicable_conditions": [
+      1,
+      2,
+      3
+    ],
+    "fixture_meta": {
+      "blueprint_version": "query_strata_v0",
+      "stratum": "more_context",
+      "role": "dev",
+      "target_evidence_state": "partial",
+      "refusal_expected": false,
+      "conflict_expected": false,
+      "audit_caveat": "Synthetic blueprint row; not source-audited."
+    },
+    "query": {
+      "text": "Which related source or field would help me understand this record better?",
+      "intent_label": "recommendation",
+      "primary_lane": "generative",
+      "mixed_intent": false,
+      "routing_ambiguity_notes": "Fill evidence_packet, field_checklist, source_audit_status, and expected_behavior before promotion."
+    },
+    "evidence_packet": {
+      "records": [
+        {
+          "record_id": "syn_q037_01",
+          "title": "Synthetic more_context record q037",
+          "date_text": "1936",
+          "source": "https://example.org/archive/q037",
+          "source_citation": "Synthetic fixture source, record q037",
+          "source_name": "Synthetic Public Health Archive",
+          "source_domain": "example.org",
+          "rights_label": "Fixture rights label; source audit required",
+          "rights_state": "fixture_metadata_only",
+          "reuse_permission": "source verification required before reuse",
+          "public_domain_status": "not independently determined",
+          "record_origin": "synthetic",
+          "image_state_code": "IMG-META",
+          "image_state_label": "metadata-only; image not downloaded",
+          "chronology_proof": false,
+          "source_audit_status": "not_audited",
+          "source_audit_notes": "Synthetic blueprint row; not source-audited."
+        }
+      ],
+      "field_checklist": {
+        "source": "present_and_consistent",
+        "rights_label": "not_applicable",
+        "reuse_permission": "not_applicable",
+        "public_domain_status": "not_applicable",
+        "image_state_label": "not_applicable",
+        "research_context": "absent",
+        "chronology_proof": "not_applicable",
+        "comparison_corpus": "not_applicable",
+        "date_text": "not_applicable",
+        "title": "not_applicable"
+      },
+      "decisive_fields": [
+        "source",
+        "research_context"
+      ],
+      "aggregated_evidence_state": "partial",
+      "retrieved_snippets": [
+        {
+          "snippet_id": "snip_q037_001",
+          "record_id": "syn_q037_01",
+          "text": "Synthetic snippet for more_context with partial evidence.",
+          "rank": 1
+        }
+      ]
+    },
+    "expected_behavior": {
+      "condition_1_all_generation": {
+        "should_refuse": false,
+        "deterministic_fields_required": [],
+        "allowed_output_modes": [
+          "generative",
+          "qualified_answer"
+        ],
+        "expect_no_evidence": false,
+        "min_helpfulness_score": 3,
+        "contract_compliance_required": true
+      },
+      "condition_2_hybrid_no_refusal": {
+        "should_refuse": false,
+        "deterministic_fields_required": [
+          "source"
+        ],
+        "allowed_output_modes": [
+          "exact_render",
+          "generative",
+          "qualified_answer"
+        ],
+        "expect_no_evidence": false,
+        "min_helpfulness_score": 3,
+        "contract_compliance_required": true
+      },
+      "condition_3_full_hybrid": {
+        "should_refuse": false,
+        "deterministic_fields_required": [
+          "source"
+        ],
+        "allowed_output_modes": [
+          "exact_render",
+          "generative",
+          "qualified_answer"
+        ],
+        "expect_no_evidence": false,
+        "min_helpfulness_score": 3,
+        "contract_compliance_required": true
+      }
+    }
+  }
+]

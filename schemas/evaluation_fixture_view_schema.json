@@ -53,6 +53,22 @@
             "type": "string",
             "enum": ["not_audited", "pass", "fail", "uncertain"]
           }
+        },
+        "fixture_meta": {
+          "type": "object",
+          "properties": {
+            "blueprint_version": { "type": "string" },
+            "stratum": { "type": "string" },
+            "role": { "type": "string", "enum": ["dev", "eval", "warmup"] },
+            "target_evidence_state": {
+              "type": "string",
+              "enum": ["sufficient", "partial", "missing", "contradictory", "not_applicable"]
+            },
+            "refusal_expected": { "type": "boolean" },
+            "conflict_expected": { "type": "boolean" },
+            "audit_caveat": { "type": "string" }
+          },
+          "additionalProperties": false
         }
       },
       "additionalProperties": false

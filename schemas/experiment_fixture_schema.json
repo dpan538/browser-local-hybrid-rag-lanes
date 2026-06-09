@@ -18,6 +18,23 @@
       "items": { "type": "integer", "minimum": 1, "maximum": 3 },
       "default": [1, 2, 3]
     },
+    "fixture_meta": {
+      "type": "object",
+      "description": "Authoring and evaluation metadata. This must not be exposed in the runtime fixture view.",
+      "properties": {
+        "blueprint_version": { "type": "string" },
+        "stratum": { "type": "string" },
+        "role": { "type": "string", "enum": ["dev", "eval", "warmup"] },
+        "target_evidence_state": {
+          "type": "string",
+          "enum": ["sufficient", "partial", "missing", "contradictory", "not_applicable"]
+        },
+        "refusal_expected": { "type": "boolean" },
+        "conflict_expected": { "type": "boolean" },
+        "audit_caveat": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
     "query": {
       "type": "object",
       "required": ["text", "intent_label", "primary_lane"],

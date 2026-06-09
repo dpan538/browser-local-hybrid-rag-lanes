@@ -1,0 +1,74 @@
+{
+  "version": "query_strata_v0",
+  "status": "blueprint_not_fixture",
+  "split_seed": "hybrid-lane-fixture-v0-2026-06-10",
+  "total_measured_queries": 50,
+  "dev_count": 15,
+  "eval_count": 35,
+  "strata": [
+    {
+      "name": "source_rights",
+      "count": 8,
+      "intent_label": "source/rights",
+      "primary_lane": "deterministic_exact",
+      "target_evidence_states": ["sufficient", "partial"],
+      "decisive_fields": ["source", "rights_label", "reuse_permission", "public_domain_status", "image_state_label"]
+    },
+    {
+      "name": "no_evidence_refusal",
+      "count": 6,
+      "intent_label": "refusal_required",
+      "primary_lane": "deterministic_refusal",
+      "target_evidence_states": ["missing"],
+      "decisive_fields": ["research_context"]
+    },
+    {
+      "name": "first_earliest_refusal",
+      "count": 5,
+      "intent_label": "refusal_required",
+      "primary_lane": "deterministic_refusal",
+      "target_evidence_states": ["missing", "partial"],
+      "decisive_fields": ["chronology_proof", "comparison_corpus", "date_text"]
+    },
+    {
+      "name": "comparison",
+      "count": 6,
+      "intent_label": "comparison",
+      "primary_lane": "generative",
+      "target_evidence_states": ["sufficient", "partial"],
+      "decisive_fields": ["title", "date_text", "research_context"]
+    },
+    {
+      "name": "recommendation",
+      "count": 5,
+      "intent_label": "recommendation",
+      "primary_lane": "generative",
+      "target_evidence_states": ["sufficient", "partial"],
+      "decisive_fields": ["source", "research_context"]
+    },
+    {
+      "name": "explanation",
+      "count": 5,
+      "intent_label": "explanation",
+      "primary_lane": "generative",
+      "target_evidence_states": ["sufficient", "partial"],
+      "decisive_fields": ["title", "date_text", "image_state_label", "research_context"]
+    },
+    {
+      "name": "more_context",
+      "count": 5,
+      "intent_label": "recommendation",
+      "primary_lane": "generative",
+      "target_evidence_states": ["sufficient", "partial", "not_applicable"],
+      "decisive_fields": ["source", "research_context"]
+    },
+    {
+      "name": "mixed_intent",
+      "count": 10,
+      "intent_label": "mixed",
+      "primary_lane": "compound",
+      "target_evidence_states": ["sufficient", "partial", "missing", "contradictory"],
+      "decisive_fields": ["source", "rights_label", "reuse_permission", "public_domain_status", "research_context"]
+    }
+  ]
+}

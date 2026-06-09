@@ -50,6 +50,7 @@ def build_evaluation_view(row: Dict[str, Any]) -> Dict[str, Any]:
             "aggregated_evidence_state": evidence_packet["aggregated_evidence_state"],
             "decisive_fields": evidence_packet["decisive_fields"],
             "source_audit_statuses": source_audit_statuses,
+            "fixture_meta": row.get("fixture_meta", {}),
         },
         "expected_behavior": row["expected_behavior"],
     }

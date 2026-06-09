@@ -49,7 +49,26 @@ def answer_text(answer: Dict[str, Any]) -> str:
     return json.dumps(answer, ensure_ascii=False).lower()
 
 
-def check_contract(record: Dict[str, Any], runtime_query: Dict[str, Any]) -> Dict[str, str]:
+def load_blueprint_index(path: Path) -> Dict[str, Dict[str, Any]]:
+    if not path.exists():
+        return {}
+    return {row["query_id"]: row for row in load_jsonl(path)}
+
+
+def refusal_value(answer: Dict[str, Any]) -> str:
+    return str(answer.get("refusal", "") or "").strip().lower()
+
+
+def answer_refused(answer: Dict[str, Any]) -> bool:
+    value = refusal_value(answer)
+    return bool(value and value != "none")
+
+
+def check_contract(
+    record: Dict[str, Any],
+    runtime_query: Dict[str, Any],
+    blueprint_row: Dict[str, Any] | None = None,
+) -> Dict[str, str]:
     answer = record.get("answer", {}) or {}
     condition = record.get("condition", "")
     source_record = first_record(runtime_query)
@@ -91,6 +110,17 @@ def check_contract(record: Dict[str, Any], runtime_query: Dict[str, Any]) -> Dic
     else:
         results["conflict_surfaced"] = "n/a"
 
+    if blueprint_row:
+        if blueprint_row.get("conflict_expected") and results["conflict_surfaced"] == "n/a":
+            results["conflict_surfaced"] = "fail"
+
+        expected_refusal = bool(blueprint_row.get("refusal_expected"))
+        did_refuse = answer_refused(answer)
+        if expected_refusal:
+            results["refusal_expected_alignment"] = "pass" if did_refuse else "fail"
+        else:
+            results["refusal_expected_alignment"] = "warning" if did_refuse else "pass"
+
     for field in DETERMINISTIC_FIELDS:
         if field_state(runtime_query, field) == "absent":
             results[f"{field}_placeholder_used"] = (
@@ -100,8 +130,14 @@ def check_contract(record: Dict[str, Any], runtime_query: Dict[str, Any]) -> Dic
     return results
 
 
-def enrich_records(records_path: Path, runtime_path: Path, output_path: Path) -> None:
+def enrich_records(
+    records_path: Path,
+    runtime_path: Path,
+    output_path: Path,
+    blueprint_path: Path | None = None,
+) -> None:
     runtimes = runtime_index(runtime_path)
+    blueprints = load_blueprint_index(blueprint_path) if blueprint_path else {}
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with records_path.open("r", encoding="utf-8") as source, output_path.open(
         "w",
@@ -113,7 +149,11 @@ def enrich_records(records_path: Path, runtime_path: Path, output_path: Path) ->
                 continue
             record = json.loads(raw_line)
             runtime_query = runtimes[record["query_id"]]
-            record["auto_contract"] = check_contract(record, runtime_query)
+            record["auto_contract"] = check_contract(
+                record,
+                runtime_query,
+                blueprints.get(record["query_id"]),
+            )
             target.write(json.dumps(record, ensure_ascii=False, separators=(",", ":")))
             target.write("\n")
 
@@ -123,8 +163,19 @@ def main() -> int:
     parser.add_argument("--records", default="runs/collected_records.jsonl")
     parser.add_argument("--runtime", default="fixtures/runtime_view/experiment_fixture.runtime.jsonl")
     parser.add_argument("--output", default="runs/auto_evaluated_records.jsonl")
+    parser.add_argument(
+        "--blueprint",
+        default="",
+        help="Optional blueprint file with refusal/conflict expectations.",
+    )
     args = parser.parse_args()
-    enrich_records(Path(args.records), Path(args.runtime), Path(args.output))
+    blueprint_path = Path(args.blueprint) if args.blueprint else None
+    enrich_records(
+        Path(args.records),
+        Path(args.runtime),
+        Path(args.output),
+        blueprint_path if blueprint_path and blueprint_path.exists() else None,
+    )
     print(f"Wrote auto-evaluated records to {args.output}")
     return 0
 
