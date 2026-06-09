@@ -236,3 +236,32 @@ Known limitations:
   hybrid-lanes panel.
 - The next experiment step must be a Codex in-app browser Qwen/WebLLM smoke run,
   not a server-side local endpoint run.
+
+## 2026-06-10: Qwen WebLLM smoke panel scaffold
+
+Purpose:
+
+- Add a minimal Codex in-app browser panel for the primary Qwen/WebLLM smoke
+  path.
+- Pin the panel to `Qwen3.5-0.8B-q4f16_1-MLC`, matching the inherited
+  browser-local RAG lab runtime id.
+- Keep Flask in a serving/saving role only: fixture loading, prompt-pack
+  delivery, and JSONL save.
+- Build schema-compatible run records in the browser after Qwen/WebLLM
+  generation or deterministic lane assembly.
+
+Validation target before push:
+
+- Python script compilation passes.
+- Qwen smoke panel JavaScript passes `node --check`.
+- Protocol bundle validation and `git diff --check` pass.
+- Flask serves `/tools/qwen_webllm_smoke/`, `/api/prompt-pack`, runtime
+  fixtures, and evaluation fixtures.
+- Codex in-app browser loads the panel and WebGPU probe reports `available`.
+
+Known limitations:
+
+- The panel was verified without clicking `Load Qwen WebLLM`, so no model
+  artifacts were downloaded during this scaffold validation.
+- The first real smoke run still requires an intentional browser-side Qwen load
+  and generated JSONL save.

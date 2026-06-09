@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Qwen WebLLM Smoke</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #f7f7f4;
+        color: #202124;
+      }
+      body {
+        margin: 0;
+      }
+      header {
+        border-bottom: 1px solid #d9d7d0;
+        padding: 14px 18px;
+        background: #ffffff;
+      }
+      h1 {
+        margin: 0;
+        font-size: 20px;
+        letter-spacing: 0;
+      }
+      main {
+        display: grid;
+        grid-template-columns: 340px minmax(0, 1fr);
+        min-height: calc(100vh - 58px);
+      }
+      aside {
+        border-right: 1px solid #d9d7d0;
+        background: #ffffff;
+        padding: 14px;
+        overflow: auto;
+      }
+      section {
+        padding: 14px;
+      }
+      label {
+        display: grid;
+        gap: 5px;
+        margin-bottom: 10px;
+        font-size: 12px;
+        font-weight: 650;
+      }
+      input,
+      select,
+      button,
+      textarea {
+        font: inherit;
+        border: 1px solid #bbb7ac;
+        border-radius: 6px;
+        padding: 8px;
+        background: #fff;
+        color: #202124;
+      }
+      button {
+        cursor: pointer;
+        margin: 3px 3px 3px 0;
+        font-weight: 650;
+      }
+      button.secondary {
+        background: #f0eee8;
+      }
+      button:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+      .badge-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 8px;
+      }
+      .badge {
+        border: 1px solid #bbb7ac;
+        border-radius: 999px;
+        padding: 4px 8px;
+        font-size: 12px;
+        background: #f7f7f4;
+      }
+      .good {
+        border-color: #4f8f5f;
+        background: #eef8ef;
+      }
+      .warn {
+        border-color: #bd8a22;
+        background: #fff6df;
+      }
+      .bad {
+        border-color: #b94b4b;
+        background: #fff0f0;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+      pre {
+        margin: 0;
+        min-height: 190px;
+        overflow: auto;
+        border: 1px solid #d9d7d0;
+        border-radius: 6px;
+        padding: 10px;
+        background: #ffffff;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+      textarea {
+        width: 100%;
+        min-height: 120px;
+        resize: vertical;
+      }
+      @media (max-width: 900px) {
+        main,
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        aside {
+          border-right: 0;
+          border-bottom: 1px solid #d9d7d0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Qwen 3.5 0.8B WebLLM Smoke</h1>
+      <div class="badge-row">
+        <span id="healthBadge" class="badge">API not loaded</span>
+        <span id="webgpuBadge" class="badge">WebGPU not probed</span>
+        <span id="engineBadge" class="badge">WebLLM not loaded</span>
+        <span id="recordBadge" class="badge">0 records</span>
+      </div>
+    </header>
+    <main>
+      <aside>
+        <label>
+          Model id
+          <input id="modelId" value="Qwen3.5-0.8B-q4f16_1-MLC">
+        </label>
+        <label>
+          Model URL
+          <input id="modelUrl" value="https://huggingface.co/mlc-ai/Qwen3.5-0.8B-q4f16_1-MLC">
+        </label>
+        <label>
+          Model lib URL
+          <input id="modelLibUrl" value="https://raw.githubusercontent.com/akaashrp/mlc-binaries/main/Qwen3.5-0.8B-q4f16_1-webgpu-mlc.wasm">
+        </label>
+        <button id="probeWebgpuBtn" type="button">Probe WebGPU</button>
+        <button id="loadWebllmBtn" class="secondary" type="button">Load Qwen WebLLM</button>
+
+        <label>
+          Query
+          <select id="querySelect"></select>
+        </label>
+        <label>
+          Condition
+          <select id="conditionSelect">
+            <option value="all_generation">C1 all-generation</option>
+            <option value="hybrid_without_refusal">C2 hybrid without refusal</option>
+            <option value="full_hybrid">C3 full hybrid</option>
+          </select>
+        </label>
+        <label>
+          Warm state
+          <select id="warmState">
+            <option value="cold_start">cold_start</option>
+            <option value="warmup">warmup</option>
+            <option value="warm" selected>warm</option>
+          </select>
+        </label>
+        <label>
+          Run ID
+          <input id="runId" value="qwen_webllm_smoke_v0">
+        </label>
+        <label>
+          Max tokens
+          <input id="maxTokens" type="number" min="16" max="512" value="160">
+        </label>
+        <label>
+          Temperature
+          <input id="temperature" type="number" min="0" max="2" step="0.1" value="0.2">
+        </label>
+        <button id="runOneBtn" type="button">Run Selected Condition</button>
+        <button id="runThreeBtn" class="secondary" type="button">Run 3 Conditions</button>
+        <button id="saveBtn" class="secondary" type="button" disabled>Save Records</button>
+        <button id="clearBtn" class="secondary" type="button">Clear Records</button>
+      </aside>
+      <section>
+        <div class="grid">
+          <div>
+            <h2>Prompt / Answer</h2>
+            <pre id="answerBox">No run yet.</pre>
+          </div>
+          <div>
+            <h2>Metrics / Contract</h2>
+            <pre id="metricsBox">No run yet.</pre>
+          </div>
+        </div>
+        <h2>Run Records</h2>
+        <pre id="recordsBox">[]</pre>
+        <h2>Run Log</h2>
+        <pre id="logBox"></pre>
+      </section>
+    </main>
+    <script type="module" src="./qwen_webllm_smoke.js?v=1"></script>
+  </body>
+</html>

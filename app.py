@@ -37,6 +37,7 @@ from scripts.model_backend import (
 
 ROOT = Path(__file__).resolve().parent
 PANEL_DIR = ROOT / "tools" / "experiment_panel"
+QWEN_SMOKE_DIR = ROOT / "tools" / "qwen_webllm_smoke"
 LANE_RULES_PATH = ROOT / "config" / "lane_rules_v1.yaml"
 REFUSAL_MATRIX_PATH = ROOT / "config" / "refusal_decision_matrix.csv"
 PROMPT_PACK_PATH = ROOT / "config" / "condition_prompt_pack_v1.json"
@@ -426,6 +427,16 @@ def panel_asset(path: str) -> Any:
     return send_from_directory(PANEL_DIR, path)
 
 
+@app.get("/tools/qwen_webllm_smoke/")
+def qwen_smoke_index() -> Any:
+    return send_from_directory(QWEN_SMOKE_DIR, "index.html")
+
+
+@app.get("/tools/qwen_webllm_smoke/<path:path>")
+def qwen_smoke_asset(path: str) -> Any:
+    return send_from_directory(QWEN_SMOKE_DIR, path)
+
+
 @app.get("/api/fixtures/runtime")
 def api_runtime() -> Any:
     return jsonify(runtime_rows())
@@ -439,6 +450,11 @@ def api_evaluation() -> Any:
 @app.get("/api/fixtures/browser-pilot")
 def api_browser_pilot() -> Any:
     return jsonify(browser_pilot_rows())
+
+
+@app.get("/api/prompt-pack")
+def api_prompt_pack() -> Any:
+    return jsonify(prompt_pack())
 
 
 @app.post("/api/run")
