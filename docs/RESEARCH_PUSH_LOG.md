@@ -294,3 +294,27 @@ Known limitations:
 - This backup does not include run outputs.
 - Browser model artifacts may be downloaded/cached locally during the actual
   run, but they must not be committed.
+
+## 2026-06-10: Qwen WebLLM 10-to-50 run summary and gate
+
+Purpose:
+
+- Summarize the completed primary Qwen/WebLLM pilot10 and scale50 runs without
+  committing raw JSONL outputs.
+- Record schema validation, Qwen invocation counts, deterministic skip counts,
+  refusal-alignment failures, and latency distributions.
+- Gate the result as method-analysis ready while blocking hard latency claims.
+
+Key result:
+
+- Scale50 saved 150 schema-valid rows.
+- C1 had 15 contract failures, all `refusal_expected_alignment`.
+- C2 had 15 contract failures, all `refusal_expected_alignment`.
+- C3 had 0 contract failures.
+- C3 reduced Qwen invocation from 50/50 rows in C1 to 27/50 rows.
+
+Known limitations:
+
+- Raw run outputs remain local under ignored `runs/`.
+- Latency is exploratory because browser environment flags recorded long tasks
+  and backgrounded rows.

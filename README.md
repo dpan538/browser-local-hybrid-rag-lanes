@@ -89,6 +89,8 @@ The first can be checked mechanically. The second requires source audit.
 - [Exploratory 50-query stub dry run v0](reports/EXPLORATORY_50_STUB_DRY_RUN_V0.md)
 - [Browser pilot stub v0](reports/BROWSER_PILOT_STUB_V0.md)
 - [Model backend probe stub v0](reports/MODEL_BACKEND_PROBE_STUB_V0.md)
+- [Qwen WebLLM 10-to-50 run summary v0](reports/QWEN_WEBLLM_10_50_RUN_SUMMARY_V0.md)
+- [Qwen WebLLM 10-to-50 gate v0](reports/QWEN_WEBLLM_10_50_GATE_V0.md)
 - [Methodology build plan](docs/METHODOLOGY_BUILD_PLAN.md)
 - [Paper narrative draft](docs/PAPER_NARRATIVE_DRAFT.md)
 - [Paper positioning decisions](docs/PAPER_POSITIONING_DECISIONS.md)
