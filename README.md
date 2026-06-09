@@ -76,6 +76,17 @@ The first can be checked mechanically. The second requires source audit.
 - [Deterministic lane contract](docs/DETERMINISTIC_LANE_CONTRACT.md)
 - [Ablation and evaluation protocol](docs/ABLATION_AND_EVALUATION_PROTOCOL.md)
 - [Review sheet guide](docs/REVIEW_SHEET_GUIDE.md)
+- [Lane decision flow](docs/LANE_DECISION_FLOW.md)
+- [Threats and baselines](docs/THREATS_AND_BASELINES.md)
+
+## Reproducibility Artifacts
+
+- [Rule table v1](config/lane_rules_v1.yaml)
+- [Refusal decision matrix](config/refusal_decision_matrix.csv)
+- [Run record schema](schemas/run_record_schema.json)
+- [Environment stability log schema](schemas/environment_stability_log_schema.json)
+- [Golden answers template](review/golden_answers.json)
+- [Analysis notebook placeholder](notebooks/analysis_notebook.ipynb)
 
 ## Boundaries
 

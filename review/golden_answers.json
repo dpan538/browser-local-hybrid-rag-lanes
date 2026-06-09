@@ -1,0 +1,12 @@
+{
+  "version": "golden_answers_v1_template",
+  "status": "template_not_data",
+  "purpose": "Reviewer calibration and ideal-answer comparison. Fill after the public-safe 50-query fixture exists.",
+  "guidelines": [
+    "Golden answers are authored independently of experimental conditions.",
+    "Golden answers do not imply legal advice.",
+    "Golden answers should mark deterministic fields separately from generative explanatory text.",
+    "At least two authors should approve each golden answer before review begins."
+  ],
+  "items": []
+}

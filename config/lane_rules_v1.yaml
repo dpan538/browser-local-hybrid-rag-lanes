@@ -1,0 +1,163 @@
+version: lane_rules_v1
+status: draft_for_methodology
+description: >
+  Static, auditable routing rules for the first hybrid answer-lane experiment.
+  Any change to this file creates a new experimental condition or a new rule
+  version.
+
+defaults:
+  unmatched_action: generative_answer
+  unmatched_metric: routing_undefined
+  unmatched_logging: true
+  missing_field_placeholder: "[not provided in source]"
+  missing_required_field_is_routing_error: false
+  missing_required_field_contract_level: warning
+
+field_states:
+  allowed_values:
+    - present_and_consistent
+    - present_but_conflicting
+    - absent
+    - not_applicable
+
+evidence_completeness:
+  sufficient:
+    description: Directly relevant required fields are present and consistent.
+  partial:
+    description: Some relevant fields exist, but required support is incomplete or indirect.
+  missing:
+    description: No relevant evidence fields are present for the user claim.
+  contradictory:
+    description: Relevant evidence fields conflict with each other.
+
+rules:
+  - name: source_rights_deterministic
+    priority: 10
+    condition:
+      intent_label:
+        - source_rights
+        - source_rights_question
+        - rights_only
+      evidence_has_any:
+        - rights_label
+        - rights_state
+        - reuse_permission
+        - public_domain_status
+        - source
+        - source_url
+    required_fields:
+      - source
+      - rights_label
+      - rights_state
+      - reuse_permission
+      - public_domain_status
+      - image_state_code
+    action: deterministic_render
+    output_format: structured_fields
+    fallback: log_missing_field_and_render_placeholder
+    metrics:
+      - deterministic_lane_selected
+      - evidence_to_output_fidelity
+      - field_omission_count
+      - field_mutation_count
+      - unsupported_upgrade_count
+
+  - name: exact_source_lookup
+    priority: 20
+    condition:
+      intent_label:
+        - source_lookup
+        - source_only
+      evidence_has:
+        - source
+    required_fields:
+      - source
+    action: deterministic_render
+    output_format: structured_fields
+    fallback: log_missing_field_and_render_placeholder
+
+  - name: mandatory_refusal_missing_evidence
+    priority: 30
+    condition:
+      intent_label:
+        - no_evidence_refusal
+        - refusal_required
+      evidence_completeness:
+        - missing
+        - contradictory
+    required_fields: []
+    action: deterministic_refusal
+    refusal_template: refusal_missing_evidence_v1
+    output_format: refusal_template
+    fallback: log_routing_error_and_refuse
+    metrics:
+      - refusal_false_negative
+      - refusal_decision_trace
+
+  - name: mandatory_refusal_first_earliest
+    priority: 40
+    condition:
+      intent_label:
+        - first_earliest_claim
+      required_evidence_state:
+        chronology_proof:
+          - absent
+          - present_but_conflicting
+    required_fields: []
+    action: deterministic_refusal
+    refusal_template: refusal_missing_chronology_v1
+    output_format: refusal_template
+    fallback: log_routing_error_and_refuse
+    metrics:
+      - refusal_false_negative
+      - refusal_decision_trace
+
+  - name: compound_rights_plus_research_guidance
+    priority: 50
+    condition:
+      intent_label:
+        - mixed_intent
+        - ambiguous
+      evidence_has_any:
+        - rights_label
+        - source
+      user_task_contains_any:
+        - historical_importance
+        - compare
+        - context
+        - recommendation
+    required_fields:
+      - source
+      - rights_label
+    action: compound_answer
+    deterministic_component: source_rights_deterministic
+    generative_component: bounded_research_guidance
+    output_format: structured_fields_plus_natural_language
+    fallback: deterministic_fields_plus_caveated_generation
+    metrics:
+      - compound_answer
+      - format_consistency
+      - qwen_generation_latency
+      - hybrid_system_latency
+
+  - name: generative_comparison
+    priority: 100
+    condition:
+      intent_label:
+        - comparison
+        - region_period_recommendation
+        - current_object_explanation
+        - more_context
+        - research_guidance
+    action: generative_answer
+    output_format: bounded_natural_language
+    fallback: caveated_answer_or_refusal_if_no_evidence
+
+refusal_templates:
+  refusal_missing_evidence_v1: "I cannot answer this from the provided evidence."
+  refusal_missing_chronology_v1: "I cannot make a first or earliest claim without chronology evidence."
+
+notes:
+  - Deterministic rendering guarantees evidence-to-output fidelity only.
+  - Evidence correctness requires separate source audit.
+  - routing_undefined rows default to generative_answer and are reported as rule coverage gaps.

@@ -102,10 +102,74 @@ For the first reproducible experiment, lane assignment should be explicit and
 auditable:
 
 - fixture label defines the intended lane;
-- a small rule table maps labels to execution modes;
+- a static rule table maps labels and evidence-presence flags to execution
+  modes;
 - no learned router is used;
 - any later learned or model-assisted router must be evaluated as a separate
   ablation.
+
+The rule table is committed as `config/lane_rules_v1.yaml`. Any change to the
+rule table constitutes a new experimental condition or rule version.
+
+## Rule Table Specification
+
+The deterministic lane selector is a static lookup table keyed by:
+
+- query intent label from the fixture;
+- evidence presence flags;
+- field-state checklist values;
+- evidence completeness state.
+
+Example:
+
+```text
+(intent == "source_rights_question")
+AND (rights_label OR source exists)
+-> deterministic_render
+```
+
+Example:
+
+```text
+(intent == "first_earliest_claim")
+AND (chronology_proof is absent OR conflicting)
+-> deterministic_refusal
+```
+
+Rows that match no rule use the default generative lane and set
+`routing_undefined=true`. This is not a contract failure. It is a rule-coverage
+gap to be reported and improved in later rule versions.
+
+## Fallback On Missing Required Fields
+
+If a deterministic lane is selected but a required evidence field is absent:
+
+- the system must not generate or infer a value;
+- the system should render `[not provided in source]` or omit the field only if
+  the output contract allows omission;
+- the event must increment `field_omission_count`;
+- the event is not a routing error;
+- if the omission makes the answer misleading, it may be a contract warning.
+
+Missing fields and missing rules are separate:
+
+| Case | Meaning | Metric |
+|---|---|---|
+| Missing field | Rule matched, but evidence is incomplete | `field_omission_count` |
+| Missing rule | No rule matched the query/evidence state | `routing_undefined` |
+
+The system must not fall back to model generation to invent missing
+contract-bearing values.
+
+## Deterministic Pass Criteria
+
+A deterministic lane answer passes the rendering contract when:
+
+1. all required fields are rendered or represented with allowed placeholders;
+2. `field_mutation_count = 0`;
+3. `unsupported_upgrade_count = 0`;
+4. any refusal template is consistent with the evidence state;
+5. output latency is reported as `hybrid_system_latency`.
 
 This avoids blending three different research questions:
 

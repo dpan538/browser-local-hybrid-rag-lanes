@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dpan538/browser-local-hybrid-rag-lanes/schemas/run_record_schema.json",
+  "title": "Hybrid Lane Run Record",
+  "type": "object",
+  "required": [
+    "run_id",
+    "query_id",
+    "condition",
+    "intent_label",
+    "execution_mode",
+    "latency",
+    "contract_metrics"
+  ],
+  "properties": {
+    "run_id": { "type": "string" },
+    "query_id": { "type": "string" },
+    "condition": {
+      "type": "string",
+      "enum": [
+        "all_generation",
+        "hybrid_without_refusal",
+        "full_hybrid"
+      ]
+    },
+    "intent_label": { "type": "string" },
+    "execution_mode": {
+      "type": "string",
+      "enum": [
+        "deterministic_render",
+        "deterministic_refusal",
+        "generative_answer",
+        "compound_answer"
+      ]
+    },
+    "rule_match": {
+      "type": "object",
+      "properties": {
+        "rule_version": { "type": "string" },
+        "rule_name": { "type": ["string", "null"] },
+        "routing_undefined": { "type": "boolean" },
+        "routing_notes": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "evidence_state": {
+      "type": "string",
+      "enum": ["sufficient", "partial", "missing", "contradictory", "not_applicable"]
+    },
+    "field_state_checklist": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "enum": [
+          "present_and_consistent",
+          "present_but_conflicting",
+          "absent",
+          "not_applicable"
+        ]
+      }
+    },
+    "latency": {
+      "type": "object",
+      "properties": {
+        "retrieval_latency_ms": { "type": ["number", "null"], "minimum": 0 },
+        "deterministic_assembly_latency_ms": { "type": ["number", "null"], "minimum": 0 },
+        "qwen_generation_latency_ms": { "type": ["number", "null"], "minimum": 0 },
+        "hybrid_system_latency_ms": { "type": "number", "minimum": 0 },
+        "ttft_ms": { "type": ["number", "null"], "minimum": 0 },
+        "tokens_per_second": { "type": ["number", "null"], "minimum": 0 },
+        "latency_saved_by_deterministic_ms": { "type": ["number", "null"] },
+        "warm_state": { "type": "string", "enum": ["cold_start", "warmup", "warm"] }
+      },
+      "additionalProperties": false
+    },
+    "contract_metrics": {
+      "type": "object",
+      "properties": {
+        "contract_failure": { "type": "boolean" },
+        "contract_warning": { "type": "boolean" },
+        "field_omission_count": { "type": "integer", "minimum": 0 },
+        "field_mutation_count": { "type": "integer", "minimum": 0 },
+        "unsupported_upgrade_count": { "type": "integer", "minimum": 0 },
+        "unsupported_claims": { "type": "integer", "minimum": 0 },
+        "hallucination_count": { "type": "integer", "minimum": 0 },
+        "hallucination_severity": { "type": ["integer", "null"], "minimum": 1, "maximum": 3 },
+        "refusal_false_positive": { "type": "boolean" },
+        "refusal_false_negative": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "format": {
+      "type": "object",
+      "properties": {
+        "output_format": {
+          "type": "string",
+          "enum": [
+            "structured_fields",
+            "refusal_template",
+            "bounded_natural_language",
+            "structured_fields_plus_natural_language"
+          ]
+        },
+        "format_consistency_score": { "type": ["integer", "null"], "minimum": 1, "maximum": 5 },
+        "compound_answer": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

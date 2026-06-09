@@ -34,6 +34,8 @@ Deliverables:
 - metric schema;
 - contract field specification.
 - deterministic lane contract.
+- `config/lane_rules_v1.yaml`;
+- lane decision flowchart.
 
 ## Phase 2: Minimal Reproducible Fixture
 
@@ -83,6 +85,8 @@ Deliverables:
 - execution policy spec;
 - lane output contract table;
 - metric attribution rules.
+- fallback behavior table for missing fields and missing rules.
+- `routing_undefined` metric definition.
 
 ## Phase 4: Baseline Runner
 
@@ -104,6 +108,8 @@ Deliverables:
 - JSON schema;
 - smoke test fixture;
 - sample run export.
+- `schemas/run_record_schema.json`.
+- `schemas/environment_stability_log_schema.json`.
 
 ## Phase 5: Evaluation Protocol
 
@@ -136,6 +142,9 @@ Deliverables:
 - review sheet template;
 - metric summary script.
 - refusal examples and over-refusal/under-refusal labels.
+- refusal decision matrix.
+- reviewer calibration protocol.
+- golden answers template.
 
 ## Phase 6: Paper Framing
 
@@ -179,6 +188,8 @@ The first real experiment should be small:
    - `qwen_generation_latency`;
    - `hybrid_system_latency`;
    - lane-level usability review sample.
+   - environment stability log.
+   - mixed-intent routing confusion matrix.
 
 Success condition:
 
@@ -201,3 +212,18 @@ slow-row causes before making claims.
    deterministic refusal, and full hybrid with deterministic refusal.
 5. First-version deterministic lanes are rule-based rendering over structured
    retrieved evidence. They are not learned routers or small-model distillation.
+
+## Updated Deliverable Checklist
+
+- `config/lane_rules_v1.yaml`: static, versioned, auditable rule table.
+- `config/refusal_decision_matrix.csv`: evidence-state to expected behavior
+  matrix.
+- `schemas/run_record_schema.json`: run-level output schema.
+- `schemas/environment_stability_log_schema.json`: browser/runtime anomaly
+  schema.
+- `review/golden_answers.json`: template for reviewer calibration answers.
+- `notebooks/analysis_notebook.ipynb`: placeholder for reproducible tables and
+  figures.
+- `docs/LANE_DECISION_FLOW.md`: paper-facing architecture flowchart.
+- `docs/THREATS_AND_BASELINES.md`: explicit limitations, baselines, and
+  dominance/tradeoff rules.

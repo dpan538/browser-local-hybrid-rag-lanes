@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dpan538/browser-local-hybrid-rag-lanes/schemas/environment_stability_log_schema.json",
+  "title": "Environment Stability Log",
+  "type": "object",
+  "required": [
+    "run_id",
+    "query_id",
+    "timestamp_utc",
+    "browser",
+    "model_state",
+    "anomaly_flags"
+  ],
+  "properties": {
+    "run_id": { "type": "string" },
+    "query_id": { "type": "string" },
+    "timestamp_utc": { "type": "string", "format": "date-time" },
+    "browser": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "version": { "type": "string" },
+        "webgpu_adapter": { "type": "string" },
+        "visibility_state": { "type": "string" },
+        "was_backgrounded": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    },
+    "model_state": {
+      "type": "object",
+      "properties": {
+        "cold_start": { "type": "boolean" },
+        "warmup_run_completed": { "type": "boolean" },
+        "warmup_query_count": { "type": "integer", "minimum": 0 },
+        "model_loaded_before_query": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "performance_observation": {
+      "type": "object",
+      "properties": {
+        "long_task_count": { "type": "integer", "minimum": 0 },
+        "max_long_task_ms": { "type": "number", "minimum": 0 },
+        "gc_observed": { "type": "boolean" },
+        "network_request_count": { "type": "integer", "minimum": 0 },
+        "network_error_count": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "anomaly_flags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "none",
+          "tab_backgrounded",
+          "browser_gc_or_long_task",
+          "model_warmup",
+          "network_variance",
+          "manual_interruption",
+          "unknown"
+        ]
+      }
+    },
+    "analysis_policy": {
+      "type": "string",
+      "enum": [
+        "include_primary",
+        "include_with_anomaly_flag",
+        "exclude_only_in_trimmed_sensitivity_analysis"
+      ],
+      "default": "include_with_anomaly_flag"
+    },
+    "notes": { "type": "string" }
+  },
+  "additionalProperties": false
+}
