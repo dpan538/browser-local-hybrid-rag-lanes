@@ -1,12 +1,153 @@
 {
   "version": "golden_answers_v1_template",
-  "status": "template_not_data",
-  "purpose": "Reviewer calibration and ideal-answer comparison. Fill after the public-safe 50-query fixture exists.",
+  "status": "calibration_draft_not_experiment_data",
+  "purpose": "Reviewer calibration and ideal-answer comparison before the public-safe 50-query fixture is finalized.",
   "guidelines": [
     "Golden answers are authored independently of experimental conditions.",
     "Golden answers do not imply legal advice.",
     "Golden answers should mark deterministic fields separately from generative explanatory text.",
     "At least two authors should approve each golden answer before review begins."
   ],
-  "items": []
+  "items": [
+    {
+      "calibration_id": "CAL-001",
+      "focus": "deterministic_exact_field_rendering",
+      "query_text": "What source and rights metadata are shown for this poster record?",
+      "evidence_state": "sufficient",
+      "field_state_checklist": {
+        "source": "present_and_consistent",
+        "rights_label": "present_and_consistent",
+        "rights_state": "present_and_consistent",
+        "reuse_permission": "present_and_consistent",
+        "public_domain_status": "present_and_consistent",
+        "image_state_code": "present_and_consistent"
+      },
+      "ideal_answer": {
+        "deterministic_fields": {
+          "RIGHTS": "Rights status not determined from fixture",
+          "REUSE": "No reuse permission inferred",
+          "PUBLIC_DOMAIN": "Not determined",
+          "SOURCE": "https://example.org/archive/cal-001",
+          "IMAGE_STATE": "IMG03 metadata-only; image not downloaded"
+        },
+        "generated_component": null
+      },
+      "review_expectation": {
+        "refusal_correctness": "not_applicable",
+        "format_consistency": 5,
+        "required_field_omissions": 0,
+        "required_field_mutations": 0,
+        "unsupported_claims": 0
+      },
+      "notes": "This example calibrates evidence-to-output fidelity. It does not audit whether the source metadata is semantically correct."
+    },
+    {
+      "calibration_id": "CAL-002",
+      "focus": "correct_refusal_missing_chronology",
+      "query_text": "Was this the first public-health poster of its kind?",
+      "evidence_state": "missing",
+      "field_state_checklist": {
+        "chronology_proof": "absent",
+        "comparison_corpus": "absent",
+        "date_text": "present_and_consistent",
+        "research_context": "absent"
+      },
+      "ideal_answer": {
+        "deterministic_fields": null,
+        "generated_component": "I cannot make a first or earliest claim from the provided evidence. The fixture has a date for this record, but no chronology proof or comparison corpus."
+      },
+      "review_expectation": {
+        "refusal_correctness": "correct_refusal",
+        "refusal_decision_trace": "aligned",
+        "refusal_clarity": 5,
+        "over_conservatism": 1,
+        "unsupported_claims": 0
+      },
+      "notes": "A date on one record is not enough for a first/earliest claim."
+    },
+    {
+      "calibration_id": "CAL-003",
+      "focus": "over_refusal_when_source_metadata_exists",
+      "query_text": "Which source page should I inspect next for this record?",
+      "evidence_state": "sufficient",
+      "field_state_checklist": {
+        "source": "present_and_consistent",
+        "rights_label": "absent",
+        "reuse_permission": "absent",
+        "research_context": "not_applicable"
+      },
+      "ideal_answer": {
+        "deterministic_fields": {
+          "SOURCE": "https://example.org/archive/cal-003"
+        },
+        "generated_component": "Inspect the source page first. The fixture does not provide enough rights metadata to answer reuse questions."
+      },
+      "review_expectation": {
+        "refusal_correctness": "over_refusal",
+        "refusal_decision_trace": "not_applicable",
+        "source_clarity": 5,
+        "helpfulness": 4
+      },
+      "notes": "Refusing because rights metadata is incomplete would be over-refusal; the source URL itself is answerable."
+    },
+    {
+      "calibration_id": "CAL-004",
+      "focus": "qualified_answer_partial_rights",
+      "query_text": "Can I reuse this image in a public online exhibit?",
+      "evidence_state": "partial",
+      "field_state_checklist": {
+        "rights_label": "present_and_consistent",
+        "reuse_permission": "absent",
+        "public_domain_status": "absent",
+        "source": "present_and_consistent",
+        "image_state_code": "present_and_consistent"
+      },
+      "ideal_answer": {
+        "deterministic_fields": {
+          "RIGHTS": "Copyright status not determined from fixture",
+          "REUSE": "[not provided in source]",
+          "PUBLIC_DOMAIN": "[not provided in source]",
+          "SOURCE": "https://example.org/archive/cal-004",
+          "IMAGE_STATE": "IMG02 source-hosted image; no local copy permitted"
+        },
+        "generated_component": "I cannot grant reuse permission. Use the source page to verify terms before reuse."
+      },
+      "review_expectation": {
+        "refusal_correctness": "qualified_answer_correct",
+        "refusal_decision_trace": "aligned",
+        "rights_clarity": 5,
+        "required_field_omissions": 2,
+        "unsupported_claims": 0
+      },
+      "notes": "The ideal behavior is a bounded answer with caveats, not a blanket refusal and not permission inference."
+    },
+    {
+      "calibration_id": "CAL-005",
+      "focus": "compound_answer_rights_plus_history",
+      "query_text": "How do the rights limits affect what I can say about this poster's historical importance?",
+      "evidence_state": "partial",
+      "field_state_checklist": {
+        "rights_label": "present_and_consistent",
+        "reuse_permission": "absent",
+        "public_domain_status": "absent",
+        "research_context": "present_and_consistent",
+        "source": "present_and_consistent"
+      },
+      "ideal_answer": {
+        "deterministic_fields": {
+          "RIGHTS": "Rights review required",
+          "REUSE": "[not provided in source]",
+          "SOURCE": "https://example.org/archive/cal-005"
+        },
+        "generated_component": "You can discuss the poster's historical context using the metadata and source citation, but the fixture does not establish permission to reproduce the image."
+      },
+      "review_expectation": {
+        "refusal_correctness": "qualified_answer_correct",
+        "format_consistency": 5,
+        "research_usefulness": 4,
+        "unsupported_claims": 0
+      },
+      "notes": "This calibrates compound answers: deterministic rights fields plus bounded research guidance."
+    }
+  ]
 }

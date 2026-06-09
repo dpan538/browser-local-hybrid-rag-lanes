@@ -218,3 +218,14 @@ latency/quality tradeoffs.
    - browser-local inference/retrieval;
    - UI/runtime-mediated AI.
 5. Decide primary venue story before finalizing experiment emphasis.
+
+## Drafting Status
+
+The first versions of tasks 1-3 are now represented as:
+
+- `review/golden_answers.json`;
+- `fixtures/drafts/mixed_intent_query_drafts.jsonl`;
+- `docs/FIXTURE_SCHEMA.md`;
+- `schemas/fixture_record_schema.json`;
+- `schemas/fixture_query_schema.json`;
+- `schemas/fixture_label_schema.json`.

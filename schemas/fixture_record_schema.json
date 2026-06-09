@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dpan538/browser-local-hybrid-rag-lanes/schemas/fixture_record_schema.json",
+  "title": "Hybrid Lane Fixture Record",
+  "type": "object",
+  "required": [
+    "record_id",
+    "title",
+    "source",
+    "rights",
+    "image_state",
+    "field_state_checklist",
+    "source_audit_status"
+  ],
+  "properties": {
+    "record_id": { "type": "string" },
+    "title": { "type": "string" },
+    "creator": { "type": ["string", "null"] },
+    "date_text": { "type": ["string", "null"] },
+    "region": { "type": ["string", "null"] },
+    "object_type": { "type": ["string", "null"] },
+    "source": {
+      "type": "object",
+      "required": ["source_url", "source_name", "source_domain"],
+      "properties": {
+        "source_url": { "type": ["string", "null"] },
+        "source_name": { "type": ["string", "null"] },
+        "source_domain": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "rights": {
+      "type": "object",
+      "required": [
+        "rights_label",
+        "rights_state",
+        "reuse_permission",
+        "public_domain_status"
+      ],
+      "properties": {
+        "rights_label": { "type": ["string", "null"] },
+        "rights_state": { "type": ["string", "null"] },
+        "reuse_permission": { "type": ["string", "null"] },
+        "public_domain_status": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "image_state": {
+      "type": "object",
+      "required": ["image_state_code", "image_state_label"],
+      "properties": {
+        "image_state_code": { "type": ["string", "null"] },
+        "image_state_label": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "topology": {
+      "type": "object",
+      "properties": {
+        "surface_type": { "type": ["string", "null"] },
+        "publication_role": { "type": ["string", "null"] },
+        "related_record_ids": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "research_notes": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "field_state_checklist": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "enum": [
+          "present_and_consistent",
+          "present_but_conflicting",
+          "absent",
+          "not_applicable"
+        ]
+      }
+    },
+    "source_audit_status": {
+      "type": "string",
+      "enum": ["not_audited", "pass", "fail", "uncertain"]
+    },
+    "source_audit_notes": { "type": "string" }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dpan538/browser-local-hybrid-rag-lanes/schemas/fixture_query_schema.json",
+  "title": "Hybrid Lane Fixture Query",
+  "type": "object",
+  "required": [
+    "query_id",
+    "query_text",
+    "intent_label",
+    "primary_lane",
+    "record_ids",
+    "mixed_intent"
+  ],
+  "properties": {
+    "query_id": { "type": "string" },
+    "query_text": { "type": "string" },
+    "intent_label": { "type": "string" },
+    "primary_lane": {
+      "type": "string",
+      "enum": [
+        "source_rights",
+        "no_evidence_refusal",
+        "first_earliest_refusal",
+        "comparison",
+        "region_period_recommendation",
+        "current_object_explanation",
+        "more_context",
+        "mixed_intent",
+        "ambiguous"
+      ]
+    },
+    "secondary_lanes": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "record_ids": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "mixed_intent": { "type": "boolean" },
+    "user_task_features": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "rights",
+          "source",
+          "reuse",
+          "public_domain",
+          "history",
+          "comparison",
+          "recommendation",
+          "context",
+          "first_earliest",
+          "method",
+          "unknown"
+        ]
+      }
+    },
+    "routing_ambiguity_notes": { "type": "string" }
+  },
+  "additionalProperties": false
+}

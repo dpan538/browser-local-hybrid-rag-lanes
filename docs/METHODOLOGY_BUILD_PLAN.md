@@ -63,6 +63,9 @@ Deliverables:
 - `fixtures/queries.jsonl`;
 - `fixtures/labels.jsonl`;
 - fixture README.
+- fixture schemas for records, queries, and labels.
+- 10 mixed-intent draft queries.
+- 5 reviewer calibration examples.
 
 ## Phase 3: Execution Policy Specification
 
@@ -222,6 +225,8 @@ slow-row causes before making claims.
 - `schemas/environment_stability_log_schema.json`: browser/runtime anomaly
   schema.
 - `review/golden_answers.json`: template for reviewer calibration answers.
+- `fixtures/drafts/mixed_intent_query_drafts.jsonl`: routing ambiguity draft
+  set before full fixture construction.
 - `notebooks/analysis_notebook.ipynb`: placeholder for reproducible tables and
   figures.
 - `docs/LANE_DECISION_FLOW.md`: paper-facing architecture flowchart.

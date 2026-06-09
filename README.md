@@ -75,6 +75,7 @@ The first can be checked mechanically. The second requires source audit.
 - [Open questions](reports/PARALLEL_RESEARCH_HYBRID_LANE_OPEN_QUESTIONS.md)
 - [Methodology build plan](docs/METHODOLOGY_BUILD_PLAN.md)
 - [Paper narrative draft](docs/PAPER_NARRATIVE_DRAFT.md)
+- [Fixture schema](docs/FIXTURE_SCHEMA.md)
 - [Deterministic lane contract](docs/DETERMINISTIC_LANE_CONTRACT.md)
 - [Ablation and evaluation protocol](docs/ABLATION_AND_EVALUATION_PROTOCOL.md)
 - [Review sheet guide](docs/REVIEW_SHEET_GUIDE.md)
@@ -87,7 +88,11 @@ The first can be checked mechanically. The second requires source audit.
 - [Refusal decision matrix](config/refusal_decision_matrix.csv)
 - [Run record schema](schemas/run_record_schema.json)
 - [Environment stability log schema](schemas/environment_stability_log_schema.json)
+- [Fixture record schema](schemas/fixture_record_schema.json)
+- [Fixture query schema](schemas/fixture_query_schema.json)
+- [Fixture label schema](schemas/fixture_label_schema.json)
 - [Golden answers template](review/golden_answers.json)
+- [Mixed-intent query drafts](fixtures/drafts/mixed_intent_query_drafts.jsonl)
 - [Analysis notebook placeholder](notebooks/analysis_notebook.ipynb)
 
 ## Boundaries

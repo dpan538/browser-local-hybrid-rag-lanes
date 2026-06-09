@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dpan538/browser-local-hybrid-rag-lanes/schemas/fixture_label_schema.json",
+  "title": "Hybrid Lane Fixture Label",
+  "type": "object",
+  "required": [
+    "query_id",
+    "evidence_state",
+    "field_state_checklist",
+    "expected_execution_by_condition",
+    "refusal_expected",
+    "review_focus"
+  ],
+  "properties": {
+    "query_id": { "type": "string" },
+    "evidence_state": {
+      "type": "string",
+      "enum": ["sufficient", "partial", "missing", "contradictory", "not_applicable"]
+    },
+    "field_state_checklist": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "enum": [
+          "present_and_consistent",
+          "present_but_conflicting",
+          "absent",
+          "not_applicable"
+        ]
+      }
+    },
+    "expected_execution_by_condition": {
+      "type": "object",
+      "required": ["all_generation", "hybrid_without_refusal", "full_hybrid"],
+      "properties": {
+        "all_generation": {
+          "type": "string",
+          "enum": ["generative_answer"]
+        },
+        "hybrid_without_refusal": {
+          "type": "string",
+          "enum": [
+            "deterministic_render",
+            "generative_answer",
+            "compound_answer"
+          ]
+        },
+        "full_hybrid": {
+          "type": "string",
+          "enum": [
+            "deterministic_render",
+            "deterministic_refusal",
+            "generative_answer",
+            "compound_answer"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "refusal_expected": { "type": "boolean" },
+    "deterministic_required_fields": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "ideal_answer_summary": { "type": "string" },
+    "review_focus": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "field_fidelity",
+          "evidence_correctness",
+          "refusal_correctness",
+          "over_refusal",
+          "under_refusal",
+          "qualified_answer",
+          "format_consistency",
+          "hallucination",
+          "research_usefulness",
+          "routing_ambiguity"
+        ]
+      }
+    },
+    "notes": { "type": "string" }
+  },
+  "additionalProperties": false
+}
