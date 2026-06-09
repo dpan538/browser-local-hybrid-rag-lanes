@@ -103,6 +103,7 @@ The first can be checked mechanically. The second requires source audit.
 - [Qwen primary runtime and comparison backend smoke plan v0](docs/REAL_MODEL_BACKEND_SMOKE_PLAN_V0.md)
 - [Qwen WebLLM smoke run plan v0](docs/QWEN_WEBLLM_SMOKE_RUN_PLAN_V0.md)
 - [Qwen WebLLM 10-to-50 experiment expectation v0](docs/QWEN_WEBLLM_10_50_EXPERIMENT_EXPECTATION_V0.md)
+- [Qwen WebLLM cleaner20 expectation v0](docs/QWEN_WEBLLM_CLEANER20_EXPECTATION_V0.md)
 - [Fixture expansion plan v0](docs/FIXTURE_EXPANSION_PLAN_V0.md)
 - [Source audit and promotion gate v0](docs/SOURCE_AUDIT_AND_PROMOTION_GATE_V0.md)
 - [Experiment execution plan](docs/EXPERIMENT_EXECUTION_PLAN.md)

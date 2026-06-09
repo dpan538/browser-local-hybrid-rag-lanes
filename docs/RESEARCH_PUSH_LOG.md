@@ -343,3 +343,31 @@ Known limitations:
 - Existing pilot10/scale50 records still carry the old cumulative
   `long_task_gc` behavior; this correction affects future runs only.
 - The diagnostics report is for experiment triage, not a paper claim.
+
+## 2026-06-10: Qwen WebLLM cleaner20 pre-run backup
+
+Purpose:
+
+- Back up a cleaner 20-query instrumentation rerun before starting it.
+- Use the same primary Qwen/WebLLM path but keep the Codex in-app browser
+  visible and foregrounded during execution.
+- Test the corrected row-delta `long_task_gc` behavior.
+- Allow custom batch runs to preserve the entered run id, so the run can be
+  saved as `qwen_webllm_cleaner20_v0`.
+
+Expected output:
+
+```text
+runs/qwen_webllm_cleaner20_v0/qwen_webllm_cleaner20_v0_records.jsonl
+```
+
+Validation target before push:
+
+- Qwen smoke panel JavaScript passes `node --check`.
+- Python diagnostics script compilation passes.
+- Protocol bundle validation and `git diff --check` pass.
+
+Known limitations:
+
+- This backup does not include cleaner20 outputs.
+- Cleaner20 is an instrumentation check, not a paper finding.

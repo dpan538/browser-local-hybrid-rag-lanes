@@ -634,7 +634,7 @@ async function runBatch(start, limit, runId) {
 async function runCustomBatch() {
   const start = Math.max(1, Number(el("batchStart").value || 1));
   const limit = Math.max(1, Number(el("batchLimit").value || 10));
-  const runId = `qwen_webllm_batch_${limit}_v0`;
+  const runId = el("runId").value.trim() || `qwen_webllm_batch_${limit}_v0`;
   try {
     await runBatch(start, limit, runId);
   } catch (error) {
