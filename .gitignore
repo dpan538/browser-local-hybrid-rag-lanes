@@ -1,5 +1,7 @@
 # Dependencies and local build output
 node_modules/
+__pycache__/
+*.pyc
 dist/
 build/
 .next/
