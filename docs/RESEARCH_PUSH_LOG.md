@@ -318,3 +318,28 @@ Known limitations:
 - Raw run outputs remain local under ignored `runs/`.
 - Latency is exploratory because browser environment flags recorded long tasks
   and backgrounded rows.
+
+## 2026-06-10: Qwen WebLLM diagnostics and instrumentation correction
+
+Purpose:
+
+- Slow the interpretation down after the first 10-to-50 run.
+- Add a reusable diagnostics script for schema validity, Qwen invocation counts,
+  deterministic skips, failure groups, latency summaries, and environment flags.
+- Generate machine-readable and Markdown diagnostics from the ignored local run
+  outputs without committing raw answers.
+- Fix the browser panel's `long_task_gc` flag so future rows use per-row
+  long-task delta instead of cumulative long-task presence.
+
+Validation target before push:
+
+- Qwen diagnostics script runs on pilot10 and scale50 outputs.
+- Python script compilation passes.
+- Qwen smoke panel JavaScript passes `node --check`.
+- Protocol bundle validation and `git diff --check` pass.
+
+Known limitations:
+
+- Existing pilot10/scale50 records still carry the old cumulative
+  `long_task_gc` behavior; this correction affects future runs only.
+- The diagnostics report is for experiment triage, not a paper claim.

@@ -378,7 +378,7 @@ function envFlags(warmState) {
     warmup: warmState === "warmup",
     warm: warmState === "warm",
     tab_backgrounded: document.visibilityState === "hidden" || state.wasBackgrounded,
-    long_task_gc: Boolean(longTaskDelta || state.longTaskCount),
+    long_task_gc: Boolean(longTaskDelta),
     network_variance: false,
     manual_interruption: false,
     client_environment: {
