@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import time
 import hashlib
 from datetime import datetime, timezone
@@ -23,7 +24,7 @@ from typing import Any, Dict, List, Tuple
 
 from flask import Flask, jsonify, request, send_from_directory
 
-from scripts.auto_contract_check import check_contract
+from scripts.auto_contract_check import check_contract, contract_metrics_from_auto
 
 
 ROOT = Path(__file__).resolve().parent
@@ -56,6 +57,11 @@ WARMUP_PATH = repo_path_from_env(
     "HYBRID_LANE_WARMUP_PATH",
     "fixtures/warmup_queries.jsonl",
 )
+BROWSER_PILOT_PATH = repo_path_from_env(
+    "HYBRID_LANE_BROWSER_PILOT_PATH",
+    "fixtures/drafts/browser_pilot_subset_v0.jsonl",
+)
+RUNS_DIR = repo_path_from_env("HYBRID_LANE_RUNS_DIR", "runs")
 
 CONDITION_ALIASES = {
     "all-generation": "all_generation",
@@ -125,6 +131,11 @@ def protocol_artifact_hashes() -> Dict[str, str]:
     return hashes
 
 
+def safe_run_id(value: str) -> str:
+    normalized = re.sub(r"[^A-Za-z0-9_.-]+", "_", value.strip())
+    return normalized or "browser_pilot_run"
+
+
 def prompt_pack() -> Dict[str, Any]:
     return load_json(PROMPT_PACK_PATH)
 
@@ -137,12 +148,34 @@ def eval_rows() -> List[Dict[str, Any]]:
     return load_jsonl(EVAL_PATH)
 
 
+def find_eval_row(query_id: str) -> Dict[str, Any] | None:
+    for row in eval_rows():
+        if row.get("query_id") == query_id:
+            return row
+    return None
+
+
+def evaluator_contract_labels(query_id: str) -> Dict[str, Any] | None:
+    row = find_eval_row(query_id)
+    if not row:
+        return None
+    meta = row.get("evaluation_labels", {}).get("fixture_meta", {})
+    return {
+        "refusal_expected": bool(meta.get("refusal_expected")),
+        "conflict_expected": bool(meta.get("conflict_expected")),
+    }
+
+
 def warmup_rows() -> List[Dict[str, Any]]:
     return load_jsonl(WARMUP_PATH)
 
 
+def browser_pilot_rows() -> List[Dict[str, Any]]:
+    return load_jsonl(BROWSER_PILOT_PATH)
+
+
 def find_runtime_row(query_id: str) -> Dict[str, Any] | None:
-    for row in runtime_rows() + warmup_rows():
+    for row in runtime_rows() + warmup_rows() + browser_pilot_rows():
         if row.get("query_id") == query_id:
             return row
     return None
@@ -330,10 +363,9 @@ def build_run_record(
             "answer": answer,
         },
         row,
+        evaluator_contract_labels(row["query_id"]),
     )
-    contract_failure = any(value == "fail" for value in auto_contract.values())
-    contract_warning = any(value == "warning" for value in auto_contract.values())
-    unsupported_upgrade = auto_contract.get("rights_label_upgrade") in {"warning", "fail"}
+    contract_metrics = contract_metrics_from_auto(auto_contract)
 
     return {
         "run_id": payload.get("run_id") or "pilot_run_001",
@@ -353,21 +385,7 @@ def build_run_record(
             **timings,
             "warm_state": payload.get("warm_state", "warm"),
         },
-        "contract_metrics": {
-            "contract_failure": contract_failure,
-            "contract_warning": contract_warning,
-            "field_omission_count": sum(1 for value in auto_contract.values() if value == "fail"),
-            "field_mutation_count": sum(
-                1 for key, value in auto_contract.items()
-                if key.endswith("_mutation") and value == "fail"
-            ),
-            "unsupported_upgrade_count": 1 if unsupported_upgrade else 0,
-            "unsupported_claims": 0,
-            "hallucination_count": 0,
-            "hallucination_severity": None,
-            "refusal_false_positive": False,
-            "refusal_false_negative": False,
-        },
+        "contract_metrics": contract_metrics,
         "format": {
             "output_format": (
                 "structured_fields_plus_natural_language"
@@ -414,6 +432,11 @@ def api_evaluation() -> Any:
     return jsonify(eval_rows())
 
 
+@app.get("/api/fixtures/browser-pilot")
+def api_browser_pilot() -> Any:
+    return jsonify(browser_pilot_rows())
+
+
 @app.post("/api/run")
 def api_run() -> Any:
     payload = request.get_json(force=True) or {}
@@ -449,6 +472,31 @@ def api_run() -> Any:
     return jsonify(run_record)
 
 
+@app.post("/api/runs/save")
+def api_save_runs() -> Any:
+    payload = request.get_json(force=True) or {}
+    records = payload.get("records") or []
+    if not isinstance(records, list) or not records:
+        return jsonify({"error": "records must be a non-empty list"}), 400
+
+    requested_run_id = str(payload.get("run_id") or records[0].get("run_id") or "browser_pilot_run")
+    run_id = safe_run_id(requested_run_id)
+    output_dir = RUNS_DIR / run_id
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output_path = output_dir / f"{run_id}_records.jsonl"
+    with output_path.open("w", encoding="utf-8") as handle:
+        for record in records:
+            handle.write(json.dumps(record, ensure_ascii=False, separators=(",", ":")))
+            handle.write("\n")
+
+    return jsonify({
+        "ok": True,
+        "run_id": run_id,
+        "records": len(records),
+        "path": str(output_path.relative_to(ROOT) if output_path.is_relative_to(ROOT) else output_path),
+    })
+
+
 @app.get("/api/health")
 def api_health() -> Any:
     return jsonify({
@@ -456,6 +504,7 @@ def api_health() -> Any:
         "runtime_rows": len(runtime_rows()),
         "eval_rows": len(eval_rows()),
         "warmup_rows": len(warmup_rows()),
+        "browser_pilot_rows": len(browser_pilot_rows()),
         "model_backend": os.environ.get("HYBRID_LANE_MODEL_BACKEND", "stub"),
         "prompt_pack_version": prompt_pack().get("version"),
         "paths": {
@@ -463,6 +512,8 @@ def api_health() -> Any:
             "runtime": str(RUNTIME_PATH.relative_to(ROOT) if RUNTIME_PATH.is_relative_to(ROOT) else RUNTIME_PATH),
             "evaluation": str(EVAL_PATH.relative_to(ROOT) if EVAL_PATH.is_relative_to(ROOT) else EVAL_PATH),
             "warmup": str(WARMUP_PATH.relative_to(ROOT) if WARMUP_PATH.is_relative_to(ROOT) else WARMUP_PATH),
+            "browser_pilot": str(BROWSER_PILOT_PATH.relative_to(ROOT) if BROWSER_PILOT_PATH.is_relative_to(ROOT) else BROWSER_PILOT_PATH),
+            "runs_dir": str(RUNS_DIR.relative_to(ROOT) if RUNS_DIR.is_relative_to(ROOT) else RUNS_DIR),
         },
     })
 

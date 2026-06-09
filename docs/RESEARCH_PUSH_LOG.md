@@ -125,3 +125,29 @@ Known limitations:
 - The run used the timed `stub` backend, not WebLLM/Qwen.
 - The 50-row draft fixture remains synthetic and not source-audited.
 - The dry run is a pipeline validation result, not a paper-facing model result.
+
+## 2026-06-10: Codex browser pilot scaffold
+
+Purpose:
+
+- Add a preregistered 10-query browser pilot subset drawn from the 50-query
+  draft runtime view.
+- Extend the experiment panel so Codex in-app browser can run the subset across
+  all three conditions and persist JSONL records through the local Flask API.
+- Record the first browser-mediated stub run and its limitations.
+
+Validation target before push:
+
+- browser pilot subset validates against the runtime fixture view schema;
+- Codex in-app browser panel reports 50 runtime rows and 10 pilot rows;
+- browser pilot produces and saves 30 run records;
+- saved run records validate against `schemas/run_record_schema.json`;
+- paired analysis reports 10 paired queries for both contrasts;
+- Python script compilation, blueprint validation, fixture validation, protocol
+  bundle validation, and `git diff --check` pass.
+
+Known limitations:
+
+- The backend remains `stub`, so this is not a WebLLM/Qwen result.
+- Raw browser pilot outputs remain ignored under `runs/`.
+- The current browser pilot still uses synthetic, not source-audited records.

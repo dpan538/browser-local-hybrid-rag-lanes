@@ -62,6 +62,8 @@
       color: #fff;
       border-color: #0b6f6a;
       font-weight: 700;
+      min-height: 38px;
+      text-align: left;
     }
     button.secondary {
       background: #fff;
@@ -131,6 +133,7 @@
     <div>
       <span id="healthBadge" class="badge warn">API loading</span>
       <span id="rowBadge" class="badge">0 rows</span>
+      <span id="pilotBadge" class="badge">0 pilot</span>
       <span id="evalBadge" class="badge warn">eval hidden</span>
     </div>
   </header>
@@ -162,8 +165,11 @@
         <input id="runId" value="pilot_run_001">
       </div>
       <button id="runBtn" type="button">Run Condition</button>
+      <button id="runPilotBtn" class="secondary" type="button">Run Browser Pilot</button>
       <button id="toggleEvalBtn" class="secondary" type="button">Show Eval Labels</button>
       <button id="downloadBtn" class="secondary" type="button" disabled>Download Record</button>
+      <button id="downloadPilotBtn" class="secondary" type="button" disabled>Download Pilot JSONL</button>
+      <button id="savePilotBtn" class="secondary" type="button" disabled>Save Pilot On Server</button>
     </aside>
 
     <div class="content">
@@ -218,6 +224,8 @@
       activeQueryId: null,
       evalVisible: false,
       latestRecord: null,
+      pilotRows: [],
+      pilotRecords: [],
       wasBackgrounded: false,
       longTaskCount: 0
     };
@@ -256,9 +264,11 @@
       const promptVersion = health.prompt_pack_version || "no prompt pack";
       setBadge("healthBadge", `API ${health.model_backend} · ${promptVersion}`, "good");
       state.runtimeRows = await getJson("/api/fixtures/runtime");
+      state.pilotRows = await getJson("/api/fixtures/browser-pilot");
       const evalRows = await getJson("/api/fixtures/evaluation");
       state.evalRows = new Map(evalRows.map((row) => [row.query_id, row]));
       setBadge("rowBadge", `${state.runtimeRows.length} rows`, "");
+      setBadge("pilotBadge", `${state.pilotRows.length} pilot`, state.pilotRows.length ? "good" : "warn");
 
       const select = el("querySelect");
       select.innerHTML = "";
@@ -361,6 +371,81 @@
       }
     }
 
+    function clientEnvironment(extra) {
+      return {
+        visibility_state: document.visibilityState,
+        was_backgrounded: state.wasBackgrounded,
+        long_task_count: state.longTaskCount,
+        user_agent: navigator.userAgent,
+        ...(extra || {})
+      };
+    }
+
+    async function postRun(row, condition, warmState, runId, extraEnv) {
+      const res = await fetch("/api/run", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query_id: row.query_id,
+          condition,
+          warm_state: warmState,
+          run_id: runId,
+          client_environment: clientEnvironment(extraEnv)
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || `API returned ${res.status}`);
+      return data;
+    }
+
+    async function runBrowserPilot() {
+      if (!state.pilotRows.length) return;
+      const conditions = ["all_generation", "hybrid_without_refusal", "full_hybrid"];
+      const runId = el("runId").value || "browser_pilot_v0";
+      state.pilotRecords = [];
+      el("runPilotBtn").disabled = true;
+      el("runBtn").disabled = true;
+      el("downloadPilotBtn").disabled = true;
+      try {
+        let index = 0;
+        for (const row of state.pilotRows) {
+          for (const condition of conditions) {
+            const warmState = index === 0 ? "cold_start" : "warm";
+            el("runPilotBtn").textContent = `Running ${index + 1}/${state.pilotRows.length * conditions.length}`;
+            const record = await postRun(row, condition, warmState, runId, {
+              browser_pilot_subset: "browser_pilot_subset_v0",
+              browser_pilot_sequence_index: index
+            });
+            state.pilotRecords.push(record);
+            state.latestRecord = record;
+            el("answerBox").textContent = JSON.stringify(record.answer, null, 2);
+            el("metricsBox").textContent = JSON.stringify({
+              latency: record.latency,
+              auto_contract: record.auto_contract,
+              env_flags: record.env_flags
+            }, null, 2);
+            el("recordBox").textContent = state.pilotRecords
+              .map((item) => JSON.stringify(item))
+              .join("\n");
+            index += 1;
+            await new Promise((resolve) => setTimeout(resolve, 20));
+          }
+        }
+        el("downloadPilotBtn").disabled = false;
+        el("savePilotBtn").disabled = false;
+        el("downloadBtn").disabled = false;
+        const saveResult = await persistPilotRecords();
+        el("recordBox").textContent = `${JSON.stringify(saveResult, null, 2)}\n\n` +
+          state.pilotRecords.map((record) => JSON.stringify(record)).join("\n");
+      } catch (error) {
+        el("recordBox").textContent = String(error);
+      } finally {
+        el("runPilotBtn").disabled = false;
+        el("runBtn").disabled = false;
+        el("runPilotBtn").textContent = "Run Browser Pilot";
+      }
+    }
+
     function downloadRecord() {
       if (!state.latestRecord) return;
       const blob = new Blob([JSON.stringify(state.latestRecord, null, 2)], {
@@ -376,17 +461,64 @@
       URL.revokeObjectURL(url);
     }
 
+    function downloadPilotRecords() {
+      if (!state.pilotRecords.length) return;
+      const jsonl = state.pilotRecords.map((record) => JSON.stringify(record)).join("\n") + "\n";
+      const blob = new Blob([jsonl], { type: "application/jsonl" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${el("runId").value || "browser_pilot_v0"}_records.jsonl`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    async function persistPilotRecords() {
+      const res = await fetch("/api/runs/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          run_id: el("runId").value || "browser_pilot_v0",
+          records: state.pilotRecords
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || `API returned ${res.status}`);
+      return data;
+    }
+
+    async function savePilotRecords() {
+      if (!state.pilotRecords.length) return;
+      el("savePilotBtn").disabled = true;
+      el("savePilotBtn").textContent = "Saving...";
+      try {
+        const data = await persistPilotRecords();
+        el("recordBox").textContent = `${JSON.stringify(data, null, 2)}\n\n` +
+          state.pilotRecords.map((record) => JSON.stringify(record)).join("\n");
+      } catch (error) {
+        el("recordBox").textContent = String(error);
+      } finally {
+        el("savePilotBtn").disabled = false;
+        el("savePilotBtn").textContent = "Save Pilot On Server";
+      }
+    }
+
     el("querySelect").addEventListener("change", (event) => {
       state.activeQueryId = event.target.value;
       renderRuntime();
     });
     el("runBtn").addEventListener("click", runCondition);
+    el("runPilotBtn").addEventListener("click", runBrowserPilot);
     el("toggleEvalBtn").addEventListener("click", () => {
       state.evalVisible = !state.evalVisible;
       el("toggleEvalBtn").textContent = state.evalVisible ? "Hide Eval Labels" : "Show Eval Labels";
       renderEval();
     });
     el("downloadBtn").addEventListener("click", downloadRecord);
+    el("downloadPilotBtn").addEventListener("click", downloadPilotRecords);
+    el("savePilotBtn").addEventListener("click", savePilotRecords);
 
     loadData().catch((error) => {
       setBadge("healthBadge", "API error", "warn");
