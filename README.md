@@ -70,9 +70,11 @@ The first can be checked mechanically. The second requires source audit.
 ## Reports
 
 - [Parallel research literature memo](reports/PARALLEL_RESEARCH_HYBRID_LANE_LITERATURE_MEMO.md)
+- [Deep research paper positioning memo](reports/DEEP_RESEARCH_PAPER_POSITIONING_MEMO.md)
 - [Related-work matrix](reports/PARALLEL_RESEARCH_HYBRID_LANE_RELATED_WORK_MATRIX.md)
 - [Open questions](reports/PARALLEL_RESEARCH_HYBRID_LANE_OPEN_QUESTIONS.md)
 - [Methodology build plan](docs/METHODOLOGY_BUILD_PLAN.md)
+- [Paper narrative draft](docs/PAPER_NARRATIVE_DRAFT.md)
 - [Deterministic lane contract](docs/DETERMINISTIC_LANE_CONTRACT.md)
 - [Ablation and evaluation protocol](docs/ABLATION_AND_EVALUATION_PROTOCOL.md)
 - [Review sheet guide](docs/REVIEW_SHEET_GUIDE.md)
