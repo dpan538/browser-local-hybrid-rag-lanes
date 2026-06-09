@@ -27,6 +27,9 @@ Initial contents:
 - related-work matrix;
 - open questions memo;
 - methodology build plan.
+- deterministic lane contract;
+- ablation and evaluation protocol;
+- review sheet guide.
 
 ## Current Framing
 
@@ -55,12 +58,24 @@ This repo keeps two metrics separate:
 If a deterministic lane skips model generation, it must not be reported as
 faster Qwen generation.
 
+It also keeps two correctness claims separate:
+
+- deterministic lane correctness: the output follows rules over the supplied
+  evidence;
+- evidence correctness: the supplied evidence is semantically correct relative
+  to the source.
+
+The first can be checked mechanically. The second requires source audit.
+
 ## Reports
 
 - [Parallel research literature memo](reports/PARALLEL_RESEARCH_HYBRID_LANE_LITERATURE_MEMO.md)
 - [Related-work matrix](reports/PARALLEL_RESEARCH_HYBRID_LANE_RELATED_WORK_MATRIX.md)
 - [Open questions](reports/PARALLEL_RESEARCH_HYBRID_LANE_OPEN_QUESTIONS.md)
 - [Methodology build plan](docs/METHODOLOGY_BUILD_PLAN.md)
+- [Deterministic lane contract](docs/DETERMINISTIC_LANE_CONTRACT.md)
+- [Ablation and evaluation protocol](docs/ABLATION_AND_EVALUATION_PROTOCOL.md)
+- [Review sheet guide](docs/REVIEW_SHEET_GUIDE.md)
 
 ## Boundaries
 

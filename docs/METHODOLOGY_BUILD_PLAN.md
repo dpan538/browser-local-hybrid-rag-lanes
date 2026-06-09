@@ -33,6 +33,7 @@ Deliverables:
 - lane taxonomy memo;
 - metric schema;
 - contract field specification.
+- deterministic lane contract.
 
 ## Phase 2: Minimal Reproducible Fixture
 
@@ -94,6 +95,8 @@ Tasks:
 3. Emit JSONL run records with lane, execution mode, contract result, and
    latency fields.
 4. Add small smoke tests for schema and contract validation.
+5. Keep deterministic lane assignment rule-based and fixture-auditable for the
+   first version; learned/model-assisted routers are later ablations.
 
 Deliverables:
 
@@ -132,6 +135,7 @@ Deliverables:
 - evaluation protocol;
 - review sheet template;
 - metric summary script.
+- refusal examples and over-refusal/under-refusal labels.
 
 ## Phase 6: Paper Framing
 
@@ -166,8 +170,10 @@ The first real experiment should be small:
 1. 50-query fixture.
 2. Three execution conditions:
    - all-generation baseline;
-   - deterministic source/rights plus refusal lanes;
-   - mixed deterministic fields plus bounded generation.
+   - hybrid without refusal lane: deterministic source/rights plus generative
+     guidance, but refusal remains model-handled;
+   - full hybrid: deterministic source/rights plus deterministic refusal plus
+     generative guidance.
 3. Required output:
    - contract results;
    - `qwen_generation_latency`;
@@ -176,6 +182,22 @@ The first real experiment should be small:
 
 Success condition:
 
-The hybrid policy reduces user-visible latency for exact/refusal lanes without
-adding contract failures, while preserving useful generative answers in
-research-guidance lanes.
+The hybrid policy should reduce user-visible latency for exact/refusal lanes
+without adding contract failures, while preserving useful generative answers in
+research-guidance lanes. For the 50-query milestone, P95 is exploratory rather
+than definitive; use a 1.5x all-generation baseline guardrail and inspect
+slow-row causes before making claims.
+
+## Method Decisions Approved 2026-06-09
+
+1. Deterministic lanes guarantee rule-conforming output from supplied evidence,
+   not upstream semantic truth. Evidence correctness is a separate source-audit
+   metric.
+2. The 50-query milestone treats P95 as exploratory. P50/P75/P90/P95/max and
+   slow-row counts should all be reported by lane and condition.
+3. Refusal correctness must distinguish correct refusal, over-refusal,
+   under-refusal, qualified answers, and ambiguous boundaries.
+4. The first ablation uses three conditions: all generation, hybrid without
+   deterministic refusal, and full hybrid with deterministic refusal.
+5. First-version deterministic lanes are rule-based rendering over structured
+   retrieved evidence. They are not learned routers or small-model distillation.
