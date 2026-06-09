@@ -571,7 +571,7 @@ async function runThreeConditions() {
   }
 }
 
-async function saveRecords() {
+async function saveRecords({ allowOverwrite = false } = {}) {
   if (!state.records.length) return;
   el("saveBtn").disabled = true;
   try {
@@ -582,7 +582,7 @@ async function saveRecords() {
       body: JSON.stringify({
         run_id: runId,
         records: state.records,
-        allow_overwrite: false
+        allow_overwrite: allowOverwrite
       })
     });
     const data = await res.json();
@@ -592,6 +592,69 @@ async function saveRecords() {
     log(`SAVE ERROR: ${error?.message || String(error)}`);
   } finally {
     el("saveBtn").disabled = state.records.length === 0;
+  }
+}
+
+async function runBatch(start, limit, runId) {
+  const rows = state.runtimeRows.slice(start - 1, start - 1 + limit);
+  if (!rows.length) throw new Error("No rows selected for batch.");
+  el("runScopeBtn").disabled = true;
+  el("run10Btn").disabled = true;
+  el("run50Btn").disabled = true;
+  el("runOneBtn").disabled = true;
+  el("runThreeBtn").disabled = true;
+  el("runId").value = runId;
+  state.records = [];
+  renderRecord({
+    answer: { status: "batch_started", rows: rows.length },
+    latency: {},
+    auto_contract: {},
+    env_flags: {}
+  });
+  log(`Starting batch ${runId}: rows ${start}-${start + rows.length - 1}, ${rows.length} queries x ${CONDITIONS.length} conditions.`);
+  try {
+    for (const row of rows) {
+      el("querySelect").value = row.query_id;
+      for (const condition of CONDITIONS) {
+        el("conditionSelect").value = condition;
+        await runCondition(row, condition);
+      }
+    }
+    await saveRecords({ allowOverwrite: false });
+    log(`Batch ${runId} completed and save was requested.`);
+  } finally {
+    el("runScopeBtn").disabled = false;
+    el("run10Btn").disabled = false;
+    el("run50Btn").disabled = false;
+    el("runOneBtn").disabled = false;
+    el("runThreeBtn").disabled = false;
+  }
+}
+
+async function runCustomBatch() {
+  const start = Math.max(1, Number(el("batchStart").value || 1));
+  const limit = Math.max(1, Number(el("batchLimit").value || 10));
+  const runId = `qwen_webllm_batch_${limit}_v0`;
+  try {
+    await runBatch(start, limit, runId);
+  } catch (error) {
+    log(`BATCH ERROR: ${error?.message || String(error)}`);
+  }
+}
+
+async function runFirst10() {
+  try {
+    await runBatch(1, 10, "qwen_webllm_pilot10_v0");
+  } catch (error) {
+    log(`PILOT10 ERROR: ${error?.message || String(error)}`);
+  }
+}
+
+async function runFirst50() {
+  try {
+    await runBatch(1, 50, "qwen_webllm_scale50_v0");
+  } catch (error) {
+    log(`SCALE50 ERROR: ${error?.message || String(error)}`);
   }
 }
 
@@ -647,7 +710,10 @@ el("loadWebllmBtn").addEventListener("click", async () => {
 
 el("runOneBtn").addEventListener("click", runSelectedCondition);
 el("runThreeBtn").addEventListener("click", runThreeConditions);
-el("saveBtn").addEventListener("click", saveRecords);
+el("runScopeBtn").addEventListener("click", runCustomBatch);
+el("run10Btn").addEventListener("click", runFirst10);
+el("run50Btn").addEventListener("click", runFirst50);
+el("saveBtn").addEventListener("click", () => saveRecords({ allowOverwrite: false }));
 el("clearBtn").addEventListener("click", clearRecords);
 
 loadData().catch((error) => {

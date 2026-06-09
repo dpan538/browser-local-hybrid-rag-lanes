@@ -265,3 +265,32 @@ Known limitations:
   artifacts were downloaded during this scaffold validation.
 - The first real smoke run still requires an intentional browser-side Qwen load
   and generated JSONL save.
+
+## 2026-06-10: Qwen WebLLM 10-to-50 pre-run backup
+
+Purpose:
+
+- Back up the exact expectation before the first primary-model experiment.
+- Declare that the experiment points Flask at
+  `fixtures/drafts/runtime_view_v0.jsonl` and
+  `fixtures/drafts/evaluation_view_v0.jsonl`, each with 50 rows.
+- Add browser-panel batch controls for `Run First 10` and `Run First 50`.
+- Define save paths, success criteria, and stop conditions before loading the
+  Qwen WebLLM runtime.
+
+Expected run IDs:
+
+- `qwen_webllm_pilot10_v0`
+- `qwen_webllm_scale50_v0`
+
+Validation target before push:
+
+- Python script compilation passes.
+- Qwen smoke panel JavaScript passes `node --check`.
+- Protocol bundle validation and `git diff --check` pass.
+
+Known limitations:
+
+- This backup does not include run outputs.
+- Browser model artifacts may be downloaded/cached locally during the actual
+  run, but they must not be committed.

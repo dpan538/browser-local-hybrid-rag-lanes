@@ -178,6 +178,14 @@
           <input id="runId" value="qwen_webllm_smoke_v0">
         </label>
         <label>
+          Batch start
+          <input id="batchStart" type="number" min="1" value="1">
+        </label>
+        <label>
+          Batch limit
+          <input id="batchLimit" type="number" min="1" value="10">
+        </label>
+        <label>
           Max tokens
           <input id="maxTokens" type="number" min="16" max="512" value="160">
         </label>
@@ -187,6 +195,9 @@
         </label>
         <button id="runOneBtn" type="button">Run Selected Condition</button>
         <button id="runThreeBtn" class="secondary" type="button">Run 3 Conditions</button>
+        <button id="runScopeBtn" class="secondary" type="button">Run Batch</button>
+        <button id="run10Btn" class="secondary" type="button">Run First 10</button>
+        <button id="run50Btn" class="secondary" type="button">Run First 50</button>
         <button id="saveBtn" class="secondary" type="button" disabled>Save Records</button>
         <button id="clearBtn" class="secondary" type="button">Clear Records</button>
       </aside>
