@@ -76,6 +76,7 @@ The first can be checked mechanically. The second requires source audit.
 - [Open questions](reports/PARALLEL_RESEARCH_HYBRID_LANE_OPEN_QUESTIONS.md)
 - [Fixture quality audit v0](reports/FIXTURE_QUALITY_AUDIT_V0.md)
 - [Promotion gate v0](reports/PROMOTION_GATE_V0.md)
+- [Exploratory 50-query stub dry run v0](reports/EXPLORATORY_50_STUB_DRY_RUN_V0.md)
 - [Methodology build plan](docs/METHODOLOGY_BUILD_PLAN.md)
 - [Paper narrative draft](docs/PAPER_NARRATIVE_DRAFT.md)
 - [Paper positioning decisions](docs/PAPER_POSITIONING_DECISIONS.md)

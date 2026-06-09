@@ -73,8 +73,14 @@ def check_contract(
     condition = record.get("condition", "")
     source_record = first_record(runtime_query)
     results: Dict[str, str] = {}
+    did_refuse = answer_refused(answer)
 
     for field in DETERMINISTIC_FIELDS:
+        if did_refuse:
+            results[f"{field}_rendered"] = "n/a"
+            results[f"{field}_mutation"] = "n/a"
+            continue
+
         value = str(answer.get(field, "") or "")
         expected = str(source_record.get(field, PLACEHOLDER))
         state = field_state(runtime_query, field)
@@ -89,11 +95,14 @@ def check_contract(
         else:
             results[f"{field}_mutation"] = "n/a"
 
-    source_value = str(answer.get("source", "") or "")
-    expected_source = str(source_record.get("source", "") or "")
-    results["source_pointer_preserved"] = (
-        "pass" if expected_source and expected_source in source_value else "warning"
-    )
+    if did_refuse:
+        results["source_pointer_preserved"] = "n/a"
+    else:
+        source_value = str(answer.get("source", "") or "")
+        expected_source = str(source_record.get("source", "") or "")
+        results["source_pointer_preserved"] = (
+            "pass" if expected_source and expected_source in source_value else "warning"
+        )
 
     rights_mutated = results.get("rights_label_mutation") == "fail"
     status_mutated = results.get("public_domain_status_mutation") == "fail"
@@ -115,19 +124,43 @@ def check_contract(
             results["conflict_surfaced"] = "fail"
 
         expected_refusal = bool(blueprint_row.get("refusal_expected"))
-        did_refuse = answer_refused(answer)
         if expected_refusal:
             results["refusal_expected_alignment"] = "pass" if did_refuse else "fail"
         else:
             results["refusal_expected_alignment"] = "warning" if did_refuse else "pass"
 
     for field in DETERMINISTIC_FIELDS:
+        if did_refuse:
+            continue
         if field_state(runtime_query, field) == "absent":
             results[f"{field}_placeholder_used"] = (
                 "pass" if str(answer.get(field, "")) == PLACEHOLDER else "warning"
             )
 
     return results
+
+
+def contract_metrics_from_auto(auto_contract: Dict[str, str]) -> Dict[str, Any]:
+    failure = any(value == "fail" for value in auto_contract.values())
+    warning = any(value == "warning" for value in auto_contract.values())
+    return {
+        "contract_failure": failure,
+        "contract_warning": warning,
+        "field_omission_count": sum(
+            1 for key, value in auto_contract.items()
+            if key.endswith("_rendered") and value == "fail"
+        ),
+        "field_mutation_count": sum(
+            1 for key, value in auto_contract.items()
+            if key.endswith("_mutation") and value == "fail"
+        ),
+        "unsupported_upgrade_count": 1 if auto_contract.get("rights_label_upgrade") in {"warning", "fail"} else 0,
+        "unsupported_claims": 0,
+        "hallucination_count": 0,
+        "hallucination_severity": None,
+        "refusal_false_positive": auto_contract.get("refusal_expected_alignment") == "warning",
+        "refusal_false_negative": auto_contract.get("refusal_expected_alignment") == "fail",
+    }
 
 
 def enrich_records(
@@ -154,6 +187,7 @@ def enrich_records(
                 runtime_query,
                 blueprints.get(record["query_id"]),
             )
+            record["contract_metrics"] = contract_metrics_from_auto(record["auto_contract"])
             target.write(json.dumps(record, ensure_ascii=False, separators=(",", ":")))
             target.write("\n")
 

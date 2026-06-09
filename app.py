@@ -27,15 +27,35 @@ from scripts.auto_contract_check import check_contract
 
 
 ROOT = Path(__file__).resolve().parent
-RUNTIME_PATH = ROOT / "fixtures" / "runtime_view" / "experiment_fixture.runtime.jsonl"
-EVAL_PATH = ROOT / "fixtures" / "evaluation_view" / "experiment_fixture.eval.jsonl"
-WARMUP_PATH = ROOT / "fixtures" / "warmup_queries.jsonl"
 PANEL_DIR = ROOT / "tools" / "experiment_panel"
-MASTER_FIXTURE_PATH = ROOT / "fixtures" / "experiment_fixture.jsonl"
 LANE_RULES_PATH = ROOT / "config" / "lane_rules_v1.yaml"
 REFUSAL_MATRIX_PATH = ROOT / "config" / "refusal_decision_matrix.csv"
 PROMPT_PACK_PATH = ROOT / "config" / "condition_prompt_pack_v1.json"
 ANALYSIS_PLAN_PATH = ROOT / "docs" / "EXPERIMENT_EXECUTION_PLAN.md"
+
+
+def repo_path_from_env(env_name: str, default: str) -> Path:
+    value = os.environ.get(env_name, default)
+    path = Path(value)
+    return path if path.is_absolute() else ROOT / path
+
+
+MASTER_FIXTURE_PATH = repo_path_from_env(
+    "HYBRID_LANE_MASTER_FIXTURE_PATH",
+    "fixtures/experiment_fixture.jsonl",
+)
+RUNTIME_PATH = repo_path_from_env(
+    "HYBRID_LANE_RUNTIME_PATH",
+    "fixtures/runtime_view/experiment_fixture.runtime.jsonl",
+)
+EVAL_PATH = repo_path_from_env(
+    "HYBRID_LANE_EVAL_PATH",
+    "fixtures/evaluation_view/experiment_fixture.eval.jsonl",
+)
+WARMUP_PATH = repo_path_from_env(
+    "HYBRID_LANE_WARMUP_PATH",
+    "fixtures/warmup_queries.jsonl",
+)
 
 CONDITION_ALIASES = {
     "all-generation": "all_generation",
@@ -177,6 +197,9 @@ def deterministic_fields(row: Dict[str, Any]) -> Dict[str, str]:
 
 def should_refuse(row: Dict[str, Any]) -> bool:
     evidence_state = row.get("routing_inputs", {}).get("evidence_state")
+    intent_signal = row.get("routing_inputs", {}).get("intent_signal")
+    if intent_signal == "refusal_required" and evidence_state in {"partial", "missing", "contradictory"}:
+        return True
     return evidence_state in {"missing", "contradictory"}
 
 
@@ -435,6 +458,12 @@ def api_health() -> Any:
         "warmup_rows": len(warmup_rows()),
         "model_backend": os.environ.get("HYBRID_LANE_MODEL_BACKEND", "stub"),
         "prompt_pack_version": prompt_pack().get("version"),
+        "paths": {
+            "master_fixture": str(MASTER_FIXTURE_PATH.relative_to(ROOT) if MASTER_FIXTURE_PATH.is_relative_to(ROOT) else MASTER_FIXTURE_PATH),
+            "runtime": str(RUNTIME_PATH.relative_to(ROOT) if RUNTIME_PATH.is_relative_to(ROOT) else RUNTIME_PATH),
+            "evaluation": str(EVAL_PATH.relative_to(ROOT) if EVAL_PATH.is_relative_to(ROOT) else EVAL_PATH),
+            "warmup": str(WARMUP_PATH.relative_to(ROOT) if WARMUP_PATH.is_relative_to(ROOT) else WARMUP_PATH),
+        },
     })
 
 

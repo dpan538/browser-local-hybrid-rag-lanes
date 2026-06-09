@@ -53,6 +53,7 @@ def main() -> int:
     parser.add_argument("--runtime", default="fixtures/runtime_view/experiment_fixture.runtime.jsonl")
     parser.add_argument("--warmup", default="fixtures/warmup_queries.jsonl")
     parser.add_argument("--output", default="runs/collected_records.jsonl")
+    parser.add_argument("--run-id", default="pilot_run_001")
     parser.add_argument("--seed", type=int, default=538)
     parser.add_argument("--sleep-ms", type=int, default=100)
     args = parser.parse_args()
@@ -85,7 +86,7 @@ def main() -> int:
                 "query_id": query_id,
                 "condition": condition,
                 "warm_state": "warm",
-                "run_id": "pilot_run_001",
+                "run_id": args.run_id,
             })
             handle.write(json.dumps(record, ensure_ascii=False, separators=(",", ":")))
             handle.write("\n")

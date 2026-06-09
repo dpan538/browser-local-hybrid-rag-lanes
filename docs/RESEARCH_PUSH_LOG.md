@@ -98,3 +98,30 @@ Expected validation before push:
 - paper promotion gate fails for the expected source-audit reason;
 - Python script compilation passes;
 - `git diff --check` passes.
+
+## 2026-06-10: exploratory 50-query stub dry run
+
+Purpose:
+
+- Run the first full 50-query x 3-condition dry run through the Flask
+  experiment API.
+- Confirm that the draft runtime view, pilot runner, automatic contract checker,
+  analysis script, and blind-pack exporter work together without manual answer
+  pasting.
+- Preserve the result as an exploratory report while keeping raw run records
+  ignored.
+
+Validation target before push:
+
+- 150 run records validate against `schemas/run_record_schema.json`;
+- analysis reports 50 paired queries for each condition contrast;
+- full-hybrid has zero automatic contract failures in the stub dry run;
+- Python script compilation passes;
+- blueprint, fixture, protocol-bundle, and promotion-gate checks pass;
+- `git diff --check` passes.
+
+Known limitations:
+
+- The run used the timed `stub` backend, not WebLLM/Qwen.
+- The 50-row draft fixture remains synthetic and not source-audited.
+- The dry run is a pipeline validation result, not a paper-facing model result.
