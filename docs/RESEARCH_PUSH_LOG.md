@@ -81,3 +81,20 @@ Validation target before push:
 - Python script compilation;
 - fixture quality audit regeneration;
 - `git diff --check`.
+
+## 2026-06-10: promotion gate candidate
+
+Purpose:
+
+- Add a scripted promotion gate that distinguishes exploratory synthetic-fixture
+  promotion from paper-facing source-audited promotion.
+- Keep the remaining synthetic/not-audited limitation explicit instead of
+  hiding it in the quality audit.
+- Document source-audit requirements for future evidence-correctness claims.
+
+Expected validation before push:
+
+- exploratory promotion gate passes;
+- paper promotion gate fails for the expected source-audit reason;
+- Python script compilation passes;
+- `git diff --check` passes.
