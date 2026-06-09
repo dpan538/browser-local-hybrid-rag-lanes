@@ -26,6 +26,12 @@ from flask import Flask, jsonify, request, send_from_directory
 from jsonschema import Draft202012Validator
 
 from scripts.auto_contract_check import check_contract, contract_metrics_from_auto
+from scripts.model_backend import (
+    ModelBackendError,
+    backend_config,
+    backend_name,
+    call_model,
+)
 
 
 ROOT = Path(__file__).resolve().parent
@@ -206,25 +212,9 @@ def call_local_model(prompt: str, max_tokens: int = 512) -> Tuple[str, Dict[str,
     The default backend is a timed stub so protocol code can be validated
     without downloading model weights.
     """
-    backend = os.environ.get("HYBRID_LANE_MODEL_BACKEND", "stub")
-    if backend != "stub":
-        raise RuntimeError(
-            f"model backend '{backend}' is not implemented in this reproducible scaffold"
-        )
-
-    delay_ms = float(os.environ.get("HYBRID_LANE_STUB_DELAY_MS", "80"))
-    time.sleep(delay_ms / 1000.0)
-    text = (
-        "Generated research guidance: use the exact evidence fields for source "
-        "and rights, then interpret the public-health context cautiously."
-    )
-    return text, {
-        "backend": backend,
-        "max_tokens": max_tokens,
-        "stub_delay_ms": delay_ms,
-        "prompt_chars": len(prompt),
-        "prompt_pack_version": prompt_pack().get("version"),
-    }
+    text, meta = call_model(prompt, max_tokens=max_tokens)
+    meta["prompt_pack_version"] = prompt_pack().get("version")
+    return text, meta
 
 
 def deterministic_fields(row: Dict[str, Any]) -> Dict[str, str]:
@@ -468,7 +458,7 @@ def api_run() -> Any:
 
     try:
         answer, timings, execution_mode = assemble_answer(row, condition)
-    except RuntimeError as exc:
+    except ModelBackendError as exc:
         return jsonify({"error": str(exc)}), 501
 
     env_flags = environment_flags(payload)
@@ -482,6 +472,38 @@ def api_run() -> Any:
         payload=payload,
     )
     return jsonify(run_record)
+
+
+@app.get("/api/model/config")
+def api_model_config() -> Any:
+    return jsonify(backend_config())
+
+
+@app.post("/api/model/probe")
+def api_model_probe() -> Any:
+    payload = request.get_json(force=True) or {}
+    prompt = payload.get(
+        "prompt",
+        "Return one short sentence confirming that the local backend is reachable.",
+    )
+    max_tokens = int(payload.get("max_tokens", 64))
+    started = time.perf_counter()
+    try:
+        text, meta = call_local_model(str(prompt), max_tokens=max_tokens)
+    except ModelBackendError as exc:
+        return jsonify({
+            "ok": False,
+            "backend": backend_config(),
+            "error": str(exc),
+            "elapsed_ms": ms_since(started),
+        }), 501
+    return jsonify({
+        "ok": True,
+        "backend": backend_config(),
+        "text": text,
+        "model_meta": meta,
+        "elapsed_ms": ms_since(started),
+    })
 
 
 @app.post("/api/runs/save")
@@ -553,7 +575,8 @@ def api_health() -> Any:
         "eval_rows": len(eval_rows()),
         "warmup_rows": len(warmup_rows()),
         "browser_pilot_rows": len(browser_pilot_rows()),
-        "model_backend": os.environ.get("HYBRID_LANE_MODEL_BACKEND", "stub"),
+        "model_backend": backend_name(),
+        "model_backend_config": backend_config(),
         "prompt_pack_version": prompt_pack().get("version"),
         "paths": {
             "master_fixture": str(MASTER_FIXTURE_PATH.relative_to(ROOT) if MASTER_FIXTURE_PATH.is_relative_to(ROOT) else MASTER_FIXTURE_PATH),

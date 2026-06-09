@@ -179,3 +179,29 @@ Known limitations:
 - This hardening does not implement the real WebLLM/Qwen backend.
 - It improves pipeline integrity but does not change the synthetic fixture or
   source-audit limitation.
+
+## 2026-06-10: model backend adapter probe
+
+Purpose:
+
+- Add a model-backend adapter layer so the experiment can move beyond `stub`
+  without hard-coding model downloads or a specific runtime.
+- Support an OpenAI-compatible local endpoint via environment variables.
+- Add CLI and browser/API probe paths that must pass before a non-stub smoke
+  run begins.
+- Document the one-query smoke gate and the limits of adapter-level evidence.
+
+Validation target before push:
+
+- Python script compilation passes;
+- `scripts/probe_model_backend.py` succeeds with the default `stub` backend;
+- `openai_compatible` without `HYBRID_LANE_MODEL_NAME` fails fast with an
+  explicit configuration error;
+- Flask test client `/api/model/probe` succeeds under `stub`;
+- protocol bundle validation and `git diff --check` pass.
+
+Known limitations:
+
+- This does not start WebLLM, Ollama, LM Studio, or any model server.
+- The adapter proves reachability and run-record compatibility only after an
+  external local endpoint is already running.
