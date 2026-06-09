@@ -6,9 +6,10 @@ This app is intentionally small. It serves the experiment panel and exposes
 condition logic with server-side timing.
 
 The default model backend is a deterministic stub. It does not download model
-weights and does not claim real Qwen/WebLLM performance. Replace
-`call_local_model` or set up a new backend when the protocol is ready for a
-real local model run.
+weights and does not claim real Qwen/WebLLM performance. The primary model
+identity for real runs is `Qwen/Qwen3.5-0.8B`; real generation should be run in
+the browser-local Qwen/WebLLM path, while server-side adapters are limited to
+documented comparison probes.
 """
 
 from __future__ import annotations
@@ -210,7 +211,8 @@ def call_local_model(prompt: str, max_tokens: int = 512) -> Tuple[str, Dict[str,
     """Call the configured local model backend.
 
     The default backend is a timed stub so protocol code can be validated
-    without downloading model weights.
+    without downloading model weights. This server-side hook is not the primary
+    Qwen/WebLLM experiment path.
     """
     text, meta = call_model(prompt, max_tokens=max_tokens)
     meta["prompt_pack_version"] = prompt_pack().get("version")
@@ -484,7 +486,7 @@ def api_model_probe() -> Any:
     payload = request.get_json(force=True) or {}
     prompt = payload.get(
         "prompt",
-        "Return one short sentence confirming that the local backend is reachable.",
+        "Return one short sentence confirming that the configured comparison backend is reachable.",
     )
     max_tokens = int(payload.get("max_tokens", 64))
     started = time.perf_counter()

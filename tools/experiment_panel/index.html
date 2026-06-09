@@ -165,7 +165,7 @@
         <input id="runId" value="pilot_run_001">
       </div>
       <button id="runBtn" type="button">Run Condition</button>
-      <button id="probeBtn" class="secondary" type="button">Probe Model Backend</button>
+      <button id="probeBtn" class="secondary" type="button">Probe Comparison Backend</button>
       <button id="runPilotBtn" class="secondary" type="button">Run Browser Pilot</button>
       <button id="toggleEvalBtn" class="secondary" type="button">Show Eval Labels</button>
       <button id="downloadBtn" class="secondary" type="button" disabled>Download Record</button>
@@ -382,7 +382,7 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             max_tokens: 64,
-            prompt: "Return one short sentence confirming that the configured local backend is reachable."
+            prompt: "Return one short sentence confirming that the configured comparison backend is reachable."
           })
         });
         const data = await res.json();
@@ -392,7 +392,7 @@
         el("recordBox").textContent = String(error);
       } finally {
         el("probeBtn").disabled = false;
-        el("probeBtn").textContent = "Probe Model Backend";
+        el("probeBtn").textContent = "Probe Comparison Backend";
       }
     }
 

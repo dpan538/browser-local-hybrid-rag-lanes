@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Local model backend adapters for hybrid lane smoke runs."""
+"""Local model backend adapters for hybrid lane smoke runs.
+
+The primary experiment model is Qwen/Qwen3.5-0.8B. Browser-local Qwen/WebLLM
+execution is expected to happen in the browser, not through this server-side
+adapter. The OpenAI-compatible adapter is comparison-only and is guarded so an
+incidental Ollama/LM Studio endpoint cannot become the primary experiment path.
+"""
 
 from __future__ import annotations
 
@@ -8,6 +14,11 @@ import os
 import time
 from typing import Any, Dict, Tuple
 from urllib import error, request
+
+PRIMARY_MODEL_IDENTITY = "Qwen/Qwen3.5-0.8B"
+PRIMARY_PRODUCT_RUNTIME_ARTIFACT = "onnx-community/Qwen3.5-0.8B-ONNX"
+PRIMARY_RESEARCH_WEBLLM_MODEL_ID = "Qwen3.5-0.8B-q4f16_1-MLC"
+COMPARISON_BACKENDS = {"openai_compatible", "openai-compatible"}
 
 
 class ModelBackendError(RuntimeError):
@@ -22,30 +33,50 @@ def backend_config() -> Dict[str, Any]:
     backend = backend_name()
     config: Dict[str, Any] = {
         "backend": backend,
-        "implemented": backend in {"stub", "openai_compatible", "openai-compatible"},
+        "implemented": backend in {"stub", *COMPARISON_BACKENDS},
+        "primary_model_identity": PRIMARY_MODEL_IDENTITY,
+        "primary_product_runtime_artifact": PRIMARY_PRODUCT_RUNTIME_ARTIFACT,
+        "primary_research_webllm_model_id": PRIMARY_RESEARCH_WEBLLM_MODEL_ID,
+        "primary_backend_note": (
+            "Primary Qwen 3.5 0.8B runs must use the browser-local "
+            "Qwen/WebLLM path. Server-side adapters are not primary evidence."
+        ),
     }
     if backend == "stub":
         config.update({
             "stub_delay_ms": float(os.environ.get("HYBRID_LANE_STUB_DELAY_MS", "80")),
         })
-    if backend in {"openai_compatible", "openai-compatible"}:
+    if backend in COMPARISON_BACKENDS:
         config.update({
             "base_url": os.environ.get("HYBRID_LANE_MODEL_BASE_URL", "http://127.0.0.1:8000/v1"),
             "model": os.environ.get("HYBRID_LANE_MODEL_NAME", ""),
             "timeout_sec": float(os.environ.get("HYBRID_LANE_MODEL_TIMEOUT_SEC", "60")),
             "api_key_set": bool(os.environ.get("HYBRID_LANE_MODEL_API_KEY")),
+            "comparison_only": True,
+            "comparison_backend_enabled": comparison_backend_enabled(),
         })
     return config
+
+
+def comparison_backend_enabled() -> bool:
+    return os.environ.get("HYBRID_LANE_ALLOW_COMPARISON_BACKEND", "").strip() == "1"
 
 
 def call_model(prompt: str, max_tokens: int = 512) -> Tuple[str, Dict[str, Any]]:
     backend = backend_name()
     if backend == "stub":
         return call_stub(prompt, max_tokens)
-    if backend in {"openai_compatible", "openai-compatible"}:
+    if backend in COMPARISON_BACKENDS:
+        if not comparison_backend_enabled():
+            raise ModelBackendError(
+                "openai_compatible is comparison-only. Primary experiments must use "
+                "browser-local Qwen/Qwen3.5-0.8B. Set "
+                "HYBRID_LANE_ALLOW_COMPARISON_BACKEND=1 only for a documented "
+                "same-scale comparison run."
+            )
         return call_openai_compatible(prompt, max_tokens)
     raise ModelBackendError(
-        f"model backend '{backend}' is not implemented; expected stub or openai_compatible"
+        f"model backend '{backend}' is not implemented; expected stub or comparison-only openai_compatible"
     )
 
 

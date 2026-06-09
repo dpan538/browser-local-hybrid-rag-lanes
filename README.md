@@ -12,8 +12,18 @@ This repository studies the division of labor between:
 
 - deterministic UI/runtime layers for exact source, rights, provenance, image
   state, and insufficient-evidence refusal answers;
-- browser-local small-model generation for explanatory, comparative, and
-  research-guidance answers.
+- browser-local `Qwen/Qwen3.5-0.8B` generation for explanatory, comparative,
+  and research-guidance answers.
+
+The inherited archive research boundary is explicit:
+
+- primary model identity: `Qwen/Qwen3.5-0.8B`;
+- product runtime artifact reference: `onnx-community/Qwen3.5-0.8B-ONNX`;
+- research WebLLM/MLC runtime id: `Qwen3.5-0.8B-q4f16_1-MLC`.
+
+Server-side OpenAI-compatible endpoints are comparison-only and disabled unless
+explicitly marked as comparison runs. They are not primary evidence for this
+paper.
 
 ## Status
 
@@ -87,7 +97,7 @@ The first can be checked mechanically. The second requires source audit.
 - [Research push log](docs/RESEARCH_PUSH_LOG.md)
 - [Browser pilot run plan v0](docs/BROWSER_PILOT_RUN_PLAN_V0.md)
 - [Preflight script hardening v0](docs/PREFLIGHT_SCRIPT_HARDENING_V0.md)
-- [Real model backend smoke plan v0](docs/REAL_MODEL_BACKEND_SMOKE_PLAN_V0.md)
+- [Qwen primary runtime and comparison backend smoke plan v0](docs/REAL_MODEL_BACKEND_SMOKE_PLAN_V0.md)
 - [Fixture expansion plan v0](docs/FIXTURE_EXPANSION_PLAN_V0.md)
 - [Source audit and promotion gate v0](docs/SOURCE_AUDIT_AND_PROMOTION_GATE_V0.md)
 - [Experiment execution plan](docs/EXPERIMENT_EXECUTION_PLAN.md)
@@ -133,8 +143,8 @@ The first can be checked mechanically. The second requires source audit.
 - [Freeze manifest script](scripts/freeze_manifest.py)
 - [Full pilot runner](scripts/run_full_pilot.py)
 - [Auto contract checker](scripts/auto_contract_check.py)
-- [Model backend adapter](scripts/model_backend.py)
-- [Model backend probe](scripts/probe_model_backend.py)
+- [Comparison backend adapter](scripts/model_backend.py)
+- [Comparison backend probe](scripts/probe_model_backend.py)
 - [Blind review pack generator](scripts/prepare_blind_review.py)
 - [Blind review merge script](scripts/merge_blind_review.py)
 - [Pilot analysis script](scripts/analysis.py)

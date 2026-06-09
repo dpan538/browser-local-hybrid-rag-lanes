@@ -190,6 +190,8 @@ Purpose:
 - Add CLI and browser/API probe paths that must pass before a non-stub smoke
   run begins.
 - Document the one-query smoke gate and the limits of adapter-level evidence.
+- Superseded note: the following Qwen boundary correction reclassifies this
+  endpoint path as comparison-only, not primary experiment infrastructure.
 
 Validation target before push:
 
@@ -205,3 +207,32 @@ Known limitations:
 - This does not start WebLLM, Ollama, LM Studio, or any model server.
 - The adapter proves reachability and run-record compatibility only after an
   external local endpoint is already running.
+
+## 2026-06-10: Qwen primary model boundary correction
+
+Purpose:
+
+- Correct the backend plan after confirming the archive research branch names
+  `Qwen/Qwen3.5-0.8B` as the primary model identity.
+- Preserve `onnx-community/Qwen3.5-0.8B-ONNX` as the product runtime artifact
+  reference and `Qwen3.5-0.8B-q4f16_1-MLC` as the research WebLLM runtime id.
+- Reclassify OpenAI-compatible server endpoints as comparison-only, not primary
+  experiment infrastructure.
+- Prevent accidental use of incidental local endpoints by requiring
+  `HYBRID_LANE_ALLOW_COMPARISON_BACKEND=1` before the comparison adapter can
+  run.
+
+Validation target before push:
+
+- Default stub probe still succeeds.
+- OpenAI-compatible backend without the comparison flag fails fast with an
+  explicit "comparison-only" error.
+- Python script compilation passes.
+- Protocol bundle validation and `git diff --check` pass.
+
+Known limitations:
+
+- This correction does not yet implement the browser WebLLM Qwen runner in the
+  hybrid-lanes panel.
+- The next experiment step must be a Codex in-app browser Qwen/WebLLM smoke run,
+  not a server-side local endpoint run.

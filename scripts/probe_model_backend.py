@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Probe the configured local model backend before running an experiment."""
+"""Probe the configured stub or comparison backend before running an experiment."""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--prompt",
-        default="Return one short sentence confirming that the local backend is reachable.",
+        default="Return one short sentence confirming that the configured comparison backend is reachable.",
     )
     parser.add_argument("--max-tokens", type=int, default=64)
     args = parser.parse_args()
