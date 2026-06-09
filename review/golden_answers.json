@@ -79,6 +79,49 @@
       "refusal_expected": false,
       "qualified_allowed": true,
       "review_notes": "Calibrates compound answers: deterministic rights fields plus bounded research guidance."
+    },
+    {
+      "query_id": "calib_006",
+      "task_description": "Surface conflicting evidence without silently choosing a value",
+      "ideal_answer": "Report that the evidence contains conflicting source or rights fields. Either refuse the unsupported conclusion or provide a qualified answer that names the conflict and avoids choosing one value as authoritative.",
+      "key_elements": [
+        "conflict_notice",
+        "source",
+        "rights_label",
+        "qualified_answer_or_refusal"
+      ],
+      "refusal_expected": true,
+      "qualified_allowed": true,
+      "review_notes": "Calibrates contradictory evidence: both refusal and conflict-reporting qualified answers can be correct, but silent selection is incorrect."
+    },
+    {
+      "query_id": "calib_007",
+      "task_description": "Use placeholders for missing deterministic fields",
+      "ideal_answer": "Render available deterministic fields exactly. For required fields absent from the evidence packet, use the protocol placeholder rather than generating or inferring a value.",
+      "key_elements": [
+        "placeholder",
+        "field_omission_count",
+        "no_field_mutation",
+        "no_inferred_permission"
+      ],
+      "refusal_expected": false,
+      "qualified_allowed": true,
+      "review_notes": "Calibrates missing-field fallback. Missing evidence is a warning or caveat, not permission for the model to invent exact metadata."
+    },
+    {
+      "query_id": "calib_008",
+      "task_description": "Keep all-generation baseline format-matched",
+      "ideal_answer": "Use the same visible answer sections as hybrid conditions, even though the model generates every value. Do not score a baseline answer as clearer merely because it uses a different format.",
+      "key_elements": [
+        "source",
+        "rights_label",
+        "reuse_permission",
+        "research_guidance",
+        "format_consistency"
+      ],
+      "refusal_expected": false,
+      "qualified_allowed": true,
+      "review_notes": "Calibrates condition comparison: reviewers should judge content and clarity under a shared output shape."
     }
   ],
   "full_set": {}

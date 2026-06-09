@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/dpan538/browser-local-hybrid-rag-lanes/schemas/evaluation_fixture_view_schema.json",
+  "title": "Hybrid Lane Evaluation Fixture View",
+  "type": "object",
+  "required": [
+    "fixture_version",
+    "query_id",
+    "evaluation_labels",
+    "expected_behavior"
+  ],
+  "properties": {
+    "fixture_version": { "type": "string", "const": "1.0" },
+    "query_id": { "type": "string", "pattern": "^q[0-9]{3}$" },
+    "evaluation_labels": {
+      "type": "object",
+      "description": "Evaluator-only gold labels. These fields must not be visible to the runtime.",
+      "required": [
+        "intent_label",
+        "primary_lane",
+        "mixed_intent",
+        "aggregated_evidence_state",
+        "decisive_fields"
+      ],
+      "properties": {
+        "intent_label": { "type": "string" },
+        "primary_lane": { "type": "string" },
+        "secondary_lanes": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "mixed_intent": { "type": "boolean" },
+        "routing_ambiguity_notes": { "type": "string" },
+        "aggregated_evidence_state": {
+          "type": "string",
+          "enum": [
+            "sufficient",
+            "partial",
+            "missing",
+            "contradictory",
+            "not_applicable"
+          ]
+        },
+        "decisive_fields": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "source_audit_statuses": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["not_audited", "pass", "fail", "uncertain"]
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "expected_behavior": { "$ref": "experiment_fixture_schema.json#/properties/expected_behavior" }
+  },
+  "additionalProperties": false
+}

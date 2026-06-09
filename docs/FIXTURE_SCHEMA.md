@@ -8,7 +8,7 @@ source-auditable; it must not depend on private archive product state.
 
 ## Canonical V1 Format
 
-The canonical v1 fixture is a single self-contained JSONL file:
+The author-facing canonical v1 fixture is a single self-contained JSONL file:
 
 - `fixtures/experiment_fixture.jsonl`
 
@@ -20,6 +20,34 @@ Each line is one complete test case containing:
 
 This avoids cross-file join errors between records, queries, and labels. It
 also makes each row independently reproducible.
+
+## Runtime And Evaluation Views
+
+The master fixture is not the runtime input.
+
+Before a paper-facing run, export two derived views:
+
+- runtime view: contains query text, runtime-visible routing inputs, and the
+  frozen evidence packet;
+- evaluation view: contains evaluator-only labels and expected behavior.
+
+Schemas:
+
+- `schemas/runtime_fixture_view_schema.json`
+- `schemas/evaluation_fixture_view_schema.json`
+
+Export command:
+
+```bash
+python scripts/split_fixture_views.py \
+  fixtures/experiment_fixture.jsonl \
+  fixtures/runtime_view/experiment_fixture.runtime.jsonl \
+  fixtures/evaluation_view/experiment_fixture.eval.jsonl
+```
+
+The runtime view must not contain `expected_behavior`, gold lane labels, or
+reviewer-only refusal labels. This split prevents the runner from seeing the
+answer key while preserving the convenience of an author-facing master row.
 
 ## Supporting Files
 
@@ -81,6 +109,7 @@ Required concepts:
 
 - `records`: the record subset for this query;
 - `field_checklist`: the field-state checklist aggregated for the user task;
+- `decisive_fields`: the fields that determine the row-level evidence state;
 - `aggregated_evidence_state`: the result of applying the evidence aggregation
   rules;
 - optional `retrieved_snippets`, for analyzing retrieval-stage evidence.
@@ -98,6 +127,7 @@ Record fields may include:
 - `rights_state`;
 - `reuse_permission`;
 - `public_domain_status`;
+- `record_origin`;
 - `image_state_code`;
 - `image_state_label`;
 - `chronology_proof`;
@@ -176,7 +206,11 @@ Current mapping:
 | `comparison` | `date_text`, `title` |
 | `recommendation` | `research_context` |
 | `explanation` | `image_state_label` |
-| `mixed` | v1 defaults to sufficient; compound parts and review labels carry the ambiguity |
+| `mixed` | row-level `decisive_fields`; no default sufficiency |
+
+Mixed-intent rows must declare `decisive_fields`. They should not default to
+`sufficient`, because mixed-intent evidence is exactly where routing ambiguity
+and partial support need to remain visible.
 
 First-version aggregation:
 
@@ -238,6 +272,7 @@ The validator checks:
 
 - JSON Schema validity;
 - evidence-state aggregation consistency;
+- `decisive_fields` presence and checklist coverage;
 - mixed-intent `secondary_lanes`;
 - deterministic-refusal/intent compatibility;
 - compound answer `compound_parts`;

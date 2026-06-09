@@ -33,6 +33,18 @@
         "compound_answer"
       ]
     },
+    "protocol_artifacts": {
+      "type": "object",
+      "properties": {
+        "fixture_hash": { "type": "string" },
+        "runtime_view_hash": { "type": "string" },
+        "rule_table_hash": { "type": "string" },
+        "refusal_matrix_hash": { "type": "string" },
+        "prompt_pack_hash": { "type": "string" },
+        "analysis_plan_hash": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
     "rule_match": {
       "type": "object",
       "properties": {
@@ -89,6 +101,35 @@
       },
       "additionalProperties": false
     },
+    "answer": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "auto_contract": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "enum": ["pass", "warning", "fail", "n/a"]
+      }
+    },
+    "env_flags": {
+      "type": "object",
+      "properties": {
+        "cold_start": { "type": "boolean" },
+        "warmup": { "type": "boolean" },
+        "warm": { "type": "boolean" },
+        "tab_backgrounded": { "type": "boolean" },
+        "long_task_gc": { "type": "boolean" },
+        "network_variance": { "type": "boolean" },
+        "manual_interruption": { "type": "boolean" },
+        "client_environment": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "timestamp_utc": { "type": "string", "format": "date-time" },
     "format": {
       "type": "object",
       "properties": {

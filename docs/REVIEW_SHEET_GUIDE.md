@@ -90,6 +90,13 @@ found" is aligned; missing evidence plus vague "policy" may be ambiguous.
 
 Each reviewed answer should receive:
 
+- `contract_status`: pass, warning, failure, or not_applicable.
+- `all_required_fields_rendered`: yes, no, or not_applicable.
+- `missing_fields_have_approved_placeholder`: yes, no, or not_applicable.
+- `field_mutation_present`: yes or no.
+- `unsupported_rights_or_status_upgrade_present`: yes or no.
+- `source_pointer_preserved`: yes, no, or not_applicable.
+- `conflict_surfaced_when_present`: yes, no, or not_applicable.
 - `refusal_correctness`: one of the labels above.
 - `refusal_decision_trace`: aligned, misaligned, vague, or not_applicable.
 - `refusal_clarity`: 1-5.
@@ -105,6 +112,9 @@ Each reviewed answer should receive:
 - `required_field_omissions`: count.
 - `required_field_mutations`: count.
 
+Use checklist fields as the primary contract evidence. Use 1-5 scales only for
+perception-oriented dimensions such as helpfulness, clarity, and usefulness.
+
 ## Deterministic Lane Correctness
 
 Reviewers should distinguish three questions:
@@ -116,16 +126,60 @@ Reviewers should distinguish three questions:
 The first can be checked mechanically. The second requires source audit. The
 third requires human usability review.
 
+A deterministic lane passes only when:
+
+- every required field is rendered exactly or with an approved placeholder;
+- no field value is mutated;
+- no rights/status/provenance value is upgraded beyond the evidence;
+- source or provenance pointers are preserved when required;
+- contradictions are surfaced rather than silently resolved;
+- the output format does not mislabel the evidence.
+
+A source-audit failure is not automatically a deterministic-render failure. It
+should be reported under evidence correctness.
+
+## Hallucination And Unsupported Claims
+
+Use these categories:
+
+| Category | Meaning |
+|---|---|
+| `fabricated_fact` | A concrete fact absent from or contradicted by the evidence. |
+| `unsupported_interpretation` | A plausible synthesis or inference not warranted by the evidence. |
+| `unsupported_rights_or_status_upgrade` | A reuse, rights, provenance, or status claim stronger than the evidence supports. |
+| `citation_or_provenance_mismatch` | A claim is attached to the wrong source or record. |
+| `deterministic_field_mutation` | A supplied field was changed; score as contract failure, not model hallucination unless generation caused it. |
+
+Severity:
+
+- 1: minor, non-material embellishment;
+- 2: material unsupported claim that could change interpretation;
+- 3: contradicted exact fact or rights/status/provenance upgrade.
+
 ## Reviewer Calibration
 
-Before reviewing the full set, reviewers independently score a 5-example
-calibration set. Disagreements greater than 1 point on any 1-5 dimension should
-be discussed, and the shared rubric example should be documented.
+Before reviewing the full set, reviewers independently score an 8-12 example
+calibration set covering exact fields, partial evidence, missing evidence,
+contradictory records, justified refusal, over-refusal traps, unsupported
+rights/status upgrades, OCR or metadata noise, and mixed-intent compound
+answers.
 
-If at least two reviewers score the full set, report Cohen's kappa for
-categorical refusal labels and ICC or an equivalent agreement metric for
-ordinal 1-5 scores. If agreement is below 0.6, report consensus labels or
-repeat calibration before drawing strong claims.
+Disagreements greater than 1 point on any 1-5 dimension, or any systematic
+disagreement on checklist fields, should be discussed. Revise the guide once
+before official scoring.
+
+Preferred protocol:
+
+- two independent blinded reviewers;
+- one adjudicator for unresolved disagreements;
+- randomized output order with condition IDs hidden;
+- original reviewer labels preserved alongside adjudicated labels.
+
+If at least two reviewers score the full set, report Cohen's kappa or weighted
+kappa for categorical/ordinal checklist labels and ICC or an equivalent
+agreement metric only when averaged 1-5 perception scores are analyzed. If
+agreement is below 0.6 on primary categorical labels, report consensus labels
+or repeat calibration before drawing strong claims.
 
 ## Reviewer Notes Template
 
@@ -138,6 +192,13 @@ reviewer_ideal_lane:
 execution_mode:
 evidence_state:
 field_state_checklist:
+contract_status:
+all_required_fields_rendered:
+missing_fields_have_approved_placeholder:
+field_mutation_present:
+unsupported_rights_or_status_upgrade_present:
+source_pointer_preserved:
+conflict_surfaced_when_present:
 refusal_correctness:
 refusal_decision_trace:
 refusal_clarity:

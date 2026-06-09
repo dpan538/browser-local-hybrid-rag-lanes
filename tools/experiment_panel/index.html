@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hybrid Lane Experiment Panel</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #f7f8fa;
+      color: #20242a;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+    header {
+      padding: 14px 18px;
+      background: #fff;
+      border-bottom: 1px solid #d9dee5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    h1 { margin: 0; font-size: 18px; }
+    main {
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 12px;
+      padding: 12px;
+    }
+    aside, section {
+      background: #fff;
+      border: 1px solid #d9dee5;
+      border-radius: 6px;
+      padding: 12px;
+    }
+    aside {
+      align-self: start;
+      position: sticky;
+      top: 12px;
+    }
+    .stack { display: grid; gap: 12px; }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #59636f;
+    }
+    select, input, textarea, button {
+      width: 100%;
+      font: inherit;
+      border: 1px solid #cfd6df;
+      border-radius: 5px;
+      padding: 8px;
+      background: #fff;
+    }
+    button {
+      cursor: pointer;
+      background: #0b6f6a;
+      color: #fff;
+      border-color: #0b6f6a;
+      font-weight: 700;
+    }
+    button.secondary {
+      background: #fff;
+      color: #20242a;
+      border-color: #cfd6df;
+    }
+    button:disabled { opacity: 0.55; cursor: not-allowed; }
+    textarea { min-height: 110px; resize: vertical; }
+    .content { display: grid; gap: 12px; }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 5px 8px;
+      border: 1px solid #cfd6df;
+      border-radius: 5px;
+      background: #f7f8fa;
+      color: #59636f;
+      font-size: 12px;
+    }
+    .badge.good {
+      border-color: #b4d5bd;
+      background: #f1faf3;
+      color: #236b39;
+    }
+    .badge.warn {
+      border-color: #e5c990;
+      background: #fff8e7;
+      color: #885300;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    th, td {
+      border-bottom: 1px solid #e4e8ee;
+      padding: 7px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { color: #59636f; background: #fafbfc; }
+    pre {
+      margin: 0;
+      white-space: pre-wrap;
+      overflow: auto;
+      max-height: 320px;
+      padding: 10px;
+      border-radius: 5px;
+      background: #111827;
+      color: #f9fafb;
+      font-size: 12px;
+    }
+    .hidden { display: none; }
+    @media (max-width: 900px) {
+      main, .grid-2 { grid-template-columns: 1fr; }
+      aside { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Hybrid Lane Experiment Panel</h1>
+    <div>
+      <span id="healthBadge" class="badge warn">API loading</span>
+      <span id="rowBadge" class="badge">0 rows</span>
+      <span id="evalBadge" class="badge warn">eval hidden</span>
+    </div>
+  </header>
+
+  <main>
+    <aside class="stack">
+      <div>
+        <label for="querySelect">Query</label>
+        <select id="querySelect"></select>
+      </div>
+      <div>
+        <label for="conditionSelect">Condition</label>
+        <select id="conditionSelect">
+          <option value="all_generation">C1 all-generation</option>
+          <option value="hybrid_without_refusal">C2 hybrid without refusal</option>
+          <option value="full_hybrid">C3 full hybrid</option>
+        </select>
+      </div>
+      <div>
+        <label for="warmState">Warm State</label>
+        <select id="warmState">
+          <option value="cold_start">cold_start</option>
+          <option value="warmup">warmup</option>
+          <option value="warm" selected>warm</option>
+        </select>
+      </div>
+      <div>
+        <label for="runId">Run ID</label>
+        <input id="runId" value="pilot_run_001">
+      </div>
+      <button id="runBtn" type="button">Run Condition</button>
+      <button id="toggleEvalBtn" class="secondary" type="button">Show Eval Labels</button>
+      <button id="downloadBtn" class="secondary" type="button" disabled>Download Record</button>
+    </aside>
+
+    <div class="content">
+      <section>
+        <h2>Runtime Input</h2>
+        <div id="queryText"></div>
+        <div class="grid-2" style="margin-top: 10px;">
+          <div>
+            <h3>Routing Inputs</h3>
+            <table><tbody id="routingBody"></tbody></table>
+          </div>
+          <div>
+            <h3>Decisive Evidence</h3>
+            <table>
+              <thead><tr><th>Field</th><th>Value</th><th>State</th></tr></thead>
+              <tbody id="evidenceBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>API Result</h2>
+        <div class="grid-2">
+          <div>
+            <h3>Answer</h3>
+            <pre id="answerBox">No run yet.</pre>
+          </div>
+          <div>
+            <h3>Timings And Contract</h3>
+            <pre id="metricsBox">No run yet.</pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="evalSection" class="hidden">
+        <h2>Evaluator Labels</h2>
+        <pre id="evalBox"></pre>
+      </section>
+
+      <section>
+        <h2>Run Record</h2>
+        <pre id="recordBox">No run yet.</pre>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const state = {
+      runtimeRows: [],
+      evalRows: new Map(),
+      activeQueryId: null,
+      evalVisible: false,
+      latestRecord: null,
+      wasBackgrounded: false,
+      longTaskCount: 0
+    };
+
+    if ("PerformanceObserver" in window) {
+      try {
+        const observer = new PerformanceObserver((list) => {
+          state.longTaskCount += list.getEntries().length;
+        });
+        observer.observe({ type: "longtask", buffered: true });
+      } catch (_error) {
+        // Long Task API is optional.
+      }
+    }
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden") state.wasBackgrounded = true;
+    });
+
+    const el = (id) => document.getElementById(id);
+
+    async function getJson(path) {
+      const res = await fetch(path);
+      if (!res.ok) throw new Error(`${path} returned ${res.status}`);
+      return res.json();
+    }
+
+    function setBadge(id, text, kind) {
+      const node = el(id);
+      node.textContent = text;
+      node.className = `badge ${kind || ""}`.trim();
+    }
+
+    async function loadData() {
+      const health = await getJson("/api/health");
+      const promptVersion = health.prompt_pack_version || "no prompt pack";
+      setBadge("healthBadge", `API ${health.model_backend} · ${promptVersion}`, "good");
+      state.runtimeRows = await getJson("/api/fixtures/runtime");
+      const evalRows = await getJson("/api/fixtures/evaluation");
+      state.evalRows = new Map(evalRows.map((row) => [row.query_id, row]));
+      setBadge("rowBadge", `${state.runtimeRows.length} rows`, "");
+
+      const select = el("querySelect");
+      select.innerHTML = "";
+      for (const row of state.runtimeRows) {
+        const opt = document.createElement("option");
+        opt.value = row.query_id;
+        opt.textContent = row.query_id;
+        select.appendChild(opt);
+      }
+      state.activeQueryId = state.runtimeRows[0]?.query_id || null;
+      renderRuntime();
+    }
+
+    function activeRuntime() {
+      return state.runtimeRows.find((row) => row.query_id === state.activeQueryId);
+    }
+
+    function renderRuntime() {
+      const row = activeRuntime();
+      if (!row) return;
+      el("queryText").textContent = row.query.text;
+      renderPairs(el("routingBody"), row.routing_inputs);
+
+      const record = row.evidence_packet.records[0] || {};
+      const checklist = row.evidence_packet.field_checklist || {};
+      const body = el("evidenceBody");
+      body.innerHTML = "";
+      for (const field of row.evidence_packet.decisive_fields) {
+        const tr = document.createElement("tr");
+        for (const value of [field, record[field] || "", checklist[field] || "not_listed"]) {
+          const td = document.createElement("td");
+          td.textContent = value;
+          tr.appendChild(td);
+        }
+        body.appendChild(tr);
+      }
+      renderEval();
+    }
+
+    function renderPairs(target, obj) {
+      target.innerHTML = "";
+      for (const [key, value] of Object.entries(obj)) {
+        const tr = document.createElement("tr");
+        const k = document.createElement("td");
+        const v = document.createElement("td");
+        k.textContent = key;
+        v.textContent = Array.isArray(value) ? value.join(", ") : String(value);
+        tr.appendChild(k);
+        tr.appendChild(v);
+        target.appendChild(tr);
+      }
+    }
+
+    function renderEval() {
+      const visible = state.evalVisible;
+      el("evalSection").classList.toggle("hidden", !visible);
+      setBadge("evalBadge", visible ? "eval visible" : "eval hidden", visible ? "warn" : "good");
+      const evalRow = state.evalRows.get(state.activeQueryId);
+      el("evalBox").textContent = evalRow ? JSON.stringify(evalRow, null, 2) : "No eval row.";
+    }
+
+    async function runCondition() {
+      const row = activeRuntime();
+      if (!row) return;
+      el("runBtn").disabled = true;
+      el("runBtn").textContent = "Running...";
+      try {
+        const res = await fetch("/api/run", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            query_id: row.query_id,
+            condition: el("conditionSelect").value,
+            warm_state: el("warmState").value,
+            run_id: el("runId").value,
+            client_environment: {
+              visibility_state: document.visibilityState,
+              was_backgrounded: state.wasBackgrounded,
+              long_task_count: state.longTaskCount,
+              user_agent: navigator.userAgent
+            }
+          })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || `API returned ${res.status}`);
+        state.latestRecord = data;
+        el("answerBox").textContent = JSON.stringify(data.answer, null, 2);
+        el("metricsBox").textContent = JSON.stringify({
+          latency: data.latency,
+          auto_contract: data.auto_contract,
+          env_flags: data.env_flags
+        }, null, 2);
+        el("recordBox").textContent = JSON.stringify(data, null, 2);
+        el("downloadBtn").disabled = false;
+      } catch (error) {
+        el("recordBox").textContent = String(error);
+      } finally {
+        el("runBtn").disabled = false;
+        el("runBtn").textContent = "Run Condition";
+      }
+    }
+
+    function downloadRecord() {
+      if (!state.latestRecord) return;
+      const blob = new Blob([JSON.stringify(state.latestRecord, null, 2)], {
+        type: "application/json"
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${state.latestRecord.run_id}_${state.latestRecord.query_id}_${state.latestRecord.condition}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    el("querySelect").addEventListener("change", (event) => {
+      state.activeQueryId = event.target.value;
+      renderRuntime();
+    });
+    el("runBtn").addEventListener("click", runCondition);
+    el("toggleEvalBtn").addEventListener("click", () => {
+      state.evalVisible = !state.evalVisible;
+      el("toggleEvalBtn").textContent = state.evalVisible ? "Hide Eval Labels" : "Show Eval Labels";
+      renderEval();
+    });
+    el("downloadBtn").addEventListener("click", downloadRecord);
+
+    loadData().catch((error) => {
+      setBadge("healthBadge", "API error", "warn");
+      el("recordBox").textContent = String(error);
+    });
+  </script>
+</body>
+</html>

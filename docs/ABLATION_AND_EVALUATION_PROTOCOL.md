@@ -12,6 +12,11 @@ experiment.
 All answer lanes are sent to the local model with the retrieved evidence
 packet.
 
+The baseline must be format-matched to the hybrid conditions. It should use
+the same visible answer sections and labels as the hybrid outputs, but the
+model must generate every value and caveat itself. Do not apply parser rescue,
+post-hoc field repair, or deterministic slot filling in this condition.
+
 Purpose:
 
 - baseline for user-visible latency;
@@ -58,6 +63,43 @@ Key question:
 Does deterministic refusal reduce compliance failures without making the
 assistant over-conservative or less useful?
 
+### Optional Diagnostic: Deterministic Only Subset
+
+An all-deterministic diagnostic may be run on exact-field and refusal-eligible
+rows only. It is not a primary baseline because comparison, recommendation,
+and explanation rows require synthesis.
+
+Purpose:
+
+- estimate the ceiling for contractable exact/refusal tasks;
+- answer reviewer questions about whether the observed effect is merely
+  "more determinism";
+- keep the main paper comparison focused on hybrid answer allocation.
+
+This diagnostic should not be run on mixed-intent rows as if full determinism
+were a realistic assistant condition.
+
+## Validity Controls
+
+All three primary conditions must use the same frozen evidence packet for each
+query:
+
+- same records;
+- same retrieved snippets;
+- same record order;
+- same nulls and missing fields;
+- same contradictions;
+- same source-audit status;
+- same field-state checklist and evidence sufficiency state.
+
+The lane policy may choose not to generate after the packet is frozen, but the
+packet itself must not vary by condition. Otherwise the study becomes a
+retrieval or context-packing comparison rather than an answer-lane comparison.
+
+Execution order and review order should be randomized or counterbalanced.
+Condition names, rule traces, and expected behavior labels should be hidden
+from reviewers during primary scoring.
+
 ## Why Condition 2 Matters
 
 Condition 2 vs Condition 3 directly tests whether refusal lanes hurt usability.
@@ -80,6 +122,7 @@ Rules:
 - Report per-lane results rather than only aggregate results.
 - Flag browser GC, tab suspension, model warmup, and cache state when visible.
 - Avoid absolute P95 success claims from 50 rows.
+- Preserve query pairing across conditions for all planned contrasts.
 
 Initial latency success rule:
 
@@ -96,14 +139,20 @@ Initial latency success rule:
 
 Browser-local model runs must separate cold start and warm execution:
 
-- run 3-5 dummy warmup queries before the measured sequence;
+- run five dummy warmup queries before the measured sequence;
 - mark the first measured query as `cold_start` if the model was not already
   loaded;
 - report cold-start separately from warm rows;
 - apply success criteria to warm rows only.
+- keep anomaly-flagged rows in the primary result and use exclusions only for
+  a labeled sensitivity analysis.
 
 Each measured row should have a companion environment stability entry matching
 `schemas/environment_stability_log_schema.json`.
+
+For v1, pin one browser, OS, model build, quantization, and hardware/GPU
+adapter configuration. Latency claims are within this configuration unless
+replicated elsewhere.
 
 ## Required Metrics
 
@@ -201,14 +250,25 @@ helpfulness drops more than 0.5 points, report a tradeoff.
 
 Exploratory statistical checks:
 
-- Fisher exact test for contract failure counts across conditions.
-- Mann-Whitney U test for warm latency distributions.
-- Mann-Whitney U test or ordinal model for helpfulness scores.
+- exact or mid-p McNemar-style paired tests for binary contract/refusal
+  outcomes on planned condition pairs;
+- Wilcoxon signed-rank or paired permutation tests for warm latency paired by
+  query;
+- Wilcoxon signed-rank, ordinal paired analysis, or paired descriptive
+  summaries for helpfulness scores;
+- paired effect sizes and confidence intervals before p-value rhetoric;
 - Cohen's kappa for categorical review labels.
 - ICC or equivalent agreement metric for 1-5 reviewer scores.
 
 These checks are descriptive at the 50-query milestone. They should not
 replace distribution plots, anomaly logs, or qualitative error analysis.
+Avoid unpaired tests as primary analyses because each condition answers the
+same query set.
+
+Primary planned contrasts:
+
+1. Condition 1 vs Condition 2: deterministic evidence-field delivery.
+2. Condition 2 vs Condition 3: deterministic refusal.
 
 ## Routing Ambiguity Analysis
 

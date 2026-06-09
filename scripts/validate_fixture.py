@@ -48,9 +48,11 @@ def validate_fixture_line(
         return errors
 
     intent = line_obj["query"]["intent_label"]
-    checklist = line_obj["evidence_packet"]["field_checklist"]
-    declared_state = line_obj["evidence_packet"]["aggregated_evidence_state"]
-    computed_state = aggregate_evidence_state(checklist, intent)
+    evidence_packet = line_obj["evidence_packet"]
+    checklist = evidence_packet["field_checklist"]
+    decisive_fields = evidence_packet.get("decisive_fields")
+    declared_state = evidence_packet["aggregated_evidence_state"]
+    computed_state = aggregate_evidence_state(checklist, intent, decisive_fields)
     if declared_state != computed_state:
         errors.append(
             "Evidence state mismatch: "
@@ -62,10 +64,18 @@ def validate_fixture_line(
     if query.get("mixed_intent", False):
         if not query.get("secondary_lanes"):
             errors.append("mixed_intent=true but secondary_lanes is missing or empty")
+        if not decisive_fields:
+            errors.append("mixed_intent=true but evidence_packet.decisive_fields is empty")
         if query["primary_lane"] in query.get("secondary_lanes", []):
             errors.append(
                 f"Warning: primary_lane '{query['primary_lane']}' appears in "
                 "secondary_lanes; review routing labels"
+            )
+
+    for field in decisive_fields or []:
+        if field not in checklist:
+            errors.append(
+                f"Decisive field '{field}' is not present in field_checklist"
             )
 
     if query["primary_lane"] == "deterministic_refusal":

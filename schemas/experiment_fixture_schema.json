@@ -57,6 +57,7 @@
       "required": [
         "records",
         "field_checklist",
+        "decisive_fields",
         "aggregated_evidence_state"
       ],
       "properties": {
@@ -77,6 +78,13 @@
               "not_applicable"
             ]
           }
+        },
+        "decisive_fields": {
+          "type": "array",
+          "description": "Fields that determine the row-level evidence state for this task.",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "uniqueItems": true
         },
         "aggregated_evidence_state": {
           "type": "string",
@@ -132,6 +140,10 @@
         "rights_state": { "type": "string" },
         "reuse_permission": { "type": "string" },
         "public_domain_status": { "type": "string" },
+        "record_origin": {
+          "type": "string",
+          "enum": ["synthetic", "source_audited", "derived_from_public_source"]
+        },
         "image_state_code": { "type": "string" },
         "image_state_label": { "type": "string" },
         "chronology_proof": { "type": "boolean" },

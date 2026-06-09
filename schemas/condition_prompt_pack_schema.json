@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dpan538/browser-local-hybrid-rag-lanes/schemas/condition_prompt_pack_schema.json",
+  "title": "Condition Prompt Pack",
+  "type": "object",
+  "required": [
+    "version",
+    "status",
+    "description",
+    "global_constraints",
+    "answer_sections",
+    "conditions"
+  ],
+  "properties": {
+    "version": { "type": "string" },
+    "status": { "type": "string" },
+    "description": { "type": "string" },
+    "global_constraints": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "answer_sections": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "conditions": {
+      "type": "object",
+      "required": [
+        "all_generation",
+        "hybrid_without_refusal",
+        "full_hybrid"
+      ],
+      "properties": {
+        "all_generation": { "$ref": "#/$defs/condition_prompt" },
+        "hybrid_without_refusal": { "$ref": "#/$defs/condition_prompt" },
+        "full_hybrid": { "$ref": "#/$defs/condition_prompt" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "condition_prompt": {
+      "type": "object",
+      "required": [
+        "label",
+        "model_role",
+        "deterministic_postprocessing_allowed",
+        "deterministic_refusal_allowed",
+        "prompt_template"
+      ],
+      "properties": {
+        "label": { "type": "string" },
+        "model_role": { "type": "string" },
+        "deterministic_postprocessing_allowed": { "type": "boolean" },
+        "deterministic_refusal_allowed": { "type": "boolean" },
+        "prompt_template": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

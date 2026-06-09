@@ -1,0 +1,44 @@
+{
+  "version": "condition_prompt_pack_v1",
+  "status": "draft_for_protocol_freeze",
+  "description": "Prompt scaffolds for the three planned hybrid answer-lane conditions. These prompts are part of the reproducibility contract and should be frozen before paper-facing runs.",
+  "global_constraints": [
+    "Use only the provided evidence packet.",
+    "Separate supplied evidence fields from interpretation.",
+    "Do not infer legal reuse permission from a rights label.",
+    "State when source correctness requires a separate source audit.",
+    "Preserve the visible answer sections across all conditions."
+  ],
+  "answer_sections": [
+    "source",
+    "rights_label",
+    "reuse_permission",
+    "public_domain_status",
+    "research_guidance",
+    "refusal",
+    "caveats"
+  ],
+  "conditions": {
+    "all_generation": {
+      "label": "Condition 1: all generation",
+      "model_role": "Generate every visible answer section from the frozen evidence packet.",
+      "deterministic_postprocessing_allowed": false,
+      "deterministic_refusal_allowed": false,
+      "prompt_template": "Answer the user question using the supplied evidence packet. Generate the source, rights, reuse, public-domain status, research guidance, refusal, and caveat sections yourself. Do not copy deterministic field values through a runtime rule."
+    },
+    "hybrid_without_refusal": {
+      "label": "Condition 2: hybrid without deterministic refusal",
+      "model_role": "Generate only the research guidance and any refusal language while deterministic fields are rendered by the runtime.",
+      "deterministic_postprocessing_allowed": true,
+      "deterministic_refusal_allowed": false,
+      "prompt_template": "Use the deterministic source and rights fields exactly as rendered by the runtime. Generate bounded research guidance from the supplied evidence packet. If evidence is missing, any refusal decision remains a model responsibility in this condition."
+    },
+    "full_hybrid": {
+      "label": "Condition 3: full hybrid",
+      "model_role": "Generate bounded research guidance only when the rule table does not select deterministic refusal.",
+      "deterministic_postprocessing_allowed": true,
+      "deterministic_refusal_allowed": true,
+      "prompt_template": "Use the deterministic source and rights fields exactly as rendered by the runtime. If the rule table selects deterministic refusal, do not generate a substantive answer. Otherwise generate bounded research guidance from the supplied evidence packet."
+    }
+  }
+}

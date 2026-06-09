@@ -76,6 +76,10 @@ The first can be checked mechanically. The second requires source audit.
 - [Open questions](reports/PARALLEL_RESEARCH_HYBRID_LANE_OPEN_QUESTIONS.md)
 - [Methodology build plan](docs/METHODOLOGY_BUILD_PLAN.md)
 - [Paper narrative draft](docs/PAPER_NARRATIVE_DRAFT.md)
+- [Paper positioning decisions](docs/PAPER_POSITIONING_DECISIONS.md)
+- [Protocol revision queue](docs/PROTOCOL_REVISION_QUEUE.md)
+- [Protocol freeze v0](docs/PROTOCOL_FREEZE_V0.md)
+- [Experiment execution plan](docs/EXPERIMENT_EXECUTION_PLAN.md)
 - [Fixture schema](docs/FIXTURE_SCHEMA.md)
 - [Deterministic lane contract](docs/DETERMINISTIC_LANE_CONTRACT.md)
 - [Ablation and evaluation protocol](docs/ABLATION_AND_EVALUATION_PROTOCOL.md)
@@ -87,7 +91,11 @@ The first can be checked mechanically. The second requires source audit.
 
 - [Rule table v1](config/lane_rules_v1.yaml)
 - [Refusal decision matrix](config/refusal_decision_matrix.csv)
+- [Condition prompt pack v1](config/condition_prompt_pack_v1.json)
 - [Experiment fixture schema](schemas/experiment_fixture_schema.json)
+- [Condition prompt pack schema](schemas/condition_prompt_pack_schema.json)
+- [Runtime fixture view schema](schemas/runtime_fixture_view_schema.json)
+- [Evaluation fixture view schema](schemas/evaluation_fixture_view_schema.json)
 - [Run record schema](schemas/run_record_schema.json)
 - [Environment stability log schema](schemas/environment_stability_log_schema.json)
 - [Fixture record schema](schemas/fixture_record_schema.json)
@@ -95,8 +103,20 @@ The first can be checked mechanically. The second requires source audit.
 - [Fixture label schema](schemas/fixture_label_schema.json)
 - [Golden answers schema](schemas/golden_answers_schema.json)
 - [Sample experiment fixture](fixtures/experiment_fixture.jsonl)
+- [Sample runtime fixture view](fixtures/runtime_view/experiment_fixture.runtime.jsonl)
+- [Sample evaluation fixture view](fixtures/evaluation_view/experiment_fixture.eval.jsonl)
 - [Golden answers template](review/golden_answers.json)
 - [Mixed-intent query drafts](fixtures/drafts/mixed_intent_query_drafts.jsonl)
+- [Fixture view splitter](scripts/split_fixture_views.py)
+- [Protocol bundle validator](scripts/validate_protocol_bundle.py)
+- [Flask experiment API](app.py)
+- [Freeze manifest script](scripts/freeze_manifest.py)
+- [Full pilot runner](scripts/run_full_pilot.py)
+- [Auto contract checker](scripts/auto_contract_check.py)
+- [Blind review pack generator](scripts/prepare_blind_review.py)
+- [Blind review merge script](scripts/merge_blind_review.py)
+- [Pilot analysis script](scripts/analysis.py)
+- [Static experiment panel](tools/experiment_panel/README.md)
 - [Analysis notebook placeholder](notebooks/analysis_notebook.ipynb)
 
 ## Validation
@@ -111,6 +131,12 @@ Validate the sample fixture:
 
 ```bash
 python scripts/validate_fixture.py fixtures/experiment_fixture.jsonl
+```
+
+Validate the current protocol bundle:
+
+```bash
+python scripts/validate_protocol_bundle.py
 ```
 
 ## Boundaries

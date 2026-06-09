@@ -21,7 +21,12 @@
         "name": { "type": "string" },
         "version": { "type": "string" },
         "webgpu_adapter": { "type": "string" },
+        "webgpu_adapter_info": {
+          "type": "object",
+          "additionalProperties": true
+        },
         "visibility_state": { "type": "string" },
+        "page_lifecycle_state": { "type": "string" },
         "was_backgrounded": { "type": "boolean" }
       },
       "additionalProperties": true
@@ -40,8 +45,11 @@
       "type": "object",
       "properties": {
         "long_task_count": { "type": "integer", "minimum": 0 },
+        "long_task_total_ms": { "type": "number", "minimum": 0 },
         "max_long_task_ms": { "type": "number", "minimum": 0 },
         "gc_observed": { "type": "boolean" },
+        "webgpu_timestamp_query_supported": { "type": "boolean" },
+        "gpu_timed_span_ms": { "type": ["number", "null"], "minimum": 0 },
         "network_request_count": { "type": "integer", "minimum": 0 },
         "network_error_count": { "type": "integer", "minimum": 0 }
       },
@@ -55,7 +63,9 @@
           "none",
           "tab_backgrounded",
           "browser_gc_or_long_task",
+          "page_hidden_or_frozen",
           "model_warmup",
+          "webgpu_adapter_change",
           "network_variance",
           "manual_interruption",
           "unknown"

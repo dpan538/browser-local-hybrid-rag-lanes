@@ -1,4 +1,5 @@
 # Dependencies and local build output
+.venv/
 node_modules/
 __pycache__/
 *.pyc
@@ -40,6 +41,14 @@ Code Cache/
 *.jpeg
 *.webp
 *.gif
+
+# Generated experiment outputs
+runs/*
+!runs/
+!runs/README.md
+review/blind_pack.json
+review/blind_mapping.json
+review/unblinded_review_records.jsonl
 
 # OS/editor noise
 .DS_Store

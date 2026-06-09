@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/dpan538/browser-local-hybrid-rag-lanes/schemas/runtime_fixture_view_schema.json",
+  "title": "Hybrid Lane Runtime Fixture View",
+  "type": "object",
+  "required": [
+    "fixture_version",
+    "query_id",
+    "query",
+    "routing_inputs",
+    "evidence_packet"
+  ],
+  "properties": {
+    "fixture_version": { "type": "string", "const": "1.0" },
+    "query_id": { "type": "string", "pattern": "^q[0-9]{3}$" },
+    "applicable_conditions": {
+      "type": "array",
+      "items": { "type": "integer", "minimum": 1, "maximum": 3 }
+    },
+    "query": {
+      "type": "object",
+      "required": ["text"],
+      "properties": {
+        "text": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "routing_inputs": {
+      "type": "object",
+      "description": "Runtime-visible router inputs. These are pre-registered operational signals, not evaluator-only labels.",
+      "required": [
+        "rule_version",
+        "intent_signal",
+        "evidence_state",
+        "decisive_fields"
+      ],
+      "properties": {
+        "rule_version": { "type": "string" },
+        "intent_signal": { "type": "string" },
+        "evidence_state": {
+          "type": "string",
+          "enum": [
+            "sufficient",
+            "partial",
+            "missing",
+            "contradictory",
+            "not_applicable"
+          ]
+        },
+        "decisive_fields": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "evidence_packet": { "$ref": "experiment_fixture_schema.json#/properties/evidence_packet" }
+  },
+  "not": {
+    "anyOf": [
+      { "required": ["expected_behavior"] },
+      { "required": ["gold_labels"] },
+      { "required": ["evaluation_labels"] }
+    ]
+  },
+  "additionalProperties": false
+}
