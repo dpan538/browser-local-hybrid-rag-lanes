@@ -93,6 +93,8 @@ The first can be checked mechanically. The second requires source audit.
 - [Qwen WebLLM 10-to-50 gate v0](reports/QWEN_WEBLLM_10_50_GATE_V0.md)
 - [Qwen WebLLM 10-to-50 diagnostics v0](reports/QWEN_WEBLLM_10_50_DIAGNOSTICS_V0.md)
 - [Qwen WebLLM cleaner20 diagnostics v0](reports/QWEN_WEBLLM_CLEANER20_DIAGNOSTICS_V0.md)
+- [Qwen WebLLM cleaner50 stalled partial diagnostics v0](reports/QWEN_WEBLLM_CLEANER50_STALLED_PARTIAL_DIAGNOSTICS_V0.md)
+- [Qwen WebLLM cleaner50 stall triage v0](reports/QWEN_WEBLLM_CLEANER50_STALL_TRIAGE_V0.md)
 - [Methodology build plan](docs/METHODOLOGY_BUILD_PLAN.md)
 - [Paper narrative draft](docs/PAPER_NARRATIVE_DRAFT.md)
 - [Paper positioning decisions](docs/PAPER_POSITIONING_DECISIONS.md)

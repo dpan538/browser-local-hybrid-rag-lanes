@@ -431,3 +431,30 @@ Known limitations:
 - Checkpointing does not solve an underlying WebGPU generation stall; it only
   prevents complete data loss.
 - Raw run records remain ignored and are not committed.
+
+## 2026-06-10: Cleaner50 stalled partial diagnostics
+
+Purpose:
+
+- Record the checkpointed cleaner50 rerun honestly as a stalled partial run.
+- Preserve diagnostics for the 60 schema-valid rows saved through q020.
+- Avoid claiming a completed 50-query scale result when q021
+  `hybrid_without_refusal` stalled in WebLLM streaming generation.
+
+Observed result:
+
+- Saved checkpoint rows: 60.
+- Completed queries: q001-q020.
+- Schema errors: 0.
+- `tab_backgrounded_rows`: 0.
+- `long_task_gc_rows`: 1.
+- q021 `all_generation` completed in-page, but the batch stalled before q021
+  `hybrid_without_refusal` produced a record.
+- After reloading, WebGPU probe also stalled in both the original tab and a new
+  tab, so the in-app browser session was treated as contaminated.
+
+Next experimental step:
+
+- Restart the browser/WebGPU session, then run a focused q021/q022 triage before
+  attempting another full cleaner50.
+- Treat this as a scale-blocker diagnosis, not as a condition-level finding.
