@@ -507,3 +507,33 @@ Next experimental step:
 
 - Run q021-q025 as a timeout-protected microbatch before attempting another
   full cleaner50.
+
+## 2026-06-10: Q021-Q025 microbatch triage result
+
+Purpose:
+
+- Test whether the q021 cleaner50 stall reproduces in a smaller segmented
+  batch with generation timeout enabled.
+
+Observed result:
+
+- Run id: `qwen_webllm_q021_q025_microbatch_v0`.
+- Rows: 15.
+- Schema errors: 0.
+- Contract failures: 0.
+- Generation timeouts: 0.
+- Save errors: 0.
+- `tab_backgrounded_rows`: 2.
+- `long_task_gc_rows`: 1.
+
+Interpretation:
+
+- q021-q025 can complete in a segmented run.
+- The cleaner50 blocker is more likely monolithic-batch/session instability
+  than an intrinsically failing q021 prompt.
+- Latency remains diagnostic only because 2 rows were backgrounded.
+
+Next experimental step:
+
+- Continue segmented microbatches with q026-q030 before attempting another
+  monolithic cleaner50.

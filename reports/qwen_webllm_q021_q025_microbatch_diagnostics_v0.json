@@ -1,0 +1,100 @@
+{
+  "schema": "/Users/jarlgiovanni/Desktop/modern_GD_history/research-repo/browser-local-hybrid-rag-lanes/schemas/run_record_schema.json",
+  "runs": [
+    {
+      "path": "runs/qwen_webllm_q021_q025_microbatch_v0/qwen_webllm_q021_q025_microbatch_v0_records.jsonl",
+      "rows": 15,
+      "queries": 5,
+      "schema_errors": [],
+      "by_condition": {
+        "all_generation": {
+          "rows": 5,
+          "qwen_rows": 5,
+          "deterministic_skip_rows": 0,
+          "contract_failures": 0,
+          "execution_modes": {
+            "generative_answer": 5
+          },
+          "qwen_generation_ms": {
+            "p50": 11574.7,
+            "p90": 19982.48,
+            "p95": 20896.94,
+            "max": 21811.4
+          },
+          "hybrid_system_ms": {
+            "p50": 11574.7,
+            "p90": 19982.58,
+            "p95": 20897.04,
+            "max": 21811.5
+          }
+        },
+        "hybrid_without_refusal": {
+          "rows": 5,
+          "qwen_rows": 5,
+          "deterministic_skip_rows": 0,
+          "contract_failures": 0,
+          "execution_modes": {
+            "generative_answer": 5
+          },
+          "qwen_generation_ms": {
+            "p50": 11318.8,
+            "p90": 16640.24,
+            "p95": 17102.52,
+            "max": 17564.8
+          },
+          "hybrid_system_ms": {
+            "p50": 11318.8,
+            "p90": 16640.38,
+            "p95": 17102.64,
+            "max": 17564.9
+          }
+        },
+        "full_hybrid": {
+          "rows": 5,
+          "qwen_rows": 5,
+          "deterministic_skip_rows": 0,
+          "contract_failures": 0,
+          "execution_modes": {
+            "generative_answer": 5
+          },
+          "qwen_generation_ms": {
+            "p50": 9677.2,
+            "p90": 13401.12,
+            "p95": 14557.46,
+            "max": 15713.8
+          },
+          "hybrid_system_ms": {
+            "p50": 9677.2,
+            "p90": 13401.18,
+            "p95": 14557.54,
+            "max": 15713.9
+          }
+        }
+      },
+      "failure_groups": [],
+      "failure_query_ids": [],
+      "environment": {
+        "cold_start_rows": 0,
+        "warmup_rows": 0,
+        "warm_rows": 15,
+        "tab_backgrounded_rows": 2,
+        "long_task_gc_rows": 1,
+        "network_variance_rows": 0,
+        "manual_interruption_rows": 0
+      },
+      "model": {
+        "qwen_model_meta_rows": 15,
+        "deterministic_meta_rows": 0,
+        "model_ids": [
+          "Qwen3.5-0.8B-q4f16_1-MLC"
+        ],
+        "primary_model_identities": [
+          "Qwen/Qwen3.5-0.8B"
+        ],
+        "model_load_ms_values": [
+          2036.0
+        ]
+      }
+    }
+  ]
+}
