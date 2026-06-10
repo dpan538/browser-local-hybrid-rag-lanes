@@ -100,6 +100,8 @@ The first can be checked mechanically. The second requires source audit.
 - [Qwen WebLLM q021/q022 triage summary v0](reports/QWEN_WEBLLM_Q021_Q022_TRIAGE_SUMMARY_V0.md)
 - [Qwen WebLLM q021-q025 microbatch diagnostics v0](reports/QWEN_WEBLLM_Q021_Q025_MICROBATCH_DIAGNOSTICS_V0.md)
 - [Qwen WebLLM q021-q025 microbatch summary v0](reports/QWEN_WEBLLM_Q021_Q025_MICROBATCH_SUMMARY_V0.md)
+- [Qwen WebLLM q026-q030 microbatch diagnostics v0](reports/QWEN_WEBLLM_Q026_Q030_MICROBATCH_DIAGNOSTICS_V0.md)
+- [Qwen WebLLM q026-q030 microbatch summary v0](reports/QWEN_WEBLLM_Q026_Q030_MICROBATCH_SUMMARY_V0.md)
 - [Methodology build plan](docs/METHODOLOGY_BUILD_PLAN.md)
 - [Paper narrative draft](docs/PAPER_NARRATIVE_DRAFT.md)
 - [Paper positioning decisions](docs/PAPER_POSITIONING_DECISIONS.md)

@@ -537,3 +537,31 @@ Next experimental step:
 
 - Continue segmented microbatches with q026-q030 before attempting another
   monolithic cleaner50.
+
+## 2026-06-10: Q026-Q030 microbatch triage result
+
+Purpose:
+
+- Continue timeout-protected segmented execution after q021-q025 completed.
+
+Observed result:
+
+- Run id: `qwen_webllm_q026_q030_microbatch_v0`.
+- Rows: 15.
+- Schema errors: 0.
+- Contract failures: 0.
+- Generation timeouts: 0.
+- Save errors: 0.
+- `tab_backgrounded_rows`: 15.
+- `long_task_gc_rows`: 0.
+
+Interpretation:
+
+- q026-q030 completed without WebLLM stall.
+- Latency should not be interpreted because all rows were backgrounded.
+- The segmented strategy remains viable for execution stability.
+
+Next experimental step:
+
+- Run q031-q035 with the browser kept foregrounded if latency is part of the
+  claim.
