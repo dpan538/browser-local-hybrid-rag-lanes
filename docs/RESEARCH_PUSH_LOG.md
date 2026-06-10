@@ -760,3 +760,31 @@ Next step:
 
 - Repeat with a larger foreground-controlled segment, preferably q001-q020,
   before rerunning all q001-q050 foregrounded.
+
+## 2026-06-10: Foreground q011-q020 expansion pre-run backup
+
+Purpose:
+
+- Back up the next foreground-controlled Qwen WebLLM segment before execution.
+- Extend q001-q010 coverage to q011-q020 without duplicating rows.
+- Preserve the model boundary as `Qwen/Qwen3.5-0.8B` via
+  `Qwen3.5-0.8B-q4f16_1-MLC`.
+
+Expected output:
+
+```text
+runs/qwen_webllm_foreground_q011_q020_v0/qwen_webllm_foreground_q011_q020_v0_records.jsonl
+```
+
+Success criteria:
+
+- 30 records.
+- Schema errors: 0.
+- Generation timeouts: 0.
+- Save errors: 0.
+- `tab_backgrounded_rows`: 0.
+
+Known limitation:
+
+- If any row is backgrounded, this segment remains useful for stability
+  diagnostics but not clean latency evidence.
