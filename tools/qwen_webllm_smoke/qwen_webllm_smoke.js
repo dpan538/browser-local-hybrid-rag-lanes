@@ -731,6 +731,22 @@ function clearRecords() {
   log("Cleared in-page records.");
 }
 
+function applyUrlDefaults() {
+  const params = new URLSearchParams(window.location.search);
+  const defaults = [
+    ["run_id", "runId"],
+    ["batch_start", "batchStart"],
+    ["batch_limit", "batchLimit"],
+    ["max_tokens", "maxTokens"],
+    ["generation_timeout_ms", "generationTimeoutMs"],
+    ["temperature", "temperature"]
+  ];
+  for (const [param, id] of defaults) {
+    const value = params.get(param);
+    if (value !== null) el(id).value = value;
+  }
+}
+
 async function loadData() {
   state.health = await getJson("/api/health");
   state.promptPack = await getJson("/api/prompt-pack");
@@ -780,6 +796,8 @@ el("run10Btn").addEventListener("click", runFirst10);
 el("run50Btn").addEventListener("click", runFirst50);
 el("saveBtn").addEventListener("click", () => saveRecords({ allowOverwrite: false }));
 el("clearBtn").addEventListener("click", clearRecords);
+
+applyUrlDefaults();
 
 window.__qwenSmoke = {
   state,
