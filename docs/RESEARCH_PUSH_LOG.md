@@ -482,3 +482,28 @@ Known limitations:
 
 - A timeout record is pipeline evidence, not model-quality evidence.
 - If WebGPU probe still hangs after restart, the q021 triage cannot proceed.
+
+## 2026-06-10: Q021/Q022 focused triage result
+
+Purpose:
+
+- Test whether q021 `hybrid_without_refusal` is intrinsically prone to WebLLM
+  stall.
+- Run q021 and nearby q022 under a fresh Codex in-app browser/WebGPU session.
+
+Observed result:
+
+- q021 C2 completed without timeout: 6808.4 ms Qwen generation.
+- q022 C2 completed without timeout: 16264.3 ms Qwen generation.
+- Both records were schema-valid and used `Qwen3.5-0.8B-q4f16_1-MLC`.
+
+Interpretation:
+
+- q021 itself is not an inevitable stall case.
+- The cleaner50 stall is more likely tied to long-batch/session-state
+  accumulation after q001-q020.
+
+Next experimental step:
+
+- Run q021-q025 as a timeout-protected microbatch before attempting another
+  full cleaner50.

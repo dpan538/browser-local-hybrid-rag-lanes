@@ -1,0 +1,96 @@
+{
+  "schema": "/Users/jarlgiovanni/Desktop/modern_GD_history/research-repo/browser-local-hybrid-rag-lanes/schemas/run_record_schema.json",
+  "runs": [
+    {
+      "path": "runs/qwen_webllm_q022_triage_v0/qwen_webllm_q022_triage_v0_records.jsonl",
+      "rows": 1,
+      "queries": 1,
+      "schema_errors": [],
+      "by_condition": {
+        "all_generation": {
+          "rows": 0,
+          "qwen_rows": 0,
+          "deterministic_skip_rows": 0,
+          "contract_failures": 0,
+          "execution_modes": {},
+          "qwen_generation_ms": {
+            "p50": null,
+            "p90": null,
+            "p95": null,
+            "max": null
+          },
+          "hybrid_system_ms": {
+            "p50": null,
+            "p90": null,
+            "p95": null,
+            "max": null
+          }
+        },
+        "hybrid_without_refusal": {
+          "rows": 1,
+          "qwen_rows": 1,
+          "deterministic_skip_rows": 0,
+          "contract_failures": 0,
+          "execution_modes": {
+            "generative_answer": 1
+          },
+          "qwen_generation_ms": {
+            "p50": 16264.3,
+            "p90": 16264.3,
+            "p95": 16264.3,
+            "max": 16264.3
+          },
+          "hybrid_system_ms": {
+            "p50": 16264.3,
+            "p90": 16264.3,
+            "p95": 16264.3,
+            "max": 16264.3
+          }
+        },
+        "full_hybrid": {
+          "rows": 0,
+          "qwen_rows": 0,
+          "deterministic_skip_rows": 0,
+          "contract_failures": 0,
+          "execution_modes": {},
+          "qwen_generation_ms": {
+            "p50": null,
+            "p90": null,
+            "p95": null,
+            "max": null
+          },
+          "hybrid_system_ms": {
+            "p50": null,
+            "p90": null,
+            "p95": null,
+            "max": null
+          }
+        }
+      },
+      "failure_groups": [],
+      "failure_query_ids": [],
+      "environment": {
+        "cold_start_rows": 0,
+        "warmup_rows": 0,
+        "warm_rows": 1,
+        "tab_backgrounded_rows": 0,
+        "long_task_gc_rows": 0,
+        "network_variance_rows": 0,
+        "manual_interruption_rows": 0
+      },
+      "model": {
+        "qwen_model_meta_rows": 1,
+        "deterministic_meta_rows": 0,
+        "model_ids": [
+          "Qwen3.5-0.8B-q4f16_1-MLC"
+        ],
+        "primary_model_identities": [
+          "Qwen/Qwen3.5-0.8B"
+        ],
+        "model_load_ms_values": [
+          2036.0
+        ]
+      }
+    }
+  ]
+}
