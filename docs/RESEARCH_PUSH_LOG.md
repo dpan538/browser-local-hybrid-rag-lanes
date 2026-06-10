@@ -651,3 +651,33 @@ Next experimental step:
 
 - Repeat segmented execution with stronger foreground control if latency claims
   are needed.
+
+## 2026-06-10: Segmented 150 aggregation script
+
+Purpose:
+
+- Add a reusable aggregation script for multi-file Qwen/WebLLM segmented runs.
+- Replace hand-merged segment summaries with a single condition-level aggregate
+  that checks row coverage, duplicate pairs, missing pairs, schema validity,
+  contract failures, generation errors, timeouts, environment flags, and model
+  identity.
+
+Observed aggregate:
+
+- Rows: 150.
+- Queries: 50.
+- Schema errors: 0.
+- Duplicate query-condition pairs: 0.
+- Missing query-condition pairs: 0.
+- `all_generation` contract failures: 15.
+- `hybrid_without_refusal` contract failures: 15.
+- `full_hybrid` contract failures: 0.
+- Generation errors/timeouts: 0.
+- `tab_backgrounded_rows`: 77.
+
+Interpretation:
+
+- The segmented run set provides complete fixture coverage for pipeline and
+  contract diagnostics.
+- Latency remains diagnostic only because the aggregate includes backgrounded
+  rows.

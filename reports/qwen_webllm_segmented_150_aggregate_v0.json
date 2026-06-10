@@ -1,0 +1,200 @@
+{
+  "schema": "/Users/jarlgiovanni/Desktop/modern_GD_history/research-repo/browser-local-hybrid-rag-lanes/schemas/run_record_schema.json",
+  "inputs": [
+    {
+      "path": "runs/qwen_webllm_cleaner50_v0/qwen_webllm_cleaner50_v0_records.jsonl",
+      "rows": 60,
+      "queries": 20,
+      "query_range": [
+        "q001",
+        "q020"
+      ]
+    },
+    {
+      "path": "runs/qwen_webllm_q021_q025_microbatch_v0/qwen_webllm_q021_q025_microbatch_v0_records.jsonl",
+      "rows": 15,
+      "queries": 5,
+      "query_range": [
+        "q021",
+        "q025"
+      ]
+    },
+    {
+      "path": "runs/qwen_webllm_q026_q030_microbatch_v0/qwen_webllm_q026_q030_microbatch_v0_records.jsonl",
+      "rows": 15,
+      "queries": 5,
+      "query_range": [
+        "q026",
+        "q030"
+      ]
+    },
+    {
+      "path": "runs/qwen_webllm_q031_q035_microbatch_v0/qwen_webllm_q031_q035_microbatch_v0_records.jsonl",
+      "rows": 15,
+      "queries": 5,
+      "query_range": [
+        "q031",
+        "q035"
+      ]
+    },
+    {
+      "path": "runs/qwen_webllm_q036_q040_microbatch_v0/qwen_webllm_q036_q040_microbatch_v0_records.jsonl",
+      "rows": 15,
+      "queries": 5,
+      "query_range": [
+        "q036",
+        "q040"
+      ]
+    },
+    {
+      "path": "runs/qwen_webllm_q041_q050_microbatch_v0/qwen_webllm_q041_q050_microbatch_v0_records.jsonl",
+      "rows": 30,
+      "queries": 10,
+      "query_range": [
+        "q041",
+        "q050"
+      ]
+    }
+  ],
+  "rows": 150,
+  "queries": 50,
+  "schema_errors": [],
+  "duplicate_pairs": [],
+  "missing_pairs": [],
+  "by_condition": {
+    "all_generation": {
+      "rows": 50,
+      "qwen_rows": 50,
+      "deterministic_skip_rows": 0,
+      "contract_failures": 15,
+      "execution_modes": {
+        "generative_answer": 50
+      },
+      "qwen_generation_ms": {
+        "p50": 10880.7,
+        "p90": 17383.55,
+        "p95": 21242.6,
+        "max": 24968.6
+      },
+      "hybrid_system_ms": {
+        "p50": 10880.75,
+        "p90": 17383.64,
+        "p95": 21242.7,
+        "max": 24968.6
+      }
+    },
+    "hybrid_without_refusal": {
+      "rows": 50,
+      "qwen_rows": 42,
+      "deterministic_skip_rows": 8,
+      "contract_failures": 15,
+      "execution_modes": {
+        "deterministic_render": 8,
+        "generative_answer": 32,
+        "compound_answer": 10
+      },
+      "qwen_generation_ms": {
+        "p50": 9803.8,
+        "p90": 15142.75,
+        "p95": 17390.17,
+        "max": 23485.2
+      },
+      "hybrid_system_ms": {
+        "p50": 8619.75,
+        "p90": 14257.57,
+        "p95": 16571.53,
+        "max": 23485.3
+      }
+    },
+    "full_hybrid": {
+      "rows": 50,
+      "qwen_rows": 27,
+      "deterministic_skip_rows": 23,
+      "contract_failures": 0,
+      "execution_modes": {
+        "deterministic_render": 8,
+        "deterministic_refusal": 15,
+        "generative_answer": 21,
+        "compound_answer": 6
+      },
+      "qwen_generation_ms": {
+        "p50": 9896.5,
+        "p90": 17527.02,
+        "p95": 18954.45,
+        "max": 19193.8
+      },
+      "hybrid_system_ms": {
+        "p50": 6627.05,
+        "p90": 12922.46,
+        "p95": 17846.34,
+        "max": 19193.9
+      }
+    }
+  },
+  "by_condition_generation_errors": {
+    "all_generation": 0,
+    "hybrid_without_refusal": 0,
+    "full_hybrid": 0
+  },
+  "by_condition_timeouts": {
+    "all_generation": 0,
+    "hybrid_without_refusal": 0,
+    "full_hybrid": 0
+  },
+  "failure_groups": [
+    {
+      "condition": "all_generation",
+      "fail_keys": [
+        "refusal_expected_alignment"
+      ],
+      "count": 15
+    },
+    {
+      "condition": "hybrid_without_refusal",
+      "fail_keys": [
+        "refusal_expected_alignment"
+      ],
+      "count": 15
+    }
+  ],
+  "failure_query_ids": [
+    "q009",
+    "q010",
+    "q011",
+    "q012",
+    "q013",
+    "q014",
+    "q015",
+    "q016",
+    "q017",
+    "q018",
+    "q019",
+    "q043",
+    "q044",
+    "q047",
+    "q048"
+  ],
+  "environment": {
+    "cold_start_rows": 1,
+    "warmup_rows": 0,
+    "warm_rows": 150,
+    "tab_backgrounded_rows": 77,
+    "long_task_gc_rows": 2,
+    "network_variance_rows": 0,
+    "manual_interruption_rows": 0
+  },
+  "model": {
+    "qwen_model_meta_rows": 119,
+    "deterministic_meta_rows": 31,
+    "model_ids": [
+      "Qwen3.5-0.8B-q4f16_1-MLC"
+    ],
+    "primary_model_identities": [
+      "Qwen/Qwen3.5-0.8B"
+    ],
+    "model_load_ms_values": [
+      2036.0,
+      2621.8
+    ]
+  }
+}
