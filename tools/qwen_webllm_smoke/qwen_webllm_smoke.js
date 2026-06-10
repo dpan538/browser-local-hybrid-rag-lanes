@@ -781,6 +781,27 @@ el("run50Btn").addEventListener("click", runFirst50);
 el("saveBtn").addEventListener("click", () => saveRecords({ allowOverwrite: false }));
 el("clearBtn").addEventListener("click", clearRecords);
 
+window.__qwenSmoke = {
+  state,
+  probeWebGPU,
+  loadEngine,
+  runBatch,
+  runCondition,
+  saveRecords,
+  clearRecords,
+  status() {
+    return {
+      records: state.records.length,
+      engine_loaded: Boolean(state.engine),
+      model_load_ms: state.modelLoadMs,
+      webgpu: state.webgpu,
+      visibility_state: document.visibilityState,
+      was_backgrounded: state.wasBackgrounded,
+      long_task_count: state.longTaskCount
+    };
+  }
+};
+
 loadData().catch((error) => {
   setBadge("healthBadge", "API error", "bad");
   log(`INIT ERROR: ${error?.message || String(error)}`);
