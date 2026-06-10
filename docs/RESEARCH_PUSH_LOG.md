@@ -869,3 +869,53 @@ Known limitation:
 - This segment is expected to contain much more generation than q001-q020, so
   latency remains diagnostic until repeated foreground-controlled runs confirm
   stability.
+
+## 2026-06-10: Foreground q021-q035 run and diagnostics
+
+Purpose:
+
+- Execute the predeclared q021-q035 foreground-controlled Qwen WebLLM segment.
+- Stress a generative-heavy section covering comparison, recommendation, and
+  explanation rows.
+
+Run artifact:
+
+```text
+runs/qwen_webllm_foreground_q021_q035_v0/qwen_webllm_foreground_q021_q035_v0_records.jsonl
+```
+
+Reports:
+
+```text
+reports/QWEN_WEBLLM_FOREGROUND_Q021_Q035_DIAGNOSTICS_V0.md
+reports/QWEN_WEBLLM_FOREGROUND_Q021_Q035_SUMMARY_V0.md
+reports/qwen_webllm_foreground_q021_q035_diagnostics_v0.json
+```
+
+Result:
+
+- Rows: 45.
+- Schema errors: 0.
+- Generation timeouts: 0.
+- `tab_backgrounded_rows`: 0.
+- `long_task_gc_rows`: 1.
+- Model id: `Qwen3.5-0.8B-q4f16_1-MLC`.
+- Primary model identity: `Qwen/Qwen3.5-0.8B`.
+
+Contract signal:
+
+- `all_generation`: 0 contract failures.
+- `hybrid_without_refusal`: 0 contract failures.
+- `full_hybrid`: 0 contract failures.
+- Failure ids: none.
+
+Interpretation:
+
+- This segment behaved as a generative-heavy reference: all 45 rows invoked
+  Qwen and no deterministic skip rows were observed.
+- Latency is therefore similar across the three conditions in this segment.
+- The foreground-control path remains stable across a longer Qwen-heavy run.
+
+Next step:
+
+- Run q036-q050 as the remaining foreground-controlled segment.
