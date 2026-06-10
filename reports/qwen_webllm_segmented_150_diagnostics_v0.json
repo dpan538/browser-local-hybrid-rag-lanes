@@ -1,0 +1,626 @@
+{
+  "schema": "/Users/jarlgiovanni/Desktop/modern_GD_history/research-repo/browser-local-hybrid-rag-lanes/schemas/run_record_schema.json",
+  "runs": [
+    {
+      "path": "runs/qwen_webllm_cleaner50_v0/qwen_webllm_cleaner50_v0_records.jsonl",
+      "rows": 60,
+      "queries": 20,
+      "schema_errors": [],
+      "by_condition": {
+        "all_generation": {
+          "rows": 20,
+          "qwen_rows": 20,
+          "deterministic_skip_rows": 0,
+          "contract_failures": 11,
+          "execution_modes": {
+            "generative_answer": 20
+          },
+          "qwen_generation_ms": {
+            "p50": 14079.75,
+            "p90": 20891.96,
+            "p95": 24041.78,
+            "max": 24968.6
+          },
+          "hybrid_system_ms": {
+            "p50": 14079.8,
+            "p90": 20892.06,
+            "p95": 24041.87,
+            "max": 24968.6
+          }
+        },
+        "hybrid_without_refusal": {
+          "rows": 20,
+          "qwen_rows": 12,
+          "deterministic_skip_rows": 8,
+          "contract_failures": 11,
+          "execution_modes": {
+            "deterministic_render": 8,
+            "generative_answer": 12
+          },
+          "qwen_generation_ms": {
+            "p50": 6822.55,
+            "p90": 14086.29,
+            "p95": 18349.13,
+            "max": 23485.2
+          },
+          "hybrid_system_ms": {
+            "p50": 6223.95,
+            "p90": 13601.5,
+            "p95": 14613.82,
+            "max": 23485.3
+          }
+        },
+        "full_hybrid": {
+          "rows": 20,
+          "qwen_rows": 1,
+          "deterministic_skip_rows": 19,
+          "contract_failures": 0,
+          "execution_modes": {
+            "deterministic_render": 8,
+            "deterministic_refusal": 11,
+            "generative_answer": 1
+          },
+          "qwen_generation_ms": {
+            "p50": 18804.3,
+            "p90": 18804.3,
+            "p95": 18804.3,
+            "max": 18804.3
+          },
+          "hybrid_system_ms": {
+            "p50": 0.0,
+            "p90": 0.01,
+            "p95": 940.31,
+            "max": 18804.3
+          }
+        }
+      },
+      "failure_groups": [
+        {
+          "condition": "all_generation",
+          "fail_keys": [
+            "refusal_expected_alignment"
+          ],
+          "count": 11
+        },
+        {
+          "condition": "hybrid_without_refusal",
+          "fail_keys": [
+            "refusal_expected_alignment"
+          ],
+          "count": 11
+        }
+      ],
+      "failure_query_ids": [
+        "q009",
+        "q010",
+        "q011",
+        "q012",
+        "q013",
+        "q014",
+        "q015",
+        "q016",
+        "q017",
+        "q018",
+        "q019"
+      ],
+      "environment": {
+        "cold_start_rows": 1,
+        "warmup_rows": 0,
+        "warm_rows": 60,
+        "tab_backgrounded_rows": 0,
+        "long_task_gc_rows": 1,
+        "network_variance_rows": 0,
+        "manual_interruption_rows": 0
+      },
+      "model": {
+        "qwen_model_meta_rows": 33,
+        "deterministic_meta_rows": 27,
+        "model_ids": [
+          "Qwen3.5-0.8B-q4f16_1-MLC"
+        ],
+        "primary_model_identities": [
+          "Qwen/Qwen3.5-0.8B"
+        ],
+        "model_load_ms_values": [
+          2621.8
+        ]
+      }
+    },
+    {
+      "path": "runs/qwen_webllm_q021_q025_microbatch_v0/qwen_webllm_q021_q025_microbatch_v0_records.jsonl",
+      "rows": 15,
+      "queries": 5,
+      "schema_errors": [],
+      "by_condition": {
+        "all_generation": {
+          "rows": 5,
+          "qwen_rows": 5,
+          "deterministic_skip_rows": 0,
+          "contract_failures": 0,
+          "execution_modes": {
+            "generative_answer": 5
+          },
+          "qwen_generation_ms": {
+            "p50": 11574.7,
+            "p90": 19982.48,
+            "p95": 20896.94,
+            "max": 21811.4
+          },
+          "hybrid_system_ms": {
+            "p50": 11574.7,
+            "p90": 19982.58,
+            "p95": 20897.04,
+            "max": 21811.5
+          }
+        },
+        "hybrid_without_refusal": {
+          "rows": 5,
+          "qwen_rows": 5,
+          "deterministic_skip_rows": 0,
+          "contract_failures": 0,
+          "execution_modes": {
+            "generative_answer": 5
+          },
+          "qwen_generation_ms": {
+            "p50": 11318.8,
+            "p90": 16640.24,
+            "p95": 17102.52,
+            "max": 17564.8
+          },
+          "hybrid_system_ms": {
+            "p50": 11318.8,
+            "p90": 16640.38,
+            "p95": 17102.64,
+            "max": 17564.9
+          }
+        },
+        "full_hybrid": {
+          "rows": 5,
+          "qwen_rows": 5,
+          "deterministic_skip_rows": 0,
+          "contract_failures": 0,
+          "execution_modes": {
+            "generative_answer": 5
+          },
+          "qwen_generation_ms": {
+            "p50": 9677.2,
+            "p90": 13401.12,
+            "p95": 14557.46,
+            "max": 15713.8
+          },
+          "hybrid_system_ms": {
+            "p50": 9677.2,
+            "p90": 13401.18,
+            "p95": 14557.54,
+            "max": 15713.9
+          }
+        }
+      },
+      "failure_groups": [],
+      "failure_query_ids": [],
+      "environment": {
+        "cold_start_rows": 0,
+        "warmup_rows": 0,
+        "warm_rows": 15,
+        "tab_backgrounded_rows": 2,
+        "long_task_gc_rows": 1,
+        "network_variance_rows": 0,
+        "manual_interruption_rows": 0
+      },
+      "model": {
+        "qwen_model_meta_rows": 15,
+        "deterministic_meta_rows": 0,
+        "model_ids": [
+          "Qwen3.5-0.8B-q4f16_1-MLC"
+        ],
+        "primary_model_identities": [
+          "Qwen/Qwen3.5-0.8B"
+        ],
+        "model_load_ms_values": [
+          2036.0
+        ]
+      }
+    },
+    {
+      "path": "runs/qwen_webllm_q026_q030_microbatch_v0/qwen_webllm_q026_q030_microbatch_v0_records.jsonl",
+      "rows": 15,
+      "queries": 5,
+      "schema_errors": [],
+      "by_condition": {
+        "all_generation": {
+          "rows": 5,
+          "qwen_rows": 5,
+          "deterministic_skip_rows": 0,
+          "contract_failures": 0,
+          "execution_modes": {
+            "generative_answer": 5
+          },
+          "qwen_generation_ms": {
+            "p50": 10878.4,
+            "p90": 11123.78,
+            "p95": 11204.04,
+            "max": 11284.3
+          },
+          "hybrid_system_ms": {
+            "p50": 10878.5,
+            "p90": 11123.78,
+            "p95": 11204.04,
+            "max": 11284.3
+          }
+        },
+        "hybrid_without_refusal": {
+          "rows": 5,
+          "qwen_rows": 5,
+          "deterministic_skip_rows": 0,
+          "contract_failures": 0,
+          "execution_modes": {
+            "generative_answer": 5
+          },
+          "qwen_generation_ms": {
+            "p50": 11036.4,
+            "p90": 11759.86,
+            "p95": 11918.58,
+            "max": 12077.3
+          },
+          "hybrid_system_ms": {
+            "p50": 11036.4,
+            "p90": 11759.86,
+            "p95": 11918.58,
+            "max": 12077.3
+          }
+        },
+        "full_hybrid": {
+          "rows": 5,
+          "qwen_rows": 5,
+          "deterministic_skip_rows": 0,
+          "contract_failures": 0,
+          "execution_modes": {
+            "generative_answer": 5
+          },
+          "qwen_generation_ms": {
+            "p50": 11265.7,
+            "p90": 11850.54,
+            "p95": 11908.42,
+            "max": 11966.3
+          },
+          "hybrid_system_ms": {
+            "p50": 11265.8,
+            "p90": 11850.58,
+            "p95": 11908.44,
+            "max": 11966.3
+          }
+        }
+      },
+      "failure_groups": [],
+      "failure_query_ids": [],
+      "environment": {
+        "cold_start_rows": 0,
+        "warmup_rows": 0,
+        "warm_rows": 15,
+        "tab_backgrounded_rows": 15,
+        "long_task_gc_rows": 0,
+        "network_variance_rows": 0,
+        "manual_interruption_rows": 0
+      },
+      "model": {
+        "qwen_model_meta_rows": 15,
+        "deterministic_meta_rows": 0,
+        "model_ids": [
+          "Qwen3.5-0.8B-q4f16_1-MLC"
+        ],
+        "primary_model_identities": [
+          "Qwen/Qwen3.5-0.8B"
+        ],
+        "model_load_ms_values": [
+          2036.0
+        ]
+      }
+    },
+    {
+      "path": "runs/qwen_webllm_q031_q035_microbatch_v0/qwen_webllm_q031_q035_microbatch_v0_records.jsonl",
+      "rows": 15,
+      "queries": 5,
+      "schema_errors": [],
+      "by_condition": {
+        "all_generation": {
+          "rows": 5,
+          "qwen_rows": 5,
+          "deterministic_skip_rows": 0,
+          "contract_failures": 0,
+          "execution_modes": {
+            "generative_answer": 5
+          },
+          "qwen_generation_ms": {
+            "p50": 14682.9,
+            "p90": 17173.76,
+            "p95": 17202.18,
+            "max": 17230.6
+          },
+          "hybrid_system_ms": {
+            "p50": 14683.0,
+            "p90": 17173.76,
+            "p95": 17202.18,
+            "max": 17230.6
+          }
+        },
+        "hybrid_without_refusal": {
+          "rows": 5,
+          "qwen_rows": 5,
+          "deterministic_skip_rows": 0,
+          "contract_failures": 0,
+          "execution_modes": {
+            "generative_answer": 5
+          },
+          "qwen_generation_ms": {
+            "p50": 8681.4,
+            "p90": 16673.86,
+            "p95": 17083.18,
+            "max": 17492.5
+          },
+          "hybrid_system_ms": {
+            "p50": 8681.4,
+            "p90": 16673.86,
+            "p95": 17083.18,
+            "max": 17492.5
+          }
+        },
+        "full_hybrid": {
+          "rows": 5,
+          "qwen_rows": 5,
+          "deterministic_skip_rows": 0,
+          "contract_failures": 0,
+          "execution_modes": {
+            "generative_answer": 5
+          },
+          "qwen_generation_ms": {
+            "p50": 16675.5,
+            "p90": 19123.8,
+            "p95": 19158.8,
+            "max": 19193.8
+          },
+          "hybrid_system_ms": {
+            "p50": 16675.5,
+            "p90": 19123.86,
+            "p95": 19158.88,
+            "max": 19193.9
+          }
+        }
+      },
+      "failure_groups": [],
+      "failure_query_ids": [],
+      "environment": {
+        "cold_start_rows": 0,
+        "warmup_rows": 0,
+        "warm_rows": 15,
+        "tab_backgrounded_rows": 15,
+        "long_task_gc_rows": 0,
+        "network_variance_rows": 0,
+        "manual_interruption_rows": 0
+      },
+      "model": {
+        "qwen_model_meta_rows": 15,
+        "deterministic_meta_rows": 0,
+        "model_ids": [
+          "Qwen3.5-0.8B-q4f16_1-MLC"
+        ],
+        "primary_model_identities": [
+          "Qwen/Qwen3.5-0.8B"
+        ],
+        "model_load_ms_values": [
+          2036.0
+        ]
+      }
+    },
+    {
+      "path": "runs/qwen_webllm_q036_q040_microbatch_v0/qwen_webllm_q036_q040_microbatch_v0_records.jsonl",
+      "rows": 15,
+      "queries": 5,
+      "schema_errors": [],
+      "by_condition": {
+        "all_generation": {
+          "rows": 5,
+          "qwen_rows": 5,
+          "deterministic_skip_rows": 0,
+          "contract_failures": 0,
+          "execution_modes": {
+            "generative_answer": 5
+          },
+          "qwen_generation_ms": {
+            "p50": 8523.2,
+            "p90": 8552.22,
+            "p95": 8553.26,
+            "max": 8554.3
+          },
+          "hybrid_system_ms": {
+            "p50": 8523.3,
+            "p90": 8552.26,
+            "p95": 8553.28,
+            "max": 8554.3
+          }
+        },
+        "hybrid_without_refusal": {
+          "rows": 5,
+          "qwen_rows": 5,
+          "deterministic_skip_rows": 0,
+          "contract_failures": 0,
+          "execution_modes": {
+            "generative_answer": 5
+          },
+          "qwen_generation_ms": {
+            "p50": 8534.1,
+            "p90": 8687.96,
+            "p95": 8723.08,
+            "max": 8758.2
+          },
+          "hybrid_system_ms": {
+            "p50": 8534.1,
+            "p90": 8688.06,
+            "p95": 8723.18,
+            "max": 8758.3
+          }
+        },
+        "full_hybrid": {
+          "rows": 5,
+          "qwen_rows": 5,
+          "deterministic_skip_rows": 0,
+          "contract_failures": 0,
+          "execution_modes": {
+            "generative_answer": 5
+          },
+          "qwen_generation_ms": {
+            "p50": 8538.8,
+            "p90": 8666.18,
+            "p95": 8701.94,
+            "max": 8737.7
+          },
+          "hybrid_system_ms": {
+            "p50": 8538.8,
+            "p90": 8666.18,
+            "p95": 8701.94,
+            "max": 8737.7
+          }
+        }
+      },
+      "failure_groups": [],
+      "failure_query_ids": [],
+      "environment": {
+        "cold_start_rows": 0,
+        "warmup_rows": 0,
+        "warm_rows": 15,
+        "tab_backgrounded_rows": 15,
+        "long_task_gc_rows": 0,
+        "network_variance_rows": 0,
+        "manual_interruption_rows": 0
+      },
+      "model": {
+        "qwen_model_meta_rows": 15,
+        "deterministic_meta_rows": 0,
+        "model_ids": [
+          "Qwen3.5-0.8B-q4f16_1-MLC"
+        ],
+        "primary_model_identities": [
+          "Qwen/Qwen3.5-0.8B"
+        ],
+        "model_load_ms_values": [
+          2036.0
+        ]
+      }
+    },
+    {
+      "path": "runs/qwen_webllm_q041_q050_microbatch_v0/qwen_webllm_q041_q050_microbatch_v0_records.jsonl",
+      "rows": 30,
+      "queries": 10,
+      "schema_errors": [],
+      "by_condition": {
+        "all_generation": {
+          "rows": 10,
+          "qwen_rows": 10,
+          "deterministic_skip_rows": 0,
+          "contract_failures": 4,
+          "execution_modes": {
+            "generative_answer": 10
+          },
+          "qwen_generation_ms": {
+            "p50": 9888.65,
+            "p90": 12680.09,
+            "p95": 12832.59,
+            "max": 12985.1
+          },
+          "hybrid_system_ms": {
+            "p50": 9888.65,
+            "p90": 12680.09,
+            "p95": 12832.59,
+            "max": 12985.1
+          }
+        },
+        "hybrid_without_refusal": {
+          "rows": 10,
+          "qwen_rows": 10,
+          "deterministic_skip_rows": 0,
+          "contract_failures": 4,
+          "execution_modes": {
+            "compound_answer": 10
+          },
+          "qwen_generation_ms": {
+            "p50": 10019.8,
+            "p90": 12700.21,
+            "p95": 12724.56,
+            "max": 12748.9
+          },
+          "hybrid_system_ms": {
+            "p50": 10019.85,
+            "p90": 12700.3,
+            "p95": 12724.6,
+            "max": 12748.9
+          }
+        },
+        "full_hybrid": {
+          "rows": 10,
+          "qwen_rows": 6,
+          "deterministic_skip_rows": 4,
+          "contract_failures": 0,
+          "execution_modes": {
+            "compound_answer": 6,
+            "deterministic_refusal": 4
+          },
+          "qwen_generation_ms": {
+            "p50": 9941.35,
+            "p90": 11351.25,
+            "p95": 11981.78,
+            "max": 12612.3
+          },
+          "hybrid_system_ms": {
+            "p50": 9341.15,
+            "p90": 10342.41,
+            "p95": 11477.36,
+            "max": 12612.3
+          }
+        }
+      },
+      "failure_groups": [
+        {
+          "condition": "all_generation",
+          "fail_keys": [
+            "refusal_expected_alignment"
+          ],
+          "count": 4
+        },
+        {
+          "condition": "hybrid_without_refusal",
+          "fail_keys": [
+            "refusal_expected_alignment"
+          ],
+          "count": 4
+        }
+      ],
+      "failure_query_ids": [
+        "q043",
+        "q044",
+        "q047",
+        "q048"
+      ],
+      "environment": {
+        "cold_start_rows": 0,
+        "warmup_rows": 0,
+        "warm_rows": 30,
+        "tab_backgrounded_rows": 30,
+        "long_task_gc_rows": 0,
+        "network_variance_rows": 0,
+        "manual_interruption_rows": 0
+      },
+      "model": {
+        "qwen_model_meta_rows": 26,
+        "deterministic_meta_rows": 4,
+        "model_ids": [
+          "Qwen3.5-0.8B-q4f16_1-MLC"
+        ],
+        "primary_model_identities": [
+          "Qwen/Qwen3.5-0.8B"
+        ],
+        "model_load_ms_values": [
+          2036.0
+        ]
+      }
+    }
+  ]
+}

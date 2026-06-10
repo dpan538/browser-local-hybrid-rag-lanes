@@ -621,3 +621,33 @@ Interpretation:
 Next experimental step:
 
 - Run q041-q050 as the final mixed-intent segment.
+
+## 2026-06-10: Q041-Q050 microbatch and segmented 150 diagnostic
+
+Purpose:
+
+- Complete the remaining mixed-intent q041-q050 segment.
+- Aggregate the stalled cleaner50 partial plus segmented reruns into a full
+  150-row diagnostic coverage set.
+
+Observed result:
+
+- q041-q050 rows: 30.
+- q041-q050 schema errors: 0.
+- q041-q050 generation timeouts: 0.
+- q041-q050 save errors: 0.
+- q041-q050 contract failures: 4 in all-generation, 4 in
+  hybrid-without-refusal, 0 in full-hybrid.
+- Segmented coverage now represents 150 rows across q001-q050.
+
+Interpretation:
+
+- Segmented execution recovered the full fixture after the monolithic cleaner50
+  stall.
+- This is a methodology result about execution stability and checkpointing.
+- Latency is not clean because most segmented rows were marked backgrounded.
+
+Next experimental step:
+
+- Repeat segmented execution with stronger foreground control if latency claims
+  are needed.
