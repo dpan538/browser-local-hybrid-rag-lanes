@@ -619,8 +619,10 @@ async function runBatch(start, limit, runId) {
         el("conditionSelect").value = condition;
         await runCondition(row, condition);
       }
+      await saveRecords({ allowOverwrite: true });
+      log(`Checkpoint saved after ${row.query_id}.`);
     }
-    await saveRecords({ allowOverwrite: false });
+    await saveRecords({ allowOverwrite: true });
     log(`Batch ${runId} completed and save was requested.`);
   } finally {
     el("runScopeBtn").disabled = false;

@@ -405,3 +405,29 @@ Known limitations:
 - Raw Qwen/WebLLM answers are not committed.
 - No claim is made yet about user-facing usability or source-audited semantic
   correctness.
+
+## 2026-06-10: Cleaner50 interruption recovery hardening
+
+Purpose:
+
+- Fix the long-batch failure mode observed when cleaner50 was interrupted
+  before final save.
+- Add per-query checkpoint saves during Qwen/WebLLM batch execution, preserving
+  completed records if Codex, the browser, or WebGPU exits mid-run.
+- Keep final output under the same run id by intentionally overwriting the
+  latest checkpoint when the batch completes.
+- Align Flask environment flags with the frontend by treating `long_task_gc` as
+  a per-row delta signal only.
+
+Expected effect:
+
+- A restarted cleaner50 run should produce incremental files under
+  `runs/qwen_webllm_cleaner50_v0/` before the final 150-row output.
+- If a later query stalls, the partial checkpoint can be diagnosed rather than
+  discarded.
+
+Known limitations:
+
+- Checkpointing does not solve an underlying WebGPU generation stall; it only
+  prevents complete data loss.
+- Raw run records remain ignored and are not committed.

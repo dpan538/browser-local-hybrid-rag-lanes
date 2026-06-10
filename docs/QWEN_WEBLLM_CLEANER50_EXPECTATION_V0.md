@@ -29,10 +29,17 @@ reports/qwen_webllm_cleaner50_diagnostics_v0.json
 - Schema errors should remain 0.
 - `tab_backgrounded_rows` should remain 0 if the browser stays foregrounded.
 - `long_task_gc_rows` should be lower than the old 10-to-50 run because the
-  panel now records per-row long-task deltas.
+  panel and Flask API now record per-row long-task deltas.
 - Failure groups are expected to remain concentrated around
   `refusal_expected_alignment`; this is an ablation signal to inspect, not a
   standalone finding.
+
+## Recovery Behavior
+
+The browser panel saves a checkpoint after each query's three conditions using
+the same run id. If Codex, the browser, or WebGPU exits before the final row,
+the partial JSONL file should preserve completed records instead of losing the
+entire batch.
 
 ## Interpretation Boundary
 

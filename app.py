@@ -336,7 +336,6 @@ def environment_flags(payload: Dict[str, Any]) -> Dict[str, Any]:
     client_env = payload.get("client_environment", {}) or {}
     warm_state = payload.get("warm_state", "warm")
     long_task_delta = int(client_env.get("long_task_count_delta", 0) or 0)
-    long_task_total = int(client_env.get("long_task_count", 0) or 0)
     return {
         "cold_start": SERVER_STATE["request_count"] == 1 or warm_state == "cold_start",
         "warmup": warm_state == "warmup",
@@ -345,7 +344,7 @@ def environment_flags(payload: Dict[str, Any]) -> Dict[str, Any]:
             client_env.get("visibility_state") == "hidden"
             or bool(client_env.get("was_backgrounded", False))
         ),
-        "long_task_gc": bool(long_task_delta or long_task_total),
+        "long_task_gc": bool(long_task_delta),
         "network_variance": False,
         "manual_interruption": False,
         "client_environment": client_env,
