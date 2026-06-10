@@ -949,3 +949,56 @@ Known limitation:
 - This segment may mix all-generation, generative guidance, and compound
   answer lanes; latency should remain diagnostic until aggregate analysis is
   complete.
+
+## 2026-06-10: Foreground q036-q050 run and contaminated diagnostics
+
+Purpose:
+
+- Execute the predeclared q036-q050 Qwen WebLLM segment.
+- Complete q001-q050 foreground-attempt coverage.
+- Capture recommendation and mixed-intent behavior, including compound answers
+  and deterministic refusals.
+
+Run artifact:
+
+```text
+runs/qwen_webllm_foreground_q036_q050_v0/qwen_webllm_foreground_q036_q050_v0_records.jsonl
+```
+
+Reports:
+
+```text
+reports/QWEN_WEBLLM_FOREGROUND_Q036_Q050_DIAGNOSTICS_V0.md
+reports/QWEN_WEBLLM_FOREGROUND_Q036_Q050_SUMMARY_V0.md
+reports/qwen_webllm_foreground_q036_q050_diagnostics_v0.json
+```
+
+Result:
+
+- Rows: 45.
+- Schema errors: 0.
+- Generation timeouts: 0.
+- `tab_backgrounded_rows`: 18.
+- `long_task_gc_rows`: 2.
+- Model id: `Qwen3.5-0.8B-q4f16_1-MLC`.
+- Primary model identity: `Qwen/Qwen3.5-0.8B`.
+
+Contract signal:
+
+- `all_generation`: 4 contract failures.
+- `hybrid_without_refusal`: 4 contract failures.
+- `full_hybrid`: 0 contract failures.
+- Failure ids: `q043`, `q044`, `q047`, `q048`.
+- Failure group: `refusal_expected_alignment`.
+
+Interpretation:
+
+- The run is valid for contract/stability diagnostics.
+- The run is not clean latency evidence because it was backgrounded mid-run.
+- The full-hybrid deterministic refusal lane again removes refusal-alignment
+  failures observed in conditions without deterministic refusal.
+
+Next step:
+
+- Rerun q036-q050 with stronger foreground protection before using it in a
+  clean latency aggregate.
