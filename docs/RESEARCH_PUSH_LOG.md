@@ -594,3 +594,30 @@ Next experimental step:
 
 - Run q036-q040 and q041-q050 as remaining segments, then aggregate segment
   diagnostics.
+
+## 2026-06-10: Q036-Q040 microbatch triage result
+
+Purpose:
+
+- Continue timeout-protected segmented execution after q031-q035 completed.
+
+Observed result:
+
+- Run id: `qwen_webllm_q036_q040_microbatch_v0`.
+- Rows: 15.
+- Schema errors: 0.
+- Contract failures: 0.
+- Generation timeouts: 0.
+- Save errors: 0.
+- `tab_backgrounded_rows`: 15.
+- `long_task_gc_rows`: 0.
+
+Interpretation:
+
+- q036-q040 completed without WebLLM stall.
+- Latency should not be interpreted because all rows were backgrounded.
+- Segmented execution has now completed q021-q040.
+
+Next experimental step:
+
+- Run q041-q050 as the final mixed-intent segment.
