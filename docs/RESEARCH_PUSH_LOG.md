@@ -1065,3 +1065,35 @@ Next step:
 
 - Rerun q036-q050 with stricter foreground protection, then regenerate a clean
   q001-q050 aggregate.
+
+## 2026-06-10: Foreground q036-q050 split rerun pre-run backup
+
+Purpose:
+
+- Back up the rerun plan for replacing the latency-contaminated q036-q050
+  segment.
+- Split q036-q050 into shorter foreground-controlled runs:
+  `q036-q042` and `q043-q050`.
+- Preserve the model boundary as `Qwen/Qwen3.5-0.8B` via
+  `Qwen3.5-0.8B-q4f16_1-MLC`.
+
+Expected outputs:
+
+```text
+runs/qwen_webllm_foreground_q036_q042_split_v0/qwen_webllm_foreground_q036_q042_split_v0_records.jsonl
+runs/qwen_webllm_foreground_q043_q050_split_v0/qwen_webllm_foreground_q043_q050_split_v0_records.jsonl
+```
+
+Success criteria:
+
+- q036-q042: 21 records.
+- q043-q050: 24 records.
+- Schema errors: 0.
+- Generation timeouts: 0.
+- Save errors: 0.
+- `tab_backgrounded_rows`: 0 for each split segment.
+
+Known limitation:
+
+- If either shorter segment is backgrounded, keep that segment as contaminated
+  and rerun only the affected range.

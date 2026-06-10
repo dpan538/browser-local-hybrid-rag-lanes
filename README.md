@@ -139,6 +139,7 @@ The first can be checked mechanically. The second requires source audit.
 - [Qwen WebLLM foreground q011-q020 expectation v0](docs/QWEN_WEBLLM_FOREGROUND_Q011_Q020_EXPECTATION_V0.md)
 - [Qwen WebLLM foreground q021-q035 expectation v0](docs/QWEN_WEBLLM_FOREGROUND_Q021_Q035_EXPECTATION_V0.md)
 - [Qwen WebLLM foreground q036-q050 expectation v0](docs/QWEN_WEBLLM_FOREGROUND_Q036_Q050_EXPECTATION_V0.md)
+- [Qwen WebLLM foreground q036-q050 split rerun expectation v0](docs/QWEN_WEBLLM_FOREGROUND_Q036_Q050_SPLIT_RERUN_EXPECTATION_V0.md)
 - [Fixture expansion plan v0](docs/FIXTURE_EXPANSION_PLAN_V0.md)
 - [Source audit and promotion gate v0](docs/SOURCE_AUDIT_AND_PROMOTION_GATE_V0.md)
 - [Experiment execution plan](docs/EXPERIMENT_EXECUTION_PLAN.md)
