@@ -371,3 +371,37 @@ Known limitations:
 
 - This backup does not include cleaner20 outputs.
 - Cleaner20 is an instrumentation check, not a paper finding.
+
+## 2026-06-10: Qwen WebLLM cleaner20 diagnostics and cleaner50 pre-run backup
+
+Purpose:
+
+- Record the completed cleaner20 run as a diagnostics artifact while keeping
+  raw run records ignored under `runs/`.
+- Confirm that the corrected row-delta `long_task_gc` instrumentation and
+  foregrounded Codex browser path produced cleaner environment flags.
+- Back up the cleaner50 expectation before starting the full 50-query rerun.
+
+Cleaner20 diagnostic result:
+
+- 60 run records: 20 queries across 3 conditions.
+- Schema errors: 0.
+- `tab_backgrounded_rows`: 0.
+- `long_task_gc_rows`: 3.
+- Failure groups remain concentrated on `refusal_expected_alignment`, which is
+  useful for ablation triage but not yet a paper finding.
+
+Cleaner50 expected output:
+
+```text
+runs/qwen_webllm_cleaner50_v0/qwen_webllm_cleaner50_v0_records.jsonl
+reports/QWEN_WEBLLM_CLEANER50_DIAGNOSTICS_V0.md
+reports/qwen_webllm_cleaner50_diagnostics_v0.json
+```
+
+Known limitations:
+
+- Cleaner20 and cleaner50 are still instrumentation and pipeline checks.
+- Raw Qwen/WebLLM answers are not committed.
+- No claim is made yet about user-facing usability or source-audited semantic
+  correctness.
