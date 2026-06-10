@@ -839,3 +839,33 @@ Interpretation:
 Next step:
 
 - Run q021-q035 as a foreground-controlled generative-heavy segment.
+
+## 2026-06-10: Foreground q021-q035 generative-heavy pre-run backup
+
+Purpose:
+
+- Back up the next foreground-controlled Qwen WebLLM segment before execution.
+- Stress comparison, recommendation, and explanation lanes where Qwen
+  generation is expected to dominate.
+- Preserve the model boundary as `Qwen/Qwen3.5-0.8B` via
+  `Qwen3.5-0.8B-q4f16_1-MLC`.
+
+Expected output:
+
+```text
+runs/qwen_webllm_foreground_q021_q035_v0/qwen_webllm_foreground_q021_q035_v0_records.jsonl
+```
+
+Success criteria:
+
+- 45 records.
+- Schema errors: 0.
+- Generation timeouts: 0.
+- Save errors: 0.
+- `tab_backgrounded_rows`: 0.
+
+Known limitation:
+
+- This segment is expected to contain much more generation than q001-q020, so
+  latency remains diagnostic until repeated foreground-controlled runs confirm
+  stability.

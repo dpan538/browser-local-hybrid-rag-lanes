@@ -131,6 +131,7 @@ The first can be checked mechanically. The second requires source audit.
 - [Qwen WebLLM q021 triage expectation v0](docs/QWEN_WEBLLM_Q021_TRIAGE_EXPECTATION_V0.md)
 - [Qwen WebLLM foreground q001-q010 expectation v0](docs/QWEN_WEBLLM_FOREGROUND_Q001_Q010_EXPECTATION_V0.md)
 - [Qwen WebLLM foreground q011-q020 expectation v0](docs/QWEN_WEBLLM_FOREGROUND_Q011_Q020_EXPECTATION_V0.md)
+- [Qwen WebLLM foreground q021-q035 expectation v0](docs/QWEN_WEBLLM_FOREGROUND_Q021_Q035_EXPECTATION_V0.md)
 - [Fixture expansion plan v0](docs/FIXTURE_EXPANSION_PLAN_V0.md)
 - [Source audit and promotion gate v0](docs/SOURCE_AUDIT_AND_PROMOTION_GATE_V0.md)
 - [Experiment execution plan](docs/EXPERIMENT_EXECUTION_PLAN.md)
