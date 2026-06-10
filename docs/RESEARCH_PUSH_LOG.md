@@ -681,3 +681,30 @@ Interpretation:
   contract diagnostics.
 - Latency remains diagnostic only because the aggregate includes backgrounded
   rows.
+
+## 2026-06-10: Foreground q001-q010 clean-latency pre-run backup
+
+Purpose:
+
+- Back up the first foreground-controlled segmented rerun before starting it.
+- Test whether Codex in-app browser execution can keep `tab_backgrounded_rows`
+  at 0 for a small 30-row segment.
+
+Expected output:
+
+```text
+runs/qwen_webllm_foreground_q001_q010_v0/qwen_webllm_foreground_q001_q010_v0_records.jsonl
+```
+
+Success criteria:
+
+- 30 records.
+- Schema errors: 0.
+- Generation timeouts: 0.
+- Save errors: 0.
+- `tab_backgrounded_rows`: 0.
+
+Known limitation:
+
+- If any row is backgrounded, the run is still useful for stability but not
+  clean latency evidence.
