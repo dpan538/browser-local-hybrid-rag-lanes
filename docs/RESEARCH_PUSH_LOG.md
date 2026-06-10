@@ -919,3 +919,33 @@ Interpretation:
 Next step:
 
 - Run q036-q050 as the remaining foreground-controlled segment.
+
+## 2026-06-10: Foreground q036-q050 final segment pre-run backup
+
+Purpose:
+
+- Back up the final foreground-controlled Qwen WebLLM segment before execution.
+- Complete q001-q050 foreground coverage by running q036-q050.
+- Stress recommendation and mixed-intent rows, including compound answer lanes.
+- Preserve the model boundary as `Qwen/Qwen3.5-0.8B` via
+  `Qwen3.5-0.8B-q4f16_1-MLC`.
+
+Expected output:
+
+```text
+runs/qwen_webllm_foreground_q036_q050_v0/qwen_webllm_foreground_q036_q050_v0_records.jsonl
+```
+
+Success criteria:
+
+- 45 records.
+- Schema errors: 0.
+- Generation timeouts: 0.
+- Save errors: 0.
+- `tab_backgrounded_rows`: 0.
+
+Known limitation:
+
+- This segment may mix all-generation, generative guidance, and compound
+  answer lanes; latency should remain diagnostic until aggregate analysis is
+  complete.
