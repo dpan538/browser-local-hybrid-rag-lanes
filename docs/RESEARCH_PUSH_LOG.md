@@ -565,3 +565,32 @@ Next experimental step:
 
 - Run q031-q035 with the browser kept foregrounded if latency is part of the
   claim.
+
+## 2026-06-10: Q031-Q035 microbatch triage result
+
+Purpose:
+
+- Continue timeout-protected segmented execution after q026-q030 completed.
+
+Observed result:
+
+- Run id: `qwen_webllm_q031_q035_microbatch_v0`.
+- Rows: 15.
+- Schema errors: 0.
+- Contract failures: 0.
+- Generation timeouts: 0.
+- Save errors: 0.
+- `tab_backgrounded_rows`: 15.
+- `long_task_gc_rows`: 0.
+
+Interpretation:
+
+- q031-q035 completed without WebLLM stall.
+- Latency should not be interpreted because all rows were backgrounded.
+- The segmented strategy has now completed q021-q035 after the cleaner50
+  monolithic stall.
+
+Next experimental step:
+
+- Run q036-q040 and q041-q050 as remaining segments, then aggregate segment
+  diagnostics.
