@@ -111,6 +111,8 @@ The first can be checked mechanically. The second requires source audit.
 - [Qwen WebLLM segmented 150 diagnostics v0](reports/QWEN_WEBLLM_SEGMENTED_150_DIAGNOSTICS_V0.md)
 - [Qwen WebLLM segmented 150 summary v0](reports/QWEN_WEBLLM_SEGMENTED_150_SUMMARY_V0.md)
 - [Qwen WebLLM segmented 150 aggregate v0](reports/QWEN_WEBLLM_SEGMENTED_150_AGGREGATE_V0.md)
+- [Qwen WebLLM foreground q001-q010 diagnostics v0](reports/QWEN_WEBLLM_FOREGROUND_Q001_Q010_DIAGNOSTICS_V0.md)
+- [Qwen WebLLM foreground q001-q010 summary v0](reports/QWEN_WEBLLM_FOREGROUND_Q001_Q010_SUMMARY_V0.md)
 - [Methodology build plan](docs/METHODOLOGY_BUILD_PLAN.md)
 - [Paper narrative draft](docs/PAPER_NARRATIVE_DRAFT.md)
 - [Paper positioning decisions](docs/PAPER_POSITIONING_DECISIONS.md)
