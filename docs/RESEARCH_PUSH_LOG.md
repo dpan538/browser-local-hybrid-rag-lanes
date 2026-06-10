@@ -1002,3 +1002,66 @@ Next step:
 
 - Rerun q036-q050 with stronger foreground protection before using it in a
   clean latency aggregate.
+
+## 2026-06-10: Foreground aggregate split
+
+Purpose:
+
+- Aggregate the foreground-controlled segments without hiding the q036-q050
+  backgrounding event.
+- Preserve a clean latency boundary for q001-q035 and a separate q001-q050
+  foreground-attempt aggregate.
+
+Reports:
+
+```text
+reports/QWEN_WEBLLM_FOREGROUND_CLEAN_Q001_Q035_AGGREGATE_V0.md
+reports/qwen_webllm_foreground_clean_q001_q035_aggregate_v0.json
+reports/QWEN_WEBLLM_FOREGROUND_ATTEMPT_Q001_Q050_AGGREGATE_V0.md
+reports/qwen_webllm_foreground_attempt_q001_q050_aggregate_v0.json
+```
+
+Clean q001-q035 aggregate:
+
+- Rows: 105.
+- Queries: 35.
+- Schema errors: 0.
+- Duplicate query-condition pairs: 0.
+- Missing query-condition pairs: 0.
+- `tab_backgrounded_rows`: 0.
+- `long_task_gc_rows`: 3.
+- Contract failures:
+  - `all_generation`: 11.
+  - `hybrid_without_refusal`: 11.
+  - `full_hybrid`: 0.
+- Failure group: `refusal_expected_alignment`.
+- Failure ids: `q009`-`q019`.
+
+Foreground-attempt q001-q050 aggregate:
+
+- Rows: 150.
+- Queries: 50.
+- Schema errors: 0.
+- Duplicate query-condition pairs: 0.
+- Missing query-condition pairs: 0.
+- `tab_backgrounded_rows`: 18.
+- `long_task_gc_rows`: 5.
+- Contract failures:
+  - `all_generation`: 15.
+  - `hybrid_without_refusal`: 15.
+  - `full_hybrid`: 0.
+- Failure ids: `q009`-`q019`, `q043`, `q044`, `q047`, `q048`.
+
+Interpretation:
+
+- q001-q035 is the current clean foreground set for latency diagnostics.
+- q001-q050 is complete for contract coverage but contaminated for clean
+  latency because q036-q050 was backgrounded mid-run.
+- The main ablation signal remains refusal-lane related: conditions without
+  deterministic refusal show refusal alignment failures; full hybrid has 0
+  contract failures across both aggregates.
+
+Next step:
+
+- Rerun q036-q050 with stricter foreground protection, then regenerate a clean
+  q001-q050 aggregate.

@@ -119,6 +119,8 @@ The first can be checked mechanically. The second requires source audit.
 - [Qwen WebLLM foreground q021-q035 summary v0](reports/QWEN_WEBLLM_FOREGROUND_Q021_Q035_SUMMARY_V0.md)
 - [Qwen WebLLM foreground q036-q050 diagnostics v0](reports/QWEN_WEBLLM_FOREGROUND_Q036_Q050_DIAGNOSTICS_V0.md)
 - [Qwen WebLLM foreground q036-q050 summary v0](reports/QWEN_WEBLLM_FOREGROUND_Q036_Q050_SUMMARY_V0.md)
+- [Qwen WebLLM foreground clean q001-q035 aggregate v0](reports/QWEN_WEBLLM_FOREGROUND_CLEAN_Q001_Q035_AGGREGATE_V0.md)
+- [Qwen WebLLM foreground attempt q001-q050 aggregate v0](reports/QWEN_WEBLLM_FOREGROUND_ATTEMPT_Q001_Q050_AGGREGATE_V0.md)
 - [Methodology build plan](docs/METHODOLOGY_BUILD_PLAN.md)
 - [Paper narrative draft](docs/PAPER_NARRATIVE_DRAFT.md)
 - [Paper positioning decisions](docs/PAPER_POSITIONING_DECISIONS.md)
