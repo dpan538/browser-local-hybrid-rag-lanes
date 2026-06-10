@@ -1097,3 +1097,48 @@ Known limitation:
 
 - If either shorter segment is backgrounded, keep that segment as contaminated
   and rerun only the affected range.
+
+## 2026-06-10: q036-q042 split contaminated run and focus rerun plan
+
+Purpose:
+
+- Record the first split rerun of q036-q042.
+- Preserve it as contaminated foreground-control evidence because it was
+  backgrounded during generation.
+- Predeclare a stronger focus-keeper rerun for q036-q042.
+
+Run artifact:
+
+```text
+runs/qwen_webllm_foreground_q036_q042_split_v0/qwen_webllm_foreground_q036_q042_split_v0_records.jsonl
+```
+
+Reports:
+
+```text
+reports/QWEN_WEBLLM_FOREGROUND_Q036_Q042_SPLIT_DIAGNOSTICS_V0.md
+reports/QWEN_WEBLLM_FOREGROUND_Q036_Q042_SPLIT_SUMMARY_V0.md
+reports/qwen_webllm_foreground_q036_q042_split_diagnostics_v0.json
+```
+
+Result:
+
+- Rows: 21.
+- Schema errors: 0.
+- Generation timeouts: 0.
+- Contract failures: 0.
+- `tab_backgrounded_rows`: 21.
+- `long_task_gc_rows`: 3.
+
+Interpretation:
+
+- Segment length alone did not solve the Codex in-app browser backgrounding
+  issue.
+- This artifact is retained for contract/stability diagnostics but must not
+  be used as clean latency evidence.
+
+Next step:
+
+- Rerun q036-q042 as
+  `qwen_webllm_foreground_q036_q042_focus_v0` while a foreground keeper
+  repeatedly sets Codex as the frontmost app.
