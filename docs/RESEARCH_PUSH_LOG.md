@@ -458,3 +458,27 @@ Next experimental step:
 - Restart the browser/WebGPU session, then run a focused q021/q022 triage before
   attempting another full cleaner50.
 - Treat this as a scale-blocker diagnosis, not as a condition-level finding.
+
+## 2026-06-10: Q021 triage timeout hardening pre-run backup
+
+Purpose:
+
+- Add a generation timeout control to the Qwen/WebLLM panel.
+- Convert WebLLM streaming stalls into explicit run records with
+  `generation_error` metadata, rather than freezing the whole batch.
+- Back up the q021 focused triage expectation before rerunning after a clean
+  browser/WebGPU restart.
+
+Expected first run:
+
+```text
+run_id: qwen_webllm_q021_triage_v0
+query: q021
+condition: hybrid_without_refusal
+generation_timeout_ms: 120000
+```
+
+Known limitations:
+
+- A timeout record is pipeline evidence, not model-quality evidence.
+- If WebGPU probe still hangs after restart, the q021 triage cannot proceed.

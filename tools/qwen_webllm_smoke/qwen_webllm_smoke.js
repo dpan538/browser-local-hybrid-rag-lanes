@@ -286,6 +286,43 @@ async function streamCompletion(prompt) {
   };
 }
 
+function generationTimeoutMs() {
+  const value = Number(el("generationTimeoutMs")?.value || 120000);
+  return Math.max(5000, value);
+}
+
+function interruptGenerationIfAvailable() {
+  const interrupt = state.engine?.interruptGenerate;
+  if (typeof interrupt === "function") {
+    try {
+      interrupt.call(state.engine);
+      log("Requested WebLLM generation interrupt after timeout.");
+    } catch (error) {
+      log(`WebLLM interrupt failed: ${error?.message || String(error)}`);
+    }
+  }
+}
+
+async function streamCompletionWithTimeout(prompt) {
+  const timeoutMs = generationTimeoutMs();
+  let timerId = null;
+  const generation = streamCompletion(prompt);
+  generation.catch((error) => {
+    log(`Late generation error: ${error?.message || String(error)}`);
+  });
+  const timeout = new Promise((_resolve, reject) => {
+    timerId = window.setTimeout(() => {
+      interruptGenerationIfAvailable();
+      reject(new Error(`qwen_generation_timeout_${timeoutMs}ms`));
+    }, timeoutMs);
+  });
+  try {
+    return await Promise.race([generation, timeout]);
+  } finally {
+    if (timerId !== null) window.clearTimeout(timerId);
+  }
+}
+
 function answerRefused(answer) {
   const value = String(answer.refusal || "").trim().toLowerCase();
   return Boolean(value && value !== "none" && value !== "null");
@@ -437,6 +474,7 @@ async function runCondition(row, condition) {
   };
   const answer = baseAnswer(executionMode);
   let generated = null;
+  let generationError = null;
   let prompt = "";
 
   if (executionMode === "deterministic_refusal") {
@@ -454,21 +492,31 @@ async function runCondition(row, condition) {
     if (needsGeneration) {
       prompt = buildPrompt(row, condition);
       const genStarted = performance.now();
-      generated = await streamCompletion(prompt);
-      timings.qwen_generation_latency_ms = performance.now() - genStarted;
-      timings.ttft_ms = generated.ttft_ms;
-      timings.tokens_per_second = generated.tokens_per_second;
-      const parsed = generated.parsed_answer || {};
-      answer.research_guidance = String(parsed.research_guidance || generated.cleaned_answer_text || "");
-      answer.refusal = parsed.refusal === undefined ? null : parsed.refusal;
-      answer.caveats = Array.isArray(parsed.caveats)
-        ? [...parsed.caveats, "evidence_correctness_requires_source_audit"]
-        : answer.caveats;
-      if (condition === "all_generation") {
-        answer.source = String(parsed.source || generated.cleaned_answer_text || "");
-        answer.rights_label = String(parsed.rights_label || generated.cleaned_answer_text || "");
-        answer.reuse_permission = String(parsed.reuse_permission || generated.cleaned_answer_text || "");
-        answer.public_domain_status = String(parsed.public_domain_status || generated.cleaned_answer_text || "");
+      try {
+        generated = await streamCompletionWithTimeout(prompt);
+      } catch (error) {
+        generationError = error;
+        answer.research_guidance = "";
+        answer.caveats.push("qwen_generation_error");
+        log(`GENERATION ERROR ${row.query_id} ${condition}: ${error?.message || String(error)}`);
+      } finally {
+        timings.qwen_generation_latency_ms = performance.now() - genStarted;
+      }
+      if (generated) {
+        timings.ttft_ms = generated.ttft_ms;
+        timings.tokens_per_second = generated.tokens_per_second;
+        const parsed = generated.parsed_answer || {};
+        answer.research_guidance = String(parsed.research_guidance || generated.cleaned_answer_text || "");
+        answer.refusal = parsed.refusal === undefined ? null : parsed.refusal;
+        answer.caveats = Array.isArray(parsed.caveats)
+          ? [...parsed.caveats, "evidence_correctness_requires_source_audit"]
+          : answer.caveats;
+        if (condition === "all_generation") {
+          answer.source = String(parsed.source || generated.cleaned_answer_text || "");
+          answer.rights_label = String(parsed.rights_label || generated.cleaned_answer_text || "");
+          answer.reuse_permission = String(parsed.reuse_permission || generated.cleaned_answer_text || "");
+          answer.public_domain_status = String(parsed.public_domain_status || generated.cleaned_answer_text || "");
+        }
       }
     }
     if (condition === "full_hybrid" && !answer.refusal) answer.refusal = "none";
@@ -508,7 +556,9 @@ async function runCondition(row, condition) {
       format_consistency_score: null,
       compound_answer: executionMode === "compound_answer"
     },
-    protocol_artifacts: {},
+    protocol_artifacts: generationError ? {
+      generation_error: generationError?.message || String(generationError)
+    } : {},
     answer: {
       ...answer,
       model_meta: generated ? {
@@ -522,6 +572,19 @@ async function runCondition(row, condition) {
         prompt_chars: prompt.length,
         prompt_tokens_est: Math.ceil(prompt.length / 4),
         output_tokens: generated.output_tokens
+      } : generationError ? {
+        producer: "webllm_qwen3_5_0_8b_research_runtime",
+        primary_model_identity: "Qwen/Qwen3.5-0.8B",
+        model_id: el("modelId").value.trim(),
+        model_url: el("modelUrl").value.trim(),
+        model_lib_url: el("modelLibUrl").value.trim(),
+        model_load_ms: state.modelLoadMs,
+        qwen_invoked: true,
+        generation_error: generationError?.message || String(generationError),
+        raw_answer_text: "",
+        prompt_chars: prompt.length,
+        prompt_tokens_est: Math.ceil(prompt.length / 4),
+        output_tokens: 0
       } : {
         producer: "deterministic_hybrid_system_v1",
         primary_model_identity: "Qwen/Qwen3.5-0.8B",
