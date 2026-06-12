@@ -1184,3 +1184,71 @@ Interpretation:
 Next step:
 
 - Run q043-q050 using the same manual Codex browser foreground path.
+
+## 2026-06-12: q043-q050 clean split and q001-q050 clean aggregate
+
+Purpose:
+
+- Complete the remaining q043-q050 foreground-controlled split after the
+  q036-q042 focus rerun succeeded.
+- Regenerate the full clean q001-q050 aggregate using q036-q042 focus and
+  q043-q050 split in place of the background-contaminated q036-q050 attempt.
+- Preserve the model boundary as `Qwen/Qwen3.5-0.8B` via
+  `Qwen3.5-0.8B-q4f16_1-MLC`.
+
+Run artifact:
+
+```text
+runs/qwen_webllm_foreground_q043_q050_split_v0/qwen_webllm_foreground_q043_q050_split_v0_records.jsonl
+```
+
+Reports:
+
+```text
+reports/QWEN_WEBLLM_FOREGROUND_Q043_Q050_SPLIT_DIAGNOSTICS_V0.md
+reports/QWEN_WEBLLM_FOREGROUND_Q043_Q050_SPLIT_SUMMARY_V0.md
+reports/qwen_webllm_foreground_q043_q050_split_diagnostics_v0.json
+reports/QWEN_WEBLLM_FOREGROUND_CLEAN_Q001_Q050_AGGREGATE_V0.md
+reports/qwen_webllm_foreground_clean_q001_q050_aggregate_v0.json
+```
+
+q043-q050 split result:
+
+- Rows: 24.
+- Schema errors: 0.
+- Generation timeouts: 0.
+- `tab_backgrounded_rows`: 0.
+- `long_task_gc_rows`: 1.
+- Contract failures:
+  - `all_generation`: 4.
+  - `hybrid_without_refusal`: 4.
+  - `full_hybrid`: 0.
+- Failure ids: `q043`, `q044`, `q047`, `q048`.
+
+Clean q001-q050 aggregate:
+
+- Rows: 150.
+- Queries: 50.
+- Schema errors: 0.
+- Duplicate query-condition pairs: 0.
+- Missing query-condition pairs: 0.
+- `tab_backgrounded_rows`: 0.
+- `long_task_gc_rows`: 5.
+- Contract failures:
+  - `all_generation`: 15.
+  - `hybrid_without_refusal`: 15.
+  - `full_hybrid`: 0.
+- Failure ids: `q009`-`q019`, `q043`, `q044`, `q047`, `q048`.
+
+Interpretation:
+
+- The full 50-query foreground-controlled Qwen/WebLLM instrumentation set is
+  now complete without tab-background contamination.
+- This is still exploratory instrumentation, not a paper-facing finding.
+- The current contract signal remains refusal-lane related: conditions without
+  deterministic refusal show refusal alignment failures, while full hybrid has
+  0 automatic contract failures on this synthetic fixture.
+
+Next step:
+
+- Analyze the clean aggregate before expanding or making stronger claims.
