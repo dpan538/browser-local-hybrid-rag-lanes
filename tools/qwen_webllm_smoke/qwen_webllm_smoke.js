@@ -2,9 +2,11 @@ import * as webllm from "https://esm.run/@mlc-ai/web-llm";
 
 const DETERMINISTIC_FIELDS = [
   "source",
+  "source_citation",
   "rights_label",
   "reuse_permission",
-  "public_domain_status"
+  "public_domain_status",
+  "image_state_label"
 ];
 const PLACEHOLDER = "[not provided in source]";
 const CONDITIONS = ["all_generation", "hybrid_without_refusal", "full_hybrid"];
@@ -139,9 +141,11 @@ function buildPrompt(row, condition) {
   const conditionPrompt = promptPack.conditions?.[condition] || {};
   const answerKeys = [
     "source",
+    "source_citation",
     "rights_label",
     "reuse_permission",
     "public_domain_status",
+    "image_state_label",
     "research_guidance",
     "refusal",
     "caveats"
@@ -362,7 +366,13 @@ function checkContract(record, runtimeRow, evalRow) {
   } else {
     const sourceValue = String(answer.source || "");
     const expectedSource = String(sourceRecord.source || "");
-    results.source_pointer_preserved = expectedSource && sourceValue.includes(expectedSource) ? "pass" : "warning";
+    const citationValue = String(answer.source_citation || "");
+    const expectedCitation = String(sourceRecord.source_citation || "");
+    results.source_pointer_preserved =
+      (expectedSource && sourceValue.includes(expectedSource)) ||
+      (expectedCitation && citationValue.includes(expectedCitation))
+        ? "pass"
+        : "warning";
   }
   const rightsMutated = results.rights_label_mutation === "fail";
   const statusMutated = results.public_domain_status_mutation === "fail";
@@ -436,9 +446,11 @@ function baseAnswer(executionMode) {
   return {
     output_mode: executionMode,
     source: "",
+    source_citation: "",
     rights_label: "",
     reuse_permission: "",
     public_domain_status: "",
+    image_state_label: "",
     research_guidance: "",
     refusal: null,
     caveats: ["evidence_correctness_requires_source_audit"]
@@ -513,9 +525,11 @@ async function runCondition(row, condition) {
           : answer.caveats;
         if (condition === "all_generation") {
           answer.source = String(parsed.source || generated.cleaned_answer_text || "");
+          answer.source_citation = String(parsed.source_citation || generated.cleaned_answer_text || "");
           answer.rights_label = String(parsed.rights_label || generated.cleaned_answer_text || "");
           answer.reuse_permission = String(parsed.reuse_permission || generated.cleaned_answer_text || "");
           answer.public_domain_status = String(parsed.public_domain_status || generated.cleaned_answer_text || "");
+          answer.image_state_label = String(parsed.image_state_label || generated.cleaned_answer_text || "");
         }
       }
     }

@@ -42,6 +42,27 @@ The first batch is metadata-only:
 | `q004` | `98513584` | Bounded explanation with provenance |
 | `q005` | `98518818` | Compound reuse caveat plus bounded interpretation |
 
+## Expansion To 15 Rows
+
+The first expansion keeps the same source family and adds ten more LOC
+item-level metadata records:
+
+| Query | LOC item | Lane purpose |
+|---|---|---|
+| `q006` | `98513524` | Source/rights exact field delivery |
+| `q007` | `98516179` | Compound rights plus bounded title interpretation |
+| `q008` | `98518824` | Source/rights plus metadata image-state delivery |
+| `q009` | `98513398` | Bounded explanation with provenance |
+| `q010` | `98508162` | Compound reuse caveat plus bounded interpretation |
+| `q011` | `98508384` | More-context / research guidance |
+| `q012` | `98513469` | Compound rights plus safety-message interpretation |
+| `q013` | `98508416` | Bounded explanation with provenance |
+| `q014` | `98507705` | Compound source/rights plus bounded interpretation |
+| `q015` | `98510127` | Recommendation / research usefulness |
+
+This expansion also treats `source_citation` and `image_state_label` as
+contract-bearing deterministic fields when listed in a row's decisive fields.
+
 ## Next Families To Consider
 
 The next source-family candidates should diversify beyond LOC:

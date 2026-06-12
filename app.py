@@ -84,9 +84,11 @@ CONDITION_ALIASES = {
 
 DETERMINISTIC_FIELDS = [
     "source",
+    "source_citation",
     "rights_label",
     "reuse_permission",
     "public_domain_status",
+    "image_state_label",
 ]
 
 app = Flask(__name__)
@@ -268,9 +270,11 @@ def assemble_answer(row: Dict[str, Any], condition: str) -> Tuple[Dict[str, Any]
     answer: Dict[str, Any] = {
         "output_mode": execution_mode,
         "source": "",
+        "source_citation": "",
         "rights_label": "",
         "reuse_permission": "",
         "public_domain_status": "",
+        "image_state_label": "",
         "research_guidance": "",
         "refusal": None,
         "caveats": [],
@@ -315,12 +319,18 @@ def assemble_answer(row: Dict[str, Any], condition: str) -> Tuple[Dict[str, Any]
 
     if condition == "all_generation":
         answer["source"] = f"Generated source summary for {record.get('source', 'unknown source')}"
+        answer["source_citation"] = (
+            f"Generated citation summary: {record.get('source_citation', 'unknown')}"
+        )
         answer["rights_label"] = f"Generated rights summary: {record.get('rights_label', 'unknown')}"
         answer["reuse_permission"] = (
             f"Generated reuse note: {record.get('reuse_permission', 'unknown')}"
         )
         answer["public_domain_status"] = (
             f"Generated status note: {record.get('public_domain_status', 'unknown')}"
+        )
+        answer["image_state_label"] = (
+            f"Generated image-state note: {record.get('image_state_label', 'unknown')}"
         )
 
     if condition == "full_hybrid":

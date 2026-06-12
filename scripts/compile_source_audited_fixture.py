@@ -230,7 +230,14 @@ def record_for(manifest_row: Dict[str, Any]) -> Dict[str, Any]:
 def deterministic_required_fields(checklist: Dict[str, str]) -> List[str]:
     return [
         field
-        for field in ["source", "rights_label", "reuse_permission", "public_domain_status"]
+        for field in [
+            "source",
+            "source_citation",
+            "rights_label",
+            "reuse_permission",
+            "public_domain_status",
+            "image_state_label",
+        ]
         if checklist.get(field) != "not_applicable"
     ]
 

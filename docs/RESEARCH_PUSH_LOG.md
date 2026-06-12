@@ -1591,3 +1591,51 @@ Expected validation before push:
 - working tree is clean before this pre-run note;
 - this note is committed and pushed before further row expansion;
 - no experiment data or runtime code is changed by this pre-run backup.
+
+## 2026-06-12: Source-audited 50 expansion to 15 rows
+
+Purpose:
+
+- Patch deterministic-field coverage before expansion so source citation and
+  image-state fields are contract-bearing.
+- Keep Flask stub/API and Qwen WebLLM browser panel answer shapes aligned.
+- Expand `fixtures/source_audited_50` from 5 to 15 LOC metadata rows.
+- Regenerate experiment, runtime, evaluation, and warmup views.
+- Record a post-run expansion summary.
+
+Added/updated files:
+
+```text
+app.py
+scripts/auto_contract_check.py
+scripts/compile_source_audited_fixture.py
+scripts/compile_blueprint.py
+tools/qwen_webllm_smoke/qwen_webllm_smoke.js
+tools/qwen_webllm_smoke/index.html
+fixtures/source_audited_50/source_audit_manifest_v0.jsonl
+fixtures/source_audited_50/query_plan_v0.jsonl
+fixtures/source_audited_50/experiment_fixture.jsonl
+fixtures/source_audited_50/runtime_view.jsonl
+fixtures/source_audited_50/evaluation_view.jsonl
+fixtures/source_audited_50/warmup_queries.jsonl
+reports/SOURCE_AUDITED_50_EXPANSION_15_SUMMARY_V0.md
+```
+
+Expected validation before push:
+
+- Python compilation passes for changed Python scripts and app;
+- Qwen WebLLM browser panel JavaScript passes `node --check`;
+- source audit manifest passes with `--min-rows 15 --require-pass`;
+- query plan passes with `--min-rows 15`;
+- manifest/query sync passes;
+- source-audited compiler emits 15 rows and 1 warmup row;
+- source-audited consistency passes with `--expected-rows 15`;
+- protocol bundle validation passes;
+- paper-v1 source-audited freeze profile can hash the 15-row bundle;
+- `git diff --check` passes.
+
+Current stance:
+
+- This is still a source-audited fixture authoring milestone, not a model run.
+- Next expansion should introduce refusal/earliest and comparison rows plus a
+  second source family.

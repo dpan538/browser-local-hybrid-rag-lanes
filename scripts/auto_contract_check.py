@@ -11,9 +11,11 @@ from typing import Any, Dict, List
 
 DETERMINISTIC_FIELDS = [
     "source",
+    "source_citation",
     "rights_label",
     "reuse_permission",
     "public_domain_status",
+    "image_state_label",
 ]
 
 PLACEHOLDER = "[not provided in source]"
@@ -100,8 +102,15 @@ def check_contract(
     else:
         source_value = str(answer.get("source", "") or "")
         expected_source = str(source_record.get("source", "") or "")
+        citation_value = str(answer.get("source_citation", "") or "")
+        expected_citation = str(source_record.get("source_citation", "") or "")
         results["source_pointer_preserved"] = (
-            "pass" if expected_source and expected_source in source_value else "warning"
+            "pass"
+            if (
+                (expected_source and expected_source in source_value)
+                or (expected_citation and expected_citation in citation_value)
+            )
+            else "warning"
         )
 
     rights_mutated = results.get("rights_label_mutation") == "fail"

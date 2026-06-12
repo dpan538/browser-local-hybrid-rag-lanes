@@ -24,9 +24,9 @@ exploratory are useful evidence but are not, by themselves, journal-ready.
 
 | Artifact | Target Path | Status |
 |---|---|---|
-| Source-audited fixture | `fixtures/source_audited_50/` | First batch started, 5/50 LOC rows |
-| Runtime view for Paper v1 | `fixtures/source_audited_50/runtime_view.jsonl` | First batch generated, 5 rows |
-| Evaluation view for Paper v1 | `fixtures/source_audited_50/evaluation_view.jsonl` | First batch generated, 5 rows |
+| Source-audited fixture | `fixtures/source_audited_50/` | Expansion in progress, 15/50 LOC rows |
+| Runtime view for Paper v1 | `fixtures/source_audited_50/runtime_view.jsonl` | Expansion generated, 15 rows |
+| Evaluation view for Paper v1 | `fixtures/source_audited_50/evaluation_view.jsonl` | Expansion generated, 15 rows |
 | Warmup queries for Paper v1 | `fixtures/source_audited_50/warmup_queries.jsonl` | First batch generated, 1 warmup row |
 | Freeze manifest | `manifests/protocol_v1_freeze_manifest.json` | Missing |
 | Paper v1 raw run records | `runs/paper_v1_qwen_webllm_50_clean/` | Missing |
@@ -41,6 +41,7 @@ exploratory are useful evidence but are not, by themselves, journal-ready.
 | Journal target strategy | `docs/JOURNAL_TARGET_STRATEGY.md` | Active venue ladder |
 | Paper v1 fixture provenance plan | `docs/PAPER_V1_FIXTURE_PROVENANCE_PLAN.md` | Added as provenance gate |
 | Source family selection v0 | `docs/SOURCE_FAMILY_SELECTION_V0.md` | Added as first-batch source selection rationale |
+| Source-audited 15-row expansion summary | `reports/SOURCE_AUDITED_50_EXPANSION_15_SUMMARY_V0.md` | Added as post-run expansion summary |
 | Source audit manifest schema | `schemas/source_audit_manifest_schema.json` | Added as provenance validation schema |
 | Source-audited query plan schema | `schemas/source_audited_query_plan_schema.json` | Added as query authoring schema |
 | Source audit manifest validator | `scripts/validate_source_audit_manifest.py` | Added as provenance validation script |

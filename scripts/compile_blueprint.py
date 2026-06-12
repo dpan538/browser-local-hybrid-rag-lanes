@@ -21,6 +21,7 @@ from validate_fixture import load_schema, validate_fixture_line  # noqa: E402
 PLACEHOLDER = "[not provided in source]"
 BASE_CHECKLIST_FIELDS = [
     "source",
+    "source_citation",
     "rights_label",
     "reuse_permission",
     "public_domain_status",
@@ -218,7 +219,14 @@ def compile_row(row: Dict[str, Any]) -> Dict[str, Any]:
 
     deterministic_required = [
         field
-        for field in ["source", "rights_label", "reuse_permission", "public_domain_status"]
+        for field in [
+            "source",
+            "source_citation",
+            "rights_label",
+            "reuse_permission",
+            "public_domain_status",
+            "image_state_label",
+        ]
         if field in checklist and checklist[field] != "not_applicable"
     ]
     query: Dict[str, Any] = {
