@@ -1709,3 +1709,29 @@ Current stance:
 - The Paper v1 50-query gate remains incomplete at 26/50 query rows.
 - The structural expansion is important because it prevents the source-audited
   fixture from becoming only a set of source/rights success cases.
+
+## 2026-06-12: Source-audited 26-to-50 continuation pre-run backup
+
+Purpose:
+
+- Back up the clean 26-query state before continuing toward the 50-query
+  source-audited gate.
+- Prioritize structural coverage: additional source families,
+  partial/contradictory evidence states, mixed-intent rows, and multi-record
+  comparison/recommendation rows.
+- Keep the run boundary explicit: this next phase is fixture/provenance work,
+  not a Qwen/WebLLM model run.
+
+Added file:
+
+```text
+docs/SOURCE_AUDITED_50_26_TO_50_EXPANSION_EXPECTATION_V0.md
+```
+
+Expected validation before push:
+
+- working tree is clean after the 26-row post-run backup;
+- this pre-run note is committed and pushed before authoring more manifest or
+  query-plan rows;
+- no fixture rows, runtime code, model artifacts, image downloads, or browser
+  cache are changed by this pre-run backup.

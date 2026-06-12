@@ -41,6 +41,7 @@ exploratory are useful evidence but are not, by themselves, journal-ready.
 | Journal target strategy | `docs/JOURNAL_TARGET_STRATEGY.md` | Active venue ladder |
 | Paper v1 fixture provenance plan | `docs/PAPER_V1_FIXTURE_PROVENANCE_PLAN.md` | Added as provenance gate |
 | Source family selection v0 | `docs/SOURCE_FAMILY_SELECTION_V0.md` | Added as first-batch source selection rationale |
+| Source-audited 26-to-50 expansion expectation | `docs/SOURCE_AUDITED_50_26_TO_50_EXPANSION_EXPECTATION_V0.md` | Added as next expansion pre-run backup |
 | Source-audited 15-row expansion summary | `reports/SOURCE_AUDITED_50_EXPANSION_15_SUMMARY_V0.md` | Added as post-run expansion summary |
 | Source-audited 26-row structural expansion summary | `reports/SOURCE_AUDITED_50_STRUCTURAL_EXPANSION_26_SUMMARY_V0.md` | Added as structural expansion summary |
 | Source audit manifest schema | `schemas/source_audit_manifest_schema.json` | Added as provenance validation schema |
