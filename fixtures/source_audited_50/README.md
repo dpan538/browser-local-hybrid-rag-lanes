@@ -21,14 +21,32 @@ The source-audit manifest must validate with:
 .venv/bin/python scripts/validate_source_audit_manifest.py \
   fixtures/source_audited_50/source_audit_manifest_v0.jsonl \
   --min-rows 50 \
-  --require-pass
+  --allow-partial
+```
+
+Use `--require-pass` only for a strict all-audited bundle. Paper v1 may include
+`partial` rows when they are deliberate partial/missing/contradictory evidence
+cases.
+
+The query plan and manifest must align before compilation:
+
+```bash
+.venv/bin/python scripts/validate_source_audited_query_plan.py \
+  fixtures/source_audited_50/query_plan_v0.jsonl \
+  --min-rows 50
+
+.venv/bin/python scripts/sync_query_manifest.py \
+  --manifest fixtures/source_audited_50/source_audit_manifest_v0.jsonl \
+  --query-plan fixtures/source_audited_50/query_plan_v0.jsonl
 ```
 
 Compile after the manifest and query plan are ready:
 
 ```bash
 .venv/bin/python scripts/compile_source_audited_fixture.py
-.venv/bin/python scripts/check_source_audited_consistency.py
+.venv/bin/python scripts/check_source_audited_consistency.py \
+  --expected-rows 50 \
+  --require-explicit-warmup
 ```
 
 Freeze the full source-audited bundle with:

@@ -114,7 +114,8 @@ The validator is:
 scripts/validate_source_audit_manifest.py
 ```
 
-Run:
+Run a strict all-audited gate when every row is expected to have complete
+metadata:
 
 ```bash
 .venv/bin/python scripts/validate_source_audit_manifest.py \
@@ -122,6 +123,19 @@ Run:
   --min-rows 50 \
   --require-pass
 ```
+
+Run a partial-evidence gate when rows intentionally test missing or incomplete
+metadata:
+
+```bash
+.venv/bin/python scripts/validate_source_audit_manifest.py \
+  fixtures/source_audited_50/source_audit_manifest_v0.jsonl \
+  --min-rows 50 \
+  --allow-partial
+```
+
+Rows marked `source_audit_status=failed` are always rejected by validation and
+compilation. They may remain in scratch files only, not in a Paper v1 manifest.
 
 ## Audit Scope
 
@@ -223,6 +237,34 @@ fixtures/source_audited_50/query_plan_v0.jsonl
 schemas/source_audited_query_plan_schema.json
 ```
 
+Each query-plan row binds source metadata to an executable test case. Required
+fields include:
+
+- `query_id`: joined to manifest rows by `query_id`, unless explicit
+  `manifest_ids` are listed;
+- `question_text`: the user-visible query;
+- `stratum`: the sampling stratum;
+- `intent_label`, `primary_lane`, and optional `secondary_lanes`;
+- `lane_intent`: one or more of `source`, `rights`, `provenance`,
+  `research_guidance`, or `refusal`;
+- `decisive_fields`: the fields used to aggregate evidence state;
+- `refusal_policy`: `matrix`, `always`, or `never`;
+- `warmup`: true only for rows deliberately excluded from measurement;
+- optional `evidence_state_override` for mixed-intent rows where the task-level
+  evidence state differs from simple field aggregation.
+
+Validate the query plan and manifest/query alignment before compilation:
+
+```bash
+.venv/bin/python scripts/validate_source_audited_query_plan.py \
+  fixtures/source_audited_50/query_plan_v0.jsonl \
+  --min-rows 50
+
+.venv/bin/python scripts/sync_query_manifest.py \
+  --manifest fixtures/source_audited_50/source_audit_manifest_v0.jsonl \
+  --query-plan fixtures/source_audited_50/query_plan_v0.jsonl
+```
+
 Compile source-audited artifacts with:
 
 ```bash
@@ -251,7 +293,9 @@ source audit manifest.
 After compilation, run:
 
 ```bash
-.venv/bin/python scripts/check_source_audited_consistency.py
+.venv/bin/python scripts/check_source_audited_consistency.py \
+  --expected-rows 50 \
+  --require-explicit-warmup
 ```
 
 For a Paper v1 freeze, generate:
@@ -262,6 +306,31 @@ For a Paper v1 freeze, generate:
   --output manifests/protocol_v1_freeze_manifest.json
 ```
 
+The `paper-v1-source-audited` profile is defined in:
+
+```text
+config/freeze_profiles.yaml
+```
+
+The profile must include the source audit manifest, query plan, compiled
+fixture, runtime/evaluation views, warmup rows, source-family registry, schemas,
+rules, prompt pack, review instructions, and analysis scripts.
+
+For blind semantic review after a run, generate a condition-hidden pack with:
+
+```bash
+.venv/bin/python scripts/generate_blind_pack.py \
+  --records runs/paper_v1_qwen_webllm_50_clean/records.jsonl \
+  --output review/paper_v1_blind_pack.json \
+  --mapping review/paper_v1_blind_mapping.json
+```
+
+A one-row smoke exercise of the source-audited compiler is available at:
+
+```bash
+.venv/bin/python scripts/smoke_source_audited_compile.py
+```
+
 ## Promotion Gate
 
 The source-audited 50 gate can pass only when:
@@ -269,7 +338,10 @@ The source-audited 50 gate can pass only when:
 - every manifest row validates against the schema;
 - every measured fixture record maps to a manifest row;
 - no paper-facing record has `record_origin=synthetic`;
-- no paper-facing record has `source_audit_status=not_audited`;
+- no paper-facing record has `source_audit_status=not_audited` or
+  `source_audit_status=failed`;
+- `partial` rows are allowed only when the row's aggregated evidence state is
+  `partial`, `missing`, or `contradictory`;
 - missing or conflicting fields are surfaced as partial/missing/contradictory
   evidence rather than inferred;
 - the freeze manifest hashes the source audit manifest, fixture, rule table,

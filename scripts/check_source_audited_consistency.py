@@ -19,6 +19,13 @@ REQUIRED_FREEZE_FILES = [
     "fixtures/source_audited_50/evaluation_view.jsonl",
     "fixtures/source_audited_50/warmup_queries.jsonl",
 ]
+RUNTIME_FORBIDDEN_KEYS = {
+    "expected_behavior",
+    "evaluation_labels",
+    "gold_labels",
+    "refusal_expected",
+    "conflict_expected",
+}
 
 
 def load_json(path: Path) -> Dict[str, Any]:
@@ -43,6 +50,22 @@ def record_ids_from_fixture(rows: List[Dict[str, Any]]) -> Set[str]:
     return ids
 
 
+def contains_forbidden_key(value: Any, forbidden: Set[str]) -> str | None:
+    if isinstance(value, dict):
+        for key, nested in value.items():
+            if key in forbidden:
+                return key
+            found = contains_forbidden_key(nested, forbidden)
+            if found:
+                return found
+    elif isinstance(value, list):
+        for item in value:
+            found = contains_forbidden_key(item, forbidden)
+            if found:
+                return found
+    return None
+
+
 def check_consistency(
     manifest_path: Path,
     query_plan_path: Path,
@@ -51,6 +74,8 @@ def check_consistency(
     eval_path: Path,
     warmup_path: Path,
     freeze_manifest_path: Path | None,
+    expected_rows: int,
+    require_explicit_warmup: bool,
 ) -> List[str]:
     errors: List[str] = []
     manifest_rows = load_jsonl(manifest_path)
@@ -59,6 +84,8 @@ def check_consistency(
     runtime_rows = load_jsonl(runtime_path)
     eval_rows = load_jsonl(eval_path)
     warmup_rows = load_jsonl(warmup_path)
+    if expected_rows and len(fixture_rows) != expected_rows:
+        errors.append(f"fixture row count {len(fixture_rows)} != expected {expected_rows}")
 
     manifest_record_ids = {row["record_id"] for row in manifest_rows}
     fixture_record_ids = record_ids_from_fixture(fixture_rows)
@@ -91,6 +118,7 @@ def check_consistency(
         errors.append("evaluation query ids do not match fixture query ids")
 
     for row in fixture_rows:
+        evidence_state = row["evidence_packet"]["aggregated_evidence_state"]
         for record in row["evidence_packet"].get("records", []):
             origin = record.get("record_origin")
             audit = record.get("source_audit_status")
@@ -98,11 +126,30 @@ def check_consistency(
                 errors.append(f"{row['query_id']}:{record['record_id']} invalid origin {origin}")
             if audit not in ALLOWED_FIXTURE_AUDITS:
                 errors.append(f"{row['query_id']}:{record['record_id']} invalid audit {audit}")
+            if audit == "uncertain" and evidence_state in {"sufficient", "not_applicable"}:
+                errors.append(
+                    f"{row['query_id']}:{record['record_id']} partial audit produced "
+                    f"evidence_state={evidence_state}"
+                )
+
+    for row in runtime_rows:
+        forbidden_key = contains_forbidden_key(row, RUNTIME_FORBIDDEN_KEYS)
+        if forbidden_key:
+            errors.append(f"runtime row {row['query_id']} exposes forbidden key '{forbidden_key}'")
 
     fixture_runtime_ids = {row["query_id"] for row in fixture_rows}
+    explicit_warmup_ids = {
+        row["query_id"]
+        for row in query_plan_rows
+        if row.get("warmup") or row.get("role") == "warmup"
+    }
     for row in warmup_rows:
         if row["query_id"] not in fixture_runtime_ids:
             errors.append(f"warmup query {row['query_id']} not present in fixture")
+        if explicit_warmup_ids and row["query_id"] not in explicit_warmup_ids:
+            errors.append(f"warmup query {row['query_id']} is not marked warmup in query plan")
+    if require_explicit_warmup and not explicit_warmup_ids:
+        errors.append("require-explicit-warmup set but query plan has no warmup rows")
 
     if freeze_manifest_path:
         manifest = load_json(freeze_manifest_path)
@@ -130,6 +177,8 @@ def main() -> int:
     parser.add_argument("--evaluation", default="fixtures/source_audited_50/evaluation_view.jsonl")
     parser.add_argument("--warmup", default="fixtures/source_audited_50/warmup_queries.jsonl")
     parser.add_argument("--freeze-manifest")
+    parser.add_argument("--expected-rows", type=int, default=0)
+    parser.add_argument("--require-explicit-warmup", action="store_true")
     args = parser.parse_args()
 
     required_paths = [
@@ -155,6 +204,8 @@ def main() -> int:
         Path(args.evaluation),
         Path(args.warmup),
         Path(args.freeze_manifest) if args.freeze_manifest else None,
+        args.expected_rows,
+        args.require_explicit_warmup,
     )
     if errors:
         print("Source-audited consistency check failed:")

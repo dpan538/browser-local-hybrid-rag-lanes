@@ -75,6 +75,7 @@ def validate_consistency(
     rows: List[Dict[str, Any]],
     source_family_ids: Set[str],
     require_pass: bool,
+    allow_partial: bool,
 ) -> List[str]:
     errors: List[str] = []
     seen_manifest_ids: Set[str] = set()
@@ -101,6 +102,12 @@ def validate_consistency(
             errors.append(f"{manifest_id}: source_family_id '{family_id}' not in config")
 
         status = row.get("source_audit_status")
+        if status == "failed":
+            errors.append(f"{manifest_id}: failed source-audit rows cannot be promoted")
+        if status == "partial" and not allow_partial and not require_pass:
+            errors.append(
+                f"{manifest_id}: partial row requires --allow-partial for this gate"
+            )
         field_states = {
             field_name: field.get("state")
             for field_name, field in row.get("fields", {}).items()
@@ -148,6 +155,11 @@ def main() -> int:
         action="store_true",
         help="Require every row to have source_audit_status=audited.",
     )
+    parser.add_argument(
+        "--allow-partial",
+        action="store_true",
+        help="Allow source_audit_status=partial rows to pass validation.",
+    )
     args = parser.parse_args()
 
     manifest_path = Path(args.manifest)
@@ -166,7 +178,12 @@ def main() -> int:
     errors: List[str] = []
     errors.extend(validate_schema(rows, schema))
     if not errors:
-        errors.extend(validate_consistency(rows, source_family_ids, args.require_pass))
+        errors.extend(validate_consistency(
+            rows,
+            source_family_ids,
+            args.require_pass,
+            args.allow_partial,
+        ))
 
     if len(rows) < args.min_rows:
         errors.append(f"row count {len(rows)} is below required minimum {args.min_rows}")

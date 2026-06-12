@@ -1,0 +1,10 @@
+version: freeze_profiles_v0
+profiles:
+  paper-v1-source-audited:
+    files:
+      - fixtures/source_audited_50/source_audit_manifest_v0.jsonl
+      - fixtures/source_audited_50/query_plan_v0.jsonl
+      - fixtures/source_audited_50/experiment_fixture.jsonl
+      - fixtures/source_audited_50/runtime_view.jsonl
+      - fixtures/source_audited_50/evaluation_view.jsonl
+      - fixtures/source_audited_50/warmup_queries.jsonl

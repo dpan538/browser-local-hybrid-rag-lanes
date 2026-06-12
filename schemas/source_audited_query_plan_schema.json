@@ -8,11 +8,12 @@
     "query_id",
     "role",
     "stratum",
-    "query_text",
+    "question_text",
     "intent_label",
     "primary_lane",
     "mixed_intent",
     "decisive_fields",
+    "lane_intent",
     "refusal_policy"
   ],
   "properties": {
@@ -32,7 +33,7 @@
         "mixed_intent"
       ]
     },
-    "query_text": { "type": "string", "minLength": 1 },
+    "question_text": { "type": "string", "minLength": 1 },
     "intent_label": {
       "type": "string",
       "enum": [
@@ -64,15 +65,35 @@
       "minItems": 1,
       "uniqueItems": true
     },
+    "lane_intent": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "source",
+          "rights",
+          "provenance",
+          "research_guidance",
+          "refusal"
+        ]
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
     "manifest_ids": {
       "type": "array",
       "items": { "type": "string", "pattern": "^sa_[a-z0-9_\\-]+$" },
       "uniqueItems": true
     },
     "allow_no_records": { "type": "boolean", "default": false },
+    "warmup": { "type": "boolean", "default": false },
     "refusal_policy": {
       "type": "string",
       "enum": ["matrix", "always", "never"]
+    },
+    "evidence_state_override": {
+      "type": "string",
+      "enum": ["sufficient", "partial", "missing", "contradictory", "not_applicable"]
     },
     "authoring_notes": { "type": "string" }
   },

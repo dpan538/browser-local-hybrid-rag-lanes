@@ -1476,3 +1476,53 @@ Current stance:
 - The next experiment-blocking gate is now mechanical: source manifest,
   query plan, compiler, consistency checker, and paper-v1 freeze profile must
   all pass before any Paper v1 Qwen/WebLLM run.
+
+## 2026-06-12: Source-audit gate hardening follow-up
+
+Purpose:
+
+- Close the remaining executable gaps in the Paper v1 provenance chain before
+  authoring source-audited rows.
+- Add an explicit query-plan validator and a manifest/query sync checker.
+- Require `question_text`, `lane_intent`, explicit warmup marking, and optional
+  `evidence_state_override` in the query-plan flow.
+- Reject `failed` source-audit rows at validation and compilation time.
+- Distinguish strict all-audited validation from partial-evidence validation
+  with `--require-pass` versus `--allow-partial`.
+- Add recursive consistency checks so runtime views cannot expose evaluator-only
+  fields such as `expected_behavior` or `refusal_expected`.
+- Add a profile-driven freeze configuration, condition-hidden blind-pack export,
+  and a one-row smoke test for the source-audited compiler.
+
+Added/updated files:
+
+```text
+config/freeze_profiles.yaml
+schemas/source_audited_query_plan_schema.json
+scripts/validate_source_audited_query_plan.py
+scripts/sync_query_manifest.py
+scripts/compile_source_audited_fixture.py
+scripts/check_source_audited_consistency.py
+scripts/validate_source_audit_manifest.py
+scripts/freeze_manifest.py
+scripts/generate_blind_pack.py
+scripts/smoke_source_audited_compile.py
+docs/PAPER_V1_FIXTURE_PROVENANCE_PLAN.md
+fixtures/source_audited_50/README.md
+FINAL_ARTIFACT_INDEX.md
+README.md
+```
+
+Expected validation before push:
+
+- Python script compilation passes for the source-audit scripts.
+- The source-audited compiler smoke test passes end to end.
+- The current freeze manifest can be generated without missing files.
+- The protocol bundle validator still passes.
+- `git diff --check` passes.
+
+Current stance:
+
+- This hardening still does not claim Paper v1 data exists.
+- The next step after push is source family selection and the first
+  `source_audited_50` manifest/query-plan rows from public metadata.

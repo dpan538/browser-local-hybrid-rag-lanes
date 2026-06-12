@@ -43,9 +43,14 @@ exploratory are useful evidence but are not, by themselves, journal-ready.
 | Source audit manifest schema | `schemas/source_audit_manifest_schema.json` | Added as provenance validation schema |
 | Source-audited query plan schema | `schemas/source_audited_query_plan_schema.json` | Added as query authoring schema |
 | Source audit manifest validator | `scripts/validate_source_audit_manifest.py` | Added as provenance validation script |
+| Source-audited query plan validator | `scripts/validate_source_audited_query_plan.py` | Added as query-plan validation script |
+| Manifest/query sync checker | `scripts/sync_query_manifest.py` | Added as manifest/query alignment gate |
 | Source-audited fixture compiler | `scripts/compile_source_audited_fixture.py` | Added as source-audit to fixture compiler |
 | Source-audited consistency checker | `scripts/check_source_audited_consistency.py` | Added as cross-artifact validation |
 | Source family registry | `config/source_families.yaml` | Added as source-family configuration |
+| Freeze profile registry | `config/freeze_profiles.yaml` | Added as profile-driven freeze configuration |
+| Paper v1 blind-pack generator | `scripts/generate_blind_pack.py` | Added as condition-hidden review export |
+| Source-audited compiler smoke test | `scripts/smoke_source_audited_compile.py` | Added as end-to-end source-audit compile rehearsal |
 
 ## Artifact Rule
 

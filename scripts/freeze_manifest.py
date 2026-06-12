@@ -10,6 +10,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List
 
+import yaml
+
 
 DEFAULT_FILES = [
     "EXPERIMENT_STATUS.md",
@@ -22,6 +24,7 @@ DEFAULT_FILES = [
     "config/lane_rules_v1.yaml",
     "config/refusal_decision_matrix.csv",
     "config/condition_prompt_pack_v1.json",
+    "config/freeze_profiles.yaml",
     "docs/EXPERIMENT_EXECUTION_PLAN.md",
     "docs/PROTOCOL_FREEZE_V0.md",
     "docs/PAPER_V1_FREEZE_PLAN.md",
@@ -36,9 +39,13 @@ DEFAULT_FILES = [
     "scripts/aggregate_qwen_webllm_runs.py",
     "scripts/analysis.py",
     "scripts/validate_source_audit_manifest.py",
+    "scripts/validate_source_audited_query_plan.py",
+    "scripts/sync_query_manifest.py",
     "scripts/compile_source_audited_fixture.py",
     "scripts/check_source_audited_consistency.py",
     "scripts/fetch_metadata_example.py",
+    "scripts/generate_blind_pack.py",
+    "scripts/smoke_source_audited_compile.py",
     "schemas/run_record_schema.json",
     "schemas/environment_stability_log_schema.json",
     "schemas/condition_prompt_pack_schema.json",
@@ -52,14 +59,7 @@ DEFAULT_FILES = [
     "config/source_families.yaml",
 ]
 
-PAPER_V1_SOURCE_AUDITED_FILES = [
-    "fixtures/source_audited_50/source_audit_manifest_v0.jsonl",
-    "fixtures/source_audited_50/query_plan_v0.jsonl",
-    "fixtures/source_audited_50/experiment_fixture.jsonl",
-    "fixtures/source_audited_50/runtime_view.jsonl",
-    "fixtures/source_audited_50/evaluation_view.jsonl",
-    "fixtures/source_audited_50/warmup_queries.jsonl",
-]
+FREEZE_PROFILES_PATH = Path("config/freeze_profiles.yaml")
 
 
 def sha256(path: Path) -> str:
@@ -89,6 +89,17 @@ def build_manifest(files: List[str]) -> Dict[str, object]:
     return manifest
 
 
+def profile_files(profile: str, profile_path: Path = FREEZE_PROFILES_PATH) -> List[str]:
+    if profile == "current":
+        return []
+    data = yaml.safe_load(profile_path.read_text(encoding="utf-8")) or {}
+    profiles = data.get("profiles", {})
+    if profile not in profiles:
+        allowed = ", ".join(sorted(["current", *profiles.keys()]))
+        raise ValueError(f"unknown freeze profile '{profile}', expected one of: {allowed}")
+    return list(profiles[profile].get("files", []))
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -104,15 +115,17 @@ def main() -> int:
     )
     parser.add_argument(
         "--profile",
-        choices=["current", "paper-v1-source-audited"],
         default="current",
-        help="Freeze profile. paper-v1-source-audited includes generated source-audited fixture artifacts.",
+        help="Freeze profile. Non-current profiles are read from config/freeze_profiles.yaml.",
     )
     args = parser.parse_args()
 
     files = list(DEFAULT_FILES)
-    if args.profile == "paper-v1-source-audited":
-        files.extend(PAPER_V1_SOURCE_AUDITED_FILES)
+    try:
+        files.extend(profile_files(args.profile))
+    except ValueError as exc:
+        print(str(exc))
+        return 1
     files.extend(args.files or [])
     manifest = build_manifest(files)
     output_path = Path(args.output)

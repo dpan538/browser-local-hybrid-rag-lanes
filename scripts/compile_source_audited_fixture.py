@@ -114,6 +114,31 @@ def validate_unique_query_plan_ids(rows: List[Dict[str, Any]]) -> None:
         raise ValueError("duplicate query_id in query plan: " + ", ".join(sorted(duplicates)))
 
 
+def validate_query_plan_semantics(rows: List[Dict[str, Any]]) -> None:
+    errors: List[str] = []
+    for row in rows:
+        query_id = row["query_id"]
+        lane_intent = set(row["lane_intent"])
+        primary_lane = row["primary_lane"]
+        refusal_policy = row["refusal_policy"]
+        if primary_lane == "deterministic_refusal" and "refusal" not in lane_intent:
+            errors.append(f"{query_id}: deterministic_refusal requires lane_intent 'refusal'")
+        if primary_lane == "deterministic_exact" and not lane_intent.intersection({"source", "rights", "provenance"}):
+            errors.append(
+                f"{query_id}: deterministic_exact requires source/rights/provenance lane_intent"
+            )
+        if "refusal" in lane_intent and refusal_policy == "never":
+            errors.append(f"{query_id}: lane_intent includes refusal but refusal_policy is never")
+        if row.get("warmup") and row.get("role") != "warmup":
+            errors.append(f"{query_id}: warmup=true requires role=warmup")
+        if row.get("mixed_intent") and not row.get("secondary_lanes"):
+            errors.append(f"{query_id}: mixed_intent=true requires secondary_lanes")
+        if primary_lane == "compound" and "research_guidance" not in lane_intent:
+            errors.append(f"{query_id}: compound lane requires research_guidance lane_intent")
+    if errors:
+        raise ValueError("Query plan semantic validation failed:\n" + "\n".join(errors))
+
+
 def load_refusal_matrix(path: Path) -> Dict[str, Dict[str, str]]:
     with path.open("r", encoding="utf-8") as handle:
         return {row["evidence_state"]: row for row in csv.DictReader(handle)}
@@ -291,12 +316,14 @@ def compile_row(
         plan["intent_label"],
         plan["decisive_fields"],
     )
+    if plan.get("evidence_state_override"):
+        evidence_state = plan["evidence_state_override"]
     refusal_expected = refusal_expected_for(plan, evidence_state, refusal_matrix)
     records = [record_for(row) for row in manifest_rows]
     deterministic_required = deterministic_required_fields(checklist)
 
     query: Dict[str, Any] = {
-        "text": plan["query_text"],
+        "text": plan["question_text"],
         "intent_label": plan["intent_label"],
         "primary_lane": plan["primary_lane"],
         "mixed_intent": plan["mixed_intent"],
@@ -312,7 +339,7 @@ def compile_row(
         "fixture_meta": {
             "blueprint_version": plan["plan_version"],
             "stratum": plan["stratum"],
-            "role": plan["role"],
+            "role": "warmup" if plan.get("warmup") else plan["role"],
             "target_evidence_state": evidence_state,
             "refusal_expected": refusal_expected,
             "conflict_expected": evidence_state == "contradictory",
@@ -386,15 +413,26 @@ def main() -> int:
     validate_jsonl_schema(manifest_rows, REPO_ROOT / args.manifest_schema)
     validate_jsonl_schema(query_plan_rows, REPO_ROOT / args.query_plan_schema)
     validate_unique_query_plan_ids(query_plan_rows)
+    validate_query_plan_semantics(query_plan_rows)
     source_family_ids = load_source_family_ids(REPO_ROOT / args.source_families)
     manifest_errors = validate_manifest_consistency(
         manifest_rows,
         source_family_ids,
         require_pass=False,
+        allow_partial=True,
     )
     if manifest_errors:
         raise ValueError(
             "Source-audit manifest consistency failed:\n" + "\n".join(manifest_errors)
+        )
+    failed_rows = [
+        f"{row['manifest_id']}:{row['record_id']}"
+        for row in manifest_rows
+        if row.get("source_audit_status") == "failed"
+    ]
+    if failed_rows:
+        raise ValueError(
+            "Failed source-audit rows cannot be compiled: " + ", ".join(failed_rows[:20])
         )
 
     manifest_by_query: Dict[str, List[Dict[str, Any]]] = defaultdict(list)
