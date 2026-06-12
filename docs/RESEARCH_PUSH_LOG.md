@@ -1252,3 +1252,40 @@ Interpretation:
 Next step:
 
 - Analyze the clean aggregate before expanding or making stronger claims.
+
+## 2026-06-12: Paper v1 freeze scaffold
+
+Purpose:
+
+- Convert the external assessment into repository-level paper-facing controls.
+- Add status, claim, non-claim, and artifact ledgers so exploratory diagnostics
+  do not silently become overclaimed paper evidence.
+- Define the next phase as Paper v1 Freeze rather than additional loose
+  diagnostic runs.
+- Add simple blinded reviewer instructions that separate human semantic review
+  from automatic/mechanical contract checks.
+
+Added files:
+
+```text
+EXPERIMENT_STATUS.md
+CLAIMS_AND_NON_CLAIMS.md
+FINAL_ARTIFACT_INDEX.md
+docs/PAPER_V1_FREEZE_PLAN.md
+docs/BLIND_REVIEWER_INSTRUCTIONS_SIMPLE.md
+manifests/README.md
+```
+
+Current stance:
+
+- The clean q001-q050 Qwen/WebLLM aggregate remains exploratory.
+- The current strongest automatic signal is refusal-lane related:
+  `full_hybrid` has 0 automatic contract failures while `all_generation` and
+  `hybrid_without_refusal` each have 15 on the synthetic fixture.
+- Journal-level claims remain blocked until a source-audited or public-derived
+  fixture, freeze manifest, paper-facing run, and blinded human review exist.
+
+Next step:
+
+- Build the Paper v1 fixture and freeze manifest before running another
+  paper-facing experiment.

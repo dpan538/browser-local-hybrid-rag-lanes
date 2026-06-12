@@ -79,6 +79,9 @@ The first can be checked mechanically. The second requires source audit.
 
 ## Reports
 
+- [Experiment status](EXPERIMENT_STATUS.md)
+- [Claims and non-claims](CLAIMS_AND_NON_CLAIMS.md)
+- [Final artifact index](FINAL_ARTIFACT_INDEX.md)
 - [Parallel research literature memo](reports/PARALLEL_RESEARCH_HYBRID_LANE_LITERATURE_MEMO.md)
 - [Deep research paper positioning memo](reports/DEEP_RESEARCH_PAPER_POSITIONING_MEMO.md)
 - [Deep research prompt package](reports/deep_research_prompts/README.md)
@@ -131,6 +134,8 @@ The first can be checked mechanically. The second requires source audit.
 - [Methodology build plan](docs/METHODOLOGY_BUILD_PLAN.md)
 - [Paper narrative draft](docs/PAPER_NARRATIVE_DRAFT.md)
 - [Paper positioning decisions](docs/PAPER_POSITIONING_DECISIONS.md)
+- [Paper v1 freeze plan](docs/PAPER_V1_FREEZE_PLAN.md)
+- [Simple blind reviewer instructions](docs/BLIND_REVIEWER_INSTRUCTIONS_SIMPLE.md)
 - [Protocol revision queue](docs/PROTOCOL_REVISION_QUEUE.md)
 - [Protocol freeze v0](docs/PROTOCOL_FREEZE_V0.md)
 - [Research push log](docs/RESEARCH_PUSH_LOG.md)

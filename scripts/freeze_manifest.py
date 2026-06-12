@@ -12,6 +12,9 @@ from typing import Dict, List
 
 
 DEFAULT_FILES = [
+    "EXPERIMENT_STATUS.md",
+    "CLAIMS_AND_NON_CLAIMS.md",
+    "FINAL_ARTIFACT_INDEX.md",
     "fixtures/experiment_fixture.jsonl",
     "fixtures/runtime_view/experiment_fixture.runtime.jsonl",
     "fixtures/evaluation_view/experiment_fixture.eval.jsonl",
@@ -21,9 +24,20 @@ DEFAULT_FILES = [
     "config/condition_prompt_pack_v1.json",
     "docs/EXPERIMENT_EXECUTION_PLAN.md",
     "docs/PROTOCOL_FREEZE_V0.md",
+    "docs/PAPER_V1_FREEZE_PLAN.md",
+    "docs/BLIND_REVIEWER_INSTRUCTIONS_SIMPLE.md",
+    "docs/REVIEW_SHEET_GUIDE.md",
+    "scripts/auto_contract_check.py",
+    "scripts/diagnose_qwen_webllm_run.py",
+    "scripts/aggregate_qwen_webllm_runs.py",
+    "scripts/analysis.py",
     "schemas/run_record_schema.json",
     "schemas/environment_stability_log_schema.json",
     "schemas/condition_prompt_pack_schema.json",
+    "schemas/runtime_fixture_view_schema.json",
+    "schemas/evaluation_fixture_view_schema.json",
+    "schemas/golden_answers_schema.json",
+    "review/golden_answers.json",
 ]
 
 
