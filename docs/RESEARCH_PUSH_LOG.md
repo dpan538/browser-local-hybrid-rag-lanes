@@ -1142,3 +1142,45 @@ Next step:
 - Rerun q036-q042 as
   `qwen_webllm_foreground_q036_q042_focus_v0` while a foreground keeper
   repeatedly sets Codex as the frontmost app.
+
+## 2026-06-12: q036-q042 focus rerun
+
+Purpose:
+
+- Rerun q036-q042 after the first split attempt was fully backgrounded.
+- Use the Codex in-app browser manually in the foreground.
+- Preserve the model boundary as `Qwen/Qwen3.5-0.8B` via
+  `Qwen3.5-0.8B-q4f16_1-MLC`.
+
+Run artifact:
+
+```text
+runs/qwen_webllm_foreground_q036_q042_focus_v0/qwen_webllm_foreground_q036_q042_focus_v0_records.jsonl
+```
+
+Reports:
+
+```text
+reports/QWEN_WEBLLM_FOREGROUND_Q036_Q042_FOCUS_DIAGNOSTICS_V0.md
+reports/QWEN_WEBLLM_FOREGROUND_Q036_Q042_FOCUS_SUMMARY_V0.md
+reports/qwen_webllm_foreground_q036_q042_focus_diagnostics_v0.json
+```
+
+Result:
+
+- Rows: 21.
+- Schema errors: 0.
+- Generation timeouts: 0.
+- Contract failures: 0.
+- `tab_backgrounded_rows`: 0.
+- `long_task_gc_rows`: 1.
+
+Interpretation:
+
+- This run replaces the contaminated q036-q042 split attempt for clean latency
+  diagnostics.
+- The manual Codex browser foreground path worked for this segment.
+
+Next step:
+
+- Run q043-q050 using the same manual Codex browser foreground path.
