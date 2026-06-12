@@ -1817,3 +1817,61 @@ Expected validation before push:
 - `git diff --check` passes;
 - no run records, model artifacts, image downloads, or browser cache are
   committed by this pre-run backup.
+
+## 2026-06-12: Source-audited 50 Qwen/WebLLM run diagnostics
+
+Purpose:
+
+- Execute the first complete browser-local Qwen/WebLLM run over the
+  source-audited 50-query fixture gate.
+- Preserve diagnostics and aggregate reports while keeping raw run records
+  ignored under `runs/`.
+- Update the experiment status and claims ledger so source-audited diagnostic
+  evidence is separated from journal-level claims.
+
+Run artifact:
+
+```text
+runs/qwen_webllm_source_audited_50_v0/qwen_webllm_source_audited_50_v0_records.jsonl
+```
+
+Reports:
+
+```text
+reports/QWEN_WEBLLM_SOURCE_AUDITED_50_DIAGNOSTICS_V0.md
+reports/qwen_webllm_source_audited_50_diagnostics_v0.json
+reports/QWEN_WEBLLM_SOURCE_AUDITED_50_AGGREGATE_V0.md
+reports/qwen_webllm_source_audited_50_aggregate_v0.json
+reports/QWEN_WEBLLM_SOURCE_AUDITED_50_SUMMARY_V0.md
+```
+
+Result:
+
+- Rows: 150.
+- Queries: 50.
+- Schema errors: 0.
+- Duplicate query-condition pairs: 0.
+- Missing query-condition pairs: 0.
+- Generation errors/timeouts: 0.
+- `tab_backgrounded_rows`: 0.
+- `long_task_gc_rows`: 64.
+- Model id: `Qwen3.5-0.8B-q4f16_1-MLC`.
+- Primary model identity: `Qwen/Qwen3.5-0.8B`.
+
+Contract signal:
+
+- `all_generation`: 10 automatic contract failures.
+- `hybrid_without_refusal`: 10 automatic contract failures.
+- `full_hybrid`: 0 automatic contract failures.
+- Failure group: `refusal_expected_alignment`.
+- Failure ids: `q016`, `q017`, `q018`, `q019`, `q020`, `q035`, `q036`,
+  `q037`, `q038`, `q049`.
+
+Interpretation:
+
+- The source-audited diagnostic run repeats the central refusal-lane signal
+  observed on the synthetic fixture.
+- It is stronger than the synthetic run because source/provenance/rights fields
+  now come from metadata-audited rows.
+- It is still not a journal-ready result because no blinded human review exists
+  and latency remains long-task-diagnostic.

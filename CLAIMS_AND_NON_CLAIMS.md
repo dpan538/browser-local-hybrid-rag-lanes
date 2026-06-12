@@ -7,8 +7,7 @@ unsupported paper claims.
 
 ## Current Allowed Claims
 
-These claims are allowed for the current exploratory 50-query synthetic
-fixture:
+These claims are allowed for the current 50-query diagnostic fixtures:
 
 1. The project formulates browser-local small-model RAG as an answer
    execution-policy problem: deterministic rendering, deterministic refusal,
@@ -17,12 +16,15 @@ fixture:
    `hybrid_system_latency`.
 3. The protocol distinguishes evidence-to-output fidelity from evidence
    correctness.
-4. In the clean exploratory q001-q050 aggregate, `full_hybrid` produced zero
+4. In the clean synthetic q001-q050 aggregate, `full_hybrid` produced zero
    automatic contract failures, while `all_generation` and
    `hybrid_without_refusal` each produced 15 automatic contract failures.
-5. In the same aggregate, `full_hybrid` invoked Qwen on fewer rows than
-   `all_generation` because deterministic refusal and deterministic rendering
-   can skip generation for eligible lanes.
+5. In the source-audited 50-query diagnostic aggregate, `full_hybrid` produced
+   zero automatic contract failures, while `all_generation` and
+   `hybrid_without_refusal` each produced 10 automatic contract failures.
+6. In the source-audited diagnostic aggregate, `full_hybrid` invoked Qwen on
+   fewer rows than `all_generation` because deterministic refusal and
+   deterministic rendering can skip generation for eligible lanes.
 
 ## Claims Requiring Paper v1 Evidence
 
@@ -52,6 +54,24 @@ Not allowed:
 
 - generalization beyond the fixture;
 - evidence-correctness or usability claims.
+
+### Source-audited 50-query diagnostic
+
+Allowed:
+
+- the source-audited 50-query gate can be executed through the browser-local
+  Qwen/WebLLM pipeline with complete condition coverage;
+- the source-audited diagnostic run repeats the automatic refusal-alignment
+  pattern from the synthetic fixture at 50-query scale;
+- full hybrid reduces Qwen invocation count by skipping deterministic exact
+  and deterministic refusal lanes.
+
+Not allowed:
+
+- journal-level usability claims;
+- generalization beyond the controlled 50-query gate;
+- legal rights correctness claims;
+- strong latency superiority claims because long-task rows are present.
 
 ### Source-audited 100-query calibration
 

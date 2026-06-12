@@ -3,14 +3,18 @@
 Updated: 2026-06-12
 
 This file is the paper-facing status ledger for the hybrid answer-lane
-allocation study. It separates current exploratory evidence from claims that
-would require a Paper v1 freeze, source-audited evidence, and blinded human
-review.
+allocation study. It separates current diagnostic evidence from claims that
+would require a larger Paper v1 freeze and blinded human review.
 
 ## Current State
 
-The repository has a clean exploratory 50-query WebLLM/Qwen instrumentation
-aggregate:
+The repository now has two complete 50-query WebLLM/Qwen instrumentation
+aggregates:
+
+1. a clean synthetic exploratory aggregate;
+2. a source-audited 50-query diagnostic aggregate.
+
+Current source-audited diagnostic aggregate:
 
 - 50 queries x 3 conditions = 150 rows.
 - Primary model identity: `Qwen/Qwen3.5-0.8B`.
@@ -19,13 +23,19 @@ aggregate:
 - Duplicate query-condition pairs: 0.
 - Missing query-condition pairs: 0.
 - `tab_backgrounded_rows`: 0.
-- `long_task_gc_rows`: 5.
+- `long_task_gc_rows`: 64.
 - Contract failures:
-  - `all_generation`: 15.
-  - `hybrid_without_refusal`: 15.
+  - `all_generation`: 10.
+  - `hybrid_without_refusal`: 10.
   - `full_hybrid`: 0.
 
 Evidence:
+
+- `reports/QWEN_WEBLLM_SOURCE_AUDITED_50_AGGREGATE_V0.md`
+- `reports/qwen_webllm_source_audited_50_aggregate_v0.json`
+- `reports/QWEN_WEBLLM_SOURCE_AUDITED_50_SUMMARY_V0.md`
+
+The earlier synthetic clean aggregate remains useful for protocol comparison:
 
 - `reports/QWEN_WEBLLM_FOREGROUND_CLEAN_Q001_Q050_AGGREGATE_V0.md`
 - `reports/qwen_webllm_foreground_clean_q001_q050_aggregate_v0.json`
@@ -53,10 +63,10 @@ outputs. A 300-query run remains the preferred stronger version if time allows.
 |---|---|---|
 | Research question | Ready | Keep framed as answer execution policy, not general RAG quality. |
 | Three-condition ablation | Ready for exploratory use | Freeze condition prompt pack before paper run. |
-| Qwen/WebLLM browser run | Exploratory clean 50-query aggregate complete | Repeat or preserve under a Paper v1 freeze manifest. |
-| Fixture | Synthetic, not source-audited | Build source-audited or public-derived fixture before evidence-correctness claims. |
+| Qwen/WebLLM browser run | Source-audited 50-query diagnostic aggregate complete | Scale to 200-query JIS candidate or freeze as calibration-only. |
+| Fixture | Source-audited 50-query gate complete | Expand to 200 source-audited queries before JIS claim level. |
 | Automatic contract checks | Ready for exploratory contract analysis | Freeze checker version and include in manifest. |
-| Latency evidence | Exploratory, clean of tab-background rows | Report cold/warm, long-task flags, and segmented-run provenance. |
+| Latency evidence | Source-audited run has 0 tab-background rows but 64 long-task rows | Report cold/warm, long-task flags, and avoid strong latency claims. |
 | Human review | Not complete | Add two-rater blinded review with simple rubric. |
 | Usability claim | Blocked | Requires blinded human review. |
 | Rights/source correctness claim | Blocked | Requires source audit; deterministic rendering only preserves supplied evidence. |
@@ -64,30 +74,31 @@ outputs. A 300-query run remains the preferred stronger version if time allows.
 
 ## Current Best-Supported Statement
 
-In a controlled synthetic 50-query exploratory fixture, full hybrid lane
+In a controlled source-audited 50-query diagnostic fixture, full hybrid lane
 allocation eliminated the observed automatic refusal-alignment contract
-failures, while all-generation and hybrid-without-refusal each retained 15
-automatic contract failures.
+failures, while all-generation and hybrid-without-refusal each retained 10
+automatic refusal-alignment failures.
 
 Boundary:
 
-- synthetic fixture;
-- no source audit;
 - no blinded human usability review;
+- 50-query diagnostic scale, not the 200-query JIS candidate scale;
+- metadata-level source audit only, not legal rights determination;
 - no general browser-local RAG quality claim;
-- no legal rights correctness claim.
+- latency is foreground-clean but long-task-diagnostic.
 
 ## Next Gate
 
-The next methodological step is Paper v1 Freeze, not more scattered diagnostic
-runs.
+The next methodological step is source-audited review preparation, not
+immediate paper drafting.
 
-Paper v1 must define:
+The next gate should define:
 
-- frozen fixture and fixture provenance;
-- frozen rule table and prompt pack;
-- frozen browser/model/hardware configuration;
-- frozen automatic analysis scripts;
+- blind review pack from the source-audited run;
+- small calibration review;
+- adjudication rubric for partial-evidence and mixed-intent rows;
+- decision on whether this 50-query run remains calibration-only or becomes a
+  frozen pilot artifact;
 - blinded human review pack and reviewer instructions;
 - final artifact index;
 - claim and non-claim ledger.

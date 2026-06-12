@@ -31,7 +31,12 @@ exploratory are useful evidence but are not, by themselves, journal-ready.
 | Freeze manifest | `manifests/protocol_v1_freeze_manifest.json` | Missing |
 | Paper v1 raw run records | `runs/paper_v1_qwen_webllm_50_clean/` | Missing |
 | Source-audited 50 Qwen/WebLLM pre-run expectation | `docs/QWEN_WEBLLM_SOURCE_AUDITED_50_EXPECTATION_V0.md` | Added as pre-run backup |
-| Paper v1 aggregate report | `reports/PAPER_V1_QWEN_WEBLLM_50_AGGREGATE.md` | Missing |
+| Paper v1 aggregate report | `reports/PAPER_V1_QWEN_WEBLLM_50_AGGREGATE.md` | Superseded target name; source-audited diagnostic aggregate exists |
+| Source-audited 50 Qwen diagnostics | `reports/QWEN_WEBLLM_SOURCE_AUDITED_50_DIAGNOSTICS_V0.md` | Added as source-audited run diagnostics |
+| Source-audited 50 Qwen diagnostics JSON | `reports/qwen_webllm_source_audited_50_diagnostics_v0.json` | Added as machine-readable diagnostics |
+| Source-audited 50 Qwen aggregate | `reports/QWEN_WEBLLM_SOURCE_AUDITED_50_AGGREGATE_V0.md` | Added as aggregate-style source-audited report |
+| Source-audited 50 Qwen aggregate JSON | `reports/qwen_webllm_source_audited_50_aggregate_v0.json` | Added as machine-readable aggregate |
+| Source-audited 50 Qwen summary | `reports/QWEN_WEBLLM_SOURCE_AUDITED_50_SUMMARY_V0.md` | Added as source-audited run summary |
 | Blind review pack | `review/paper_v1_blind_pack.json` | Missing |
 | Reviewer A scores | `review/paper_v1_reviewer_A.jsonl` | Missing |
 | Reviewer B scores | `review/paper_v1_reviewer_B.jsonl` | Missing |
