@@ -25,6 +25,8 @@ DEFAULT_FILES = [
     "docs/EXPERIMENT_EXECUTION_PLAN.md",
     "docs/PROTOCOL_FREEZE_V0.md",
     "docs/PAPER_V1_FREEZE_PLAN.md",
+    "docs/INFORMATION_RESEARCH_TARGET_PLAN.md",
+    "docs/SOURCE_AUDITED_EXPANSION_ROADMAP.md",
     "docs/BLIND_REVIEWER_INSTRUCTIONS_SIMPLE.md",
     "docs/REVIEW_SHEET_GUIDE.md",
     "scripts/auto_contract_check.py",

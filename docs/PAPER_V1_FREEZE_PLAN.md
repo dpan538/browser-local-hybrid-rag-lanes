@@ -8,7 +8,7 @@ why the project remains exploratory.
 
 ## Freeze Goal
 
-Produce a reproducible 50-query Paper v1 package for:
+Produce a reproducible Paper v1 package for:
 
 - hybrid answer-lane allocation;
 - deterministic evidence-field delivery;
@@ -16,6 +16,10 @@ Produce a reproducible 50-query Paper v1 package for:
 - bounded Qwen/WebLLM generation;
 - latency attribution;
 - blinded usability review.
+
+The minimum Information Research-oriented target is a source-audited 100-query
+study. A source-audited 50-query clean run is the entry gate, not the final
+journal package.
 
 ## Research Questions
 
@@ -74,6 +78,16 @@ claims. Before freeze, create one of:
 
 The synthetic fixture may remain as a development fixture.
 
+Recommended path:
+
+```text
+synthetic 50 -> source-audited 50 -> source-audited 100 -> holdout 200/300
+```
+
+Do not treat sample-size expansion as the only form of generalization. Paper
+v1 must also improve evidence provenance, lane coverage, and environment
+accounting.
+
 ### Gate 2: Freeze Manifest
 
 Generate:
@@ -119,6 +133,10 @@ Requirements:
 
 Segmented runs are acceptable if every segment uses the same freeze manifest.
 
+The 50-query clean run is used to prove the source-audited protocol. The
+preferred paper-facing study then expands to 100 queries with balanced lane
+coverage.
+
 ### Gate 4: Automatic Analysis
 
 Generate the six standard tables:
@@ -149,6 +167,26 @@ Reviewers should see:
 - minimal source/evidence display if needed for faithfulness;
 - simple scoring fields.
 
+Formal human review starts only after:
+
+1. the fixture is source-audited or public-derived;
+2. rules and prompt pack are frozen;
+3. the three-condition run has 0 schema errors;
+4. automatic contract checks are complete;
+5. blind review packs are generated;
+6. no system changes will be made without rerunning the review package.
+
+Before this gate, use only calibration review.
+
+For a 100-query Paper v1 run, review a paired stratified sample:
+
+```text
+40 queries x 3 condition outputs = 120 blinded review rows
+```
+
+Include all automatic contract-failure rows, at least half of refusal-expected
+rows, at least 10 mixed-intent queries, and stratified remaining rows by lane.
+
 ## Stop Conditions
 
 Do not call a run paper-facing if:
@@ -162,10 +200,11 @@ Do not call a run paper-facing if:
 
 ## Next Immediate Work
 
-1. Build or select the source-audited fixture candidate.
+1. Build or select the source-audited 50-query fixture candidate.
 2. Generate Paper v1 runtime/evaluation views.
 3. Create the Paper v1 freeze manifest.
-4. Run the clean browser Qwen/WebLLM Paper v1 set.
-5. Generate blind review packs.
-6. Run two-rater review.
-7. Produce final claim ledger.
+4. Run the clean browser Qwen/WebLLM 50-query gate.
+5. If the gate passes, expand to source-audited 100-query Paper v1.
+6. Generate blind review packs.
+7. Run two-rater review.
+8. Produce final claim ledger.

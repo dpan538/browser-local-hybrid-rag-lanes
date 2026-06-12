@@ -1289,3 +1289,44 @@ Next step:
 
 - Build the Paper v1 fixture and freeze manifest before running another
   paper-facing experiment.
+
+## 2026-06-12: Information Research target and expansion roadmap
+
+Purpose:
+
+- Record Information Research as the first writing and style target while
+  noting that the official submissions page currently says the journal is not
+  accepting submissions.
+- Reframe the paper for an information-system and information-user audience
+  rather than as a RAG algorithm benchmark.
+- Replace a simple 50-to-100-to-300 scaling story with a staged plan:
+  synthetic 50, source-audited 50, source-audited 100, then held-out 200/300
+  robustness.
+- Define the formal human-review entry gate and keep current review work at
+  calibration-only until source audit and freeze requirements are met.
+
+Added files:
+
+```text
+docs/INFORMATION_RESEARCH_TARGET_PLAN.md
+docs/SOURCE_AUDITED_EXPANSION_ROADMAP.md
+```
+
+Updated files:
+
+```text
+docs/PAPER_V1_FREEZE_PLAN.md
+CLAIMS_AND_NON_CLAIMS.md
+FINAL_ARTIFACT_INDEX.md
+scripts/freeze_manifest.py
+README.md
+```
+
+Current stance:
+
+- Information Research is the preferred target style and audience, but not an
+  immediate submission endpoint unless submissions reopen.
+- A source-audited 100-query Paper v1 package is the minimum target for that
+  venue framing.
+- Human review should start formally after source audit, rule/prompt freeze,
+  clean three-condition run, automatic contract checks, and blind-pack export.

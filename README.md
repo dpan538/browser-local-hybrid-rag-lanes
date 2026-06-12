@@ -135,6 +135,8 @@ The first can be checked mechanically. The second requires source audit.
 - [Paper narrative draft](docs/PAPER_NARRATIVE_DRAFT.md)
 - [Paper positioning decisions](docs/PAPER_POSITIONING_DECISIONS.md)
 - [Paper v1 freeze plan](docs/PAPER_V1_FREEZE_PLAN.md)
+- [Information Research target plan](docs/INFORMATION_RESEARCH_TARGET_PLAN.md)
+- [Source-audited expansion roadmap](docs/SOURCE_AUDITED_EXPANSION_ROADMAP.md)
 - [Simple blind reviewer instructions](docs/BLIND_REVIEWER_INSTRUCTIONS_SIMPLE.md)
 - [Protocol revision queue](docs/PROTOCOL_REVISION_QUEUE.md)
 - [Protocol freeze v0](docs/PROTOCOL_FREEZE_V0.md)

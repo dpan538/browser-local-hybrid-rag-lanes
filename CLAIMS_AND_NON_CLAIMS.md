@@ -38,6 +38,46 @@ These claims are not yet supported and require a Paper v1 freeze:
 4. The approach generalizes beyond this controlled fixture.
    Requirement: larger or independently constructed fixture.
 
+## Claim Ladder
+
+### Synthetic 50-query pilot
+
+Allowed:
+
+- the pipeline supports a three-condition hybrid-lane ablation;
+- in the exploratory fixture, full hybrid removed observed automatic
+  refusal-alignment failures.
+
+Not allowed:
+
+- generalization beyond the fixture;
+- evidence-correctness or usability claims.
+
+### Source-audited 100-query Paper v1
+
+Allowed if the freeze, run, and human review pass:
+
+- in a source-audited 100-query fixture, deterministic refusal reduced
+  under-refusal without increasing observed automatic contract failures;
+- hybrid lanes reduced Qwen invocations for exact/refusal tasks;
+- blinded semantic review did not show a large usefulness collapse.
+
+Still cautious:
+
+- latency claims remain pinned to the browser/model/hardware environment.
+
+### 200/300-query holdout
+
+Allowed if rules remain frozen:
+
+- the observed pattern remained stable across a larger held-out fixture.
+
+Still forbidden:
+
+- solving hallucination;
+- determining legal rights truth;
+- universal browser-local RAG superiority.
+
 ## Forbidden Claims
 
 Do not claim:

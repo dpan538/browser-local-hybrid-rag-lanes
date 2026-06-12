@@ -36,6 +36,8 @@ exploratory are useful evidence but are not, by themselves, journal-ready.
 | Reviewer B scores | `review/paper_v1_reviewer_B.jsonl` | Missing |
 | Human review summary | `reports/HUMAN_REVIEW_SUMMARY_PAPER_V1.md` | Missing |
 | Final claim ledger | `reports/PAPER_V1_CLAIM_LEDGER.md` | Missing |
+| Information Research target plan | `docs/INFORMATION_RESEARCH_TARGET_PLAN.md` | Added as writing target |
+| Source-audited expansion roadmap | `docs/SOURCE_AUDITED_EXPANSION_ROADMAP.md` | Added as methods roadmap |
 
 ## Artifact Rule
 
