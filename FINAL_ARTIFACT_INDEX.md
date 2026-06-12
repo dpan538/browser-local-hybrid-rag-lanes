@@ -39,6 +39,9 @@ exploratory are useful evidence but are not, by themselves, journal-ready.
 | Information Research target plan | `docs/INFORMATION_RESEARCH_TARGET_PLAN.md` | Superseded historical target |
 | Source-audited expansion roadmap | `docs/SOURCE_AUDITED_EXPANSION_ROADMAP.md` | Added as methods roadmap |
 | Journal target strategy | `docs/JOURNAL_TARGET_STRATEGY.md` | Active venue ladder |
+| Paper v1 fixture provenance plan | `docs/PAPER_V1_FIXTURE_PROVENANCE_PLAN.md` | Added as provenance gate |
+| Source audit manifest schema | `schemas/source_audit_manifest_schema.json` | Added as provenance validation schema |
+| Source audit manifest validator | `scripts/validate_source_audit_manifest.py` | Added as provenance validation script |
 
 ## Artifact Rule
 

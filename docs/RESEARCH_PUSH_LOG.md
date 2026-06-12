@@ -1405,3 +1405,33 @@ Current stance:
   stronger JIS/revision reserve or OIR/AJIM stretch package.
 - The immediate next implementation step remains the source-audited 50-query
   fixture/provenance gate.
+
+## 2026-06-12: Paper v1 fixture provenance scaffold
+
+Purpose:
+
+- Start the Paper v1 source-audited fixture/provenance phase without adding
+  fake audited records.
+- Define the metadata-only source-audit manifest schema.
+- Add a validator for source-audit manifest JSONL files.
+- Create the `fixtures/source_audited_50/` gate directory with instructions.
+- Add a provenance plan that separates source audit from deterministic
+  evidence-to-output fidelity.
+
+Added files:
+
+```text
+docs/PAPER_V1_FIXTURE_PROVENANCE_PLAN.md
+schemas/source_audit_manifest_schema.json
+scripts/validate_source_audit_manifest.py
+fixtures/source_audited_50/README.md
+```
+
+Current stance:
+
+- This commit does not create source-audited rows yet.
+- The next data step is to populate
+  `fixtures/source_audited_50/source_audit_manifest_v0.jsonl` from public
+  metadata without downloading images.
+- Paper-facing promotion requires the manifest to pass with `--min-rows 50`
+  and `--require-pass`.

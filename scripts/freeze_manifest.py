@@ -25,6 +25,7 @@ DEFAULT_FILES = [
     "docs/EXPERIMENT_EXECUTION_PLAN.md",
     "docs/PROTOCOL_FREEZE_V0.md",
     "docs/PAPER_V1_FREEZE_PLAN.md",
+    "docs/PAPER_V1_FIXTURE_PROVENANCE_PLAN.md",
     "docs/JOURNAL_TARGET_STRATEGY.md",
     "docs/INFORMATION_RESEARCH_TARGET_PLAN.md",
     "docs/SOURCE_AUDITED_EXPANSION_ROADMAP.md",
@@ -34,13 +35,16 @@ DEFAULT_FILES = [
     "scripts/diagnose_qwen_webllm_run.py",
     "scripts/aggregate_qwen_webllm_runs.py",
     "scripts/analysis.py",
+    "scripts/validate_source_audit_manifest.py",
     "schemas/run_record_schema.json",
     "schemas/environment_stability_log_schema.json",
     "schemas/condition_prompt_pack_schema.json",
     "schemas/runtime_fixture_view_schema.json",
     "schemas/evaluation_fixture_view_schema.json",
     "schemas/golden_answers_schema.json",
+    "schemas/source_audit_manifest_schema.json",
     "review/golden_answers.json",
+    "fixtures/source_audited_50/README.md",
 ]
 
 
