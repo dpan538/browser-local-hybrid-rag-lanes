@@ -7,7 +7,7 @@ must generalize along four dimensions:
 
 | Dimension | Current Limitation | Expansion Requirement |
 |---|---|---|
-| Sample size | 50-query exploratory fixture | 100-query Paper v1, then 200/300 robustness sets |
+| Sample size | 50-query exploratory fixture | 100-query calibration, 200-query review pilot, 300-query final run |
 | Evidence | Synthetic, not source-audited records | Source-audited or public-derived evidence |
 | Lane coverage | Strongest signal currently comes from refusal rows | Enough rows per lane to test allocation, not only refusal |
 | Environment | Browser latency is sensitive to cold/warm state, GC, and backgrounding | Clean runs plus sensitivity analysis |
@@ -62,13 +62,14 @@ reports/PAPER_V1_QWEN_WEBLLM_50_AGGREGATE.md
 
 This stage permits a first human-review calibration, not final journal claims.
 
-## Stage 2: 100-Query Paper V1
+## Stage 2: 100-Query Calibration Set
 
 Purpose:
 
-- create the minimum Information Research-style article package;
-- give every answer lane enough observations;
-- run a lightweight two-rater blinded semantic audit.
+- test the source-audited fixture expansion process;
+- give every answer lane initial source-audited observations;
+- calibrate the review form and reviewer instructions;
+- avoid treating the result as the final journal evidence package.
 
 Suggested lane distribution:
 
@@ -86,19 +87,17 @@ Suggested lane distribution:
 
 Human review:
 
-- sample 40 queries;
-- review all three condition outputs for sampled queries;
-- 120 blinded review rows total;
-- include all automatic contract-failure rows;
-- include at least half of refusal-expected rows;
-- include at least 10 mixed-intent queries;
-- stratify remaining rows by lane.
+- calibration only;
+- use 10-12 queries or another small stratified sample;
+- do not use this review as the final paper-facing human review if rules,
+  prompts, fixture construction, or outputs later change.
 
-## Stage 3: 200-Query Robustness Expansion
+## Stage 3: 200-Query Formal Review Pilot
 
 Purpose:
 
-- test whether the pattern survives broader fixture variation.
+- validate lane distribution, failure patterns, review workflow, and
+  reviewer agreement before the final 300-query run.
 
 Add:
 
@@ -113,11 +112,30 @@ Human review:
 - sample about 60 queries x 3 outputs = 180 blinded rows;
 - review all contract-failure and flagged rows.
 
-## Stage 4: 300-Query Stronger Journal Version
+Boundary:
+
+- can support a strong internal methods decision;
+- should not be treated as the final OIR/AJIM evidence package if the 300-query
+  run is planned.
+
+## Stage 4: 300-Query OIR/AJIM Candidate
 
 Purpose:
 
-- produce a stronger held-out robustness package if needed.
+- produce the final paper-facing evidence package for the OIR/AJIM stretch
+  route.
+
+Requirements:
+
+- 300 source-audited or public-derived queries;
+- 3 conditions per query;
+- 900 outputs total;
+- frozen protocol manifest;
+- clean Qwen/WebLLM browser-local run;
+- automatic contract metrics on all outputs;
+- source, rights, provenance, refusal, mixed-intent, and guidance lanes all
+  represented;
+- environment flags retained and analyzed.
 
 Automatic metrics:
 
@@ -125,7 +143,7 @@ Automatic metrics:
 
 Human review:
 
-- stratified sample around 80 queries x 3 outputs = 240 blinded rows;
+- stratified sample around 80-100 queries x 3 outputs = 240-300 blinded rows;
 - all contract-failure or anomaly rows included;
 - do not ask reviewers to score all 900 outputs unless there is a specific
   reason.
@@ -138,14 +156,15 @@ Recommended split:
 
 ```text
 50 dev queries: adjust rule table, prompt pack, and review rubric
-100 evaluation queries: first paper-facing evaluation
-100-200 holdout queries: robustness without rule changes
+100 calibration queries: source-audited calibration and rubric testing
+200 pilot queries: formal review workflow and pattern check
+300 final queries: OIR/AJIM candidate evidence package
 ```
 
 If resources are limited:
 
 ```text
-50 dev + 50 eval = 100
+50 dev + 100 source-audited evaluation = lower-tier manuscript target
 ```
 
 Do not tune rules on the same query set used for final claims.
@@ -161,4 +180,6 @@ Do not begin formal human review until all of the following are true:
 5. Blind review pack is generated.
 6. Any system change after human review triggers a rerun and a new review pack.
 
-Before this gate, only calibration review is appropriate.
+Before this gate, only calibration review is appropriate. For the OIR/AJIM
+route, the formal paper-facing human review should be attached to the final
+300-query run rather than the 100-query calibration set.

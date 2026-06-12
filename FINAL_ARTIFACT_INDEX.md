@@ -38,6 +38,7 @@ exploratory are useful evidence but are not, by themselves, journal-ready.
 | Final claim ledger | `reports/PAPER_V1_CLAIM_LEDGER.md` | Missing |
 | Information Research target plan | `docs/INFORMATION_RESEARCH_TARGET_PLAN.md` | Added as writing target |
 | Source-audited expansion roadmap | `docs/SOURCE_AUDITED_EXPANSION_ROADMAP.md` | Added as methods roadmap |
+| Journal target strategy | `docs/JOURNAL_TARGET_STRATEGY.md` | Active venue ladder |
 
 ## Artifact Rule
 

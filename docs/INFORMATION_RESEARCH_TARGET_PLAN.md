@@ -1,11 +1,13 @@
-# Information Research Target Plan
+# Superseded Information Research Target Plan
 
 Generated: 2026-06-12
 
-This document records the first-target venue framing for the hybrid
-answer-lane allocation paper. It is a writing and methods target, not a current
-submission plan, because the official submissions page currently says the
-journal is not accepting submissions.
+This document is retained as historical planning context only. It has been
+superseded by `docs/JOURNAL_TARGET_STRATEGY.md`.
+
+Information Research is no longer the first target because the official
+submissions page currently says the journal is not accepting submissions, and
+the current OJS archive page reports no published issues in that instance.
 
 Primary source links:
 
@@ -14,8 +16,9 @@ Primary source links:
 
 ## Venue Status
 
-Information Research is a good style and audience target, but submission must
-be rechecked before the manuscript is prepared for upload.
+Information Research is no longer an active target. Its user-oriented style
+remains useful background, but submission planning should follow
+`docs/JOURNAL_TARGET_STRATEGY.md`.
 
 Current official submission-page status checked on 2026-06-12:
 
@@ -23,7 +26,13 @@ Current official submission-page status checked on 2026-06-12:
 This journal is not accepting submissions at this time.
 ```
 
-Backup venues should remain open while the paper is developed.
+Active target planning has moved to:
+
+```text
+Online Information Review -> Aslib Journal of Information Management ->
+Journal of Information Science / The Electronic Library ->
+Open Information Science / Digital Library Perspectives
+```
 
 ## Fit
 

@@ -1330,3 +1330,44 @@ Current stance:
   venue framing.
 - Human review should start formally after source audit, rule/prompt freeze,
   clean three-condition run, automatic contract checks, and blind-pack export.
+
+## 2026-06-12: OIR/AJIM stretch-target strategy
+
+Purpose:
+
+- Supersede Information Research as the active first target because its
+  submissions page is closed and the current OJS archive state is uncertain.
+- Define Online Information Review as the first stretch target and Aslib
+  Journal of Information Management as the second stretch target.
+- Preserve Journal of Information Science, The Electronic Library, Open
+  Information Science, and Digital Library Perspectives as backup tiers.
+- Raise the OIR/AJIM evidence standard to a 300-query source-audited final run
+  with automatic metrics on all 900 condition outputs and two-rater blinded
+  semantic review on 240-300 sampled outputs.
+
+Added files:
+
+```text
+docs/JOURNAL_TARGET_STRATEGY.md
+```
+
+Updated files:
+
+```text
+docs/INFORMATION_RESEARCH_TARGET_PLAN.md
+docs/SOURCE_AUDITED_EXPANSION_ROADMAP.md
+docs/PAPER_V1_FREEZE_PLAN.md
+CLAIMS_AND_NON_CLAIMS.md
+FINAL_ARTIFACT_INDEX.md
+scripts/freeze_manifest.py
+README.md
+```
+
+Current stance:
+
+- OIR/AJIM are high-risk stretch targets, not safe Q2/Q3 fallbacks.
+- The final OIR/AJIM candidate needs 300 source-audited queries, 900 outputs,
+  a frozen manifest, clean Qwen/WebLLM browser-local runs, all-output automatic
+  contract metrics, and sampled blinded semantic review.
+- The 100-query stage is now calibration, and the 200-query stage is a formal
+  review/workflow pilot rather than the final paper-facing run.

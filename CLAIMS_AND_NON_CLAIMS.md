@@ -53,24 +53,42 @@ Not allowed:
 - generalization beyond the fixture;
 - evidence-correctness or usability claims.
 
-### Source-audited 100-query Paper v1
+### Source-audited 100-query calibration
 
-Allowed if the freeze, run, and human review pass:
+Allowed if the freeze and clean run pass:
 
-- in a source-audited 100-query fixture, deterministic refusal reduced
-  under-refusal without increasing observed automatic contract failures;
-- hybrid lanes reduced Qwen invocations for exact/refusal tasks;
-- blinded semantic review did not show a large usefulness collapse.
+- the source-audited fixture and frozen rule/prompt process can scale beyond
+  the synthetic 50-query pilot;
+- the review rubric can be calibrated on realistic source-audited outputs.
 
-Still cautious:
+Not allowed:
 
-- latency claims remain pinned to the browser/model/hardware environment.
+- final journal-level usability claims;
+- stable generalization claims;
+- OIR/AJIM-level empirical claims.
 
-### 200/300-query holdout
+### Source-audited 200-query formal pilot
 
 Allowed if rules remain frozen:
 
-- the observed pattern remained stable across a larger held-out fixture.
+- the pattern and review workflow remained plausible across a broader
+  source-audited fixture;
+- reviewer disagreement patterns can identify ambiguous lane boundaries.
+
+Still not final for OIR/AJIM if a 300-query run is planned.
+
+### Source-audited 300-query OIR/AJIM candidate
+
+Allowed if the freeze, clean run, automatic metrics, and two-rater blinded
+review pass:
+
+- full hybrid answer lanes reduced refusal-alignment failures and unnecessary
+  generation in a controlled source-audited information-assistance fixture;
+- the effect was evaluated across 900 condition outputs;
+- human review on 240-300 blinded sampled outputs did not show an unacceptable
+  usefulness collapse;
+- latency claims remain pinned to the declared browser/model/hardware
+  environment.
 
 Still forbidden:
 
