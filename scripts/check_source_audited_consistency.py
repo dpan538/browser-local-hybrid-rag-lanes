@@ -119,6 +119,13 @@ def check_consistency(
 
     for row in fixture_rows:
         evidence_state = row["evidence_packet"]["aggregated_evidence_state"]
+        checklist = row["evidence_packet"].get("field_checklist", {})
+        decisive_fields = row["evidence_packet"].get("decisive_fields", [])
+        weak_decisive_fields = [
+            field
+            for field in decisive_fields
+            if checklist.get(field) in {"absent", "present_but_conflicting"}
+        ]
         for record in row["evidence_packet"].get("records", []):
             origin = record.get("record_origin")
             audit = record.get("source_audit_status")
@@ -126,10 +133,15 @@ def check_consistency(
                 errors.append(f"{row['query_id']}:{record['record_id']} invalid origin {origin}")
             if audit not in ALLOWED_FIXTURE_AUDITS:
                 errors.append(f"{row['query_id']}:{record['record_id']} invalid audit {audit}")
-            if audit == "uncertain" and evidence_state in {"sufficient", "not_applicable"}:
+            if (
+                audit == "uncertain"
+                and evidence_state in {"sufficient", "not_applicable"}
+                and weak_decisive_fields
+            ):
                 errors.append(
                     f"{row['query_id']}:{record['record_id']} partial audit produced "
-                    f"evidence_state={evidence_state}"
+                    f"evidence_state={evidence_state} despite weak decisive fields: "
+                    + ", ".join(weak_decisive_fields)
                 )
 
     for row in runtime_rows:

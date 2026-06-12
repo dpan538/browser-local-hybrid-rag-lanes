@@ -1735,3 +1735,57 @@ Expected validation before push:
   query-plan rows;
 - no fixture rows, runtime code, model artifacts, image downloads, or browser
   cache are changed by this pre-run backup.
+
+## 2026-06-12: Source-audited 50-query gate completion
+
+Purpose:
+
+- Complete the first mechanically valid 50-query `source_audited_50` gate.
+- Add five official Metropolitan Museum of Art Collection API manifest rows as
+  a third source family.
+- Mark Met rows as `partial` where title/date/source/object URL are present but
+  license/reuse fields are missing.
+- Add q027-q050 query-plan rows covering partial source/rights, mixed-intent,
+  cross-source comparison, recommendation, additional no-evidence refusal, and
+  earliest/superlative refusal cases.
+- Patch the consistency checker so partial source-audit records can support
+  query-level sufficient evidence when the missing fields are not decisive for
+  that query.
+- Regenerate experiment, runtime, evaluation, and warmup views.
+
+Added/updated files:
+
+```text
+scripts/check_source_audited_consistency.py
+fixtures/source_audited_50/source_audit_manifest_v0.jsonl
+fixtures/source_audited_50/query_plan_v0.jsonl
+fixtures/source_audited_50/experiment_fixture.jsonl
+fixtures/source_audited_50/runtime_view.jsonl
+fixtures/source_audited_50/evaluation_view.jsonl
+fixtures/source_audited_50/README.md
+reports/SOURCE_AUDITED_50_GATE_50_SUMMARY_V0.md
+docs/SOURCE_FAMILY_SELECTION_V0.md
+FINAL_ARTIFACT_INDEX.md
+README.md
+```
+
+Validation target before push:
+
+- source audit manifest passes with `--min-rows 23 --allow-partial`;
+- query plan passes with `--min-rows 50`;
+- manifest/query sync passes;
+- source-audited compiler emits 50 rows and 1 warmup row;
+- source-audited consistency passes with `--expected-rows 50`;
+- compiled experiment fixture passes `validate_fixture.py`;
+- Python script compilation passes for changed scripts;
+- protocol bundle validation passes;
+- paper-v1 source-audited freeze profile can hash the 50-query bundle;
+- `git diff --check` passes.
+
+Current stance:
+
+- This is a completed fixture/provenance gate, not a Qwen/WebLLM model run.
+- The gate contains 50 query rows from 23 metadata records across LOC,
+  Wikimedia Commons, and Met metadata.
+- The next step is a pre-run backup for a clean browser-local Qwen/WebLLM run
+  over this source-audited runtime view.

@@ -133,6 +133,7 @@ The first can be checked mechanically. The second requires source audit.
 - [Qwen WebLLM foreground clean q001-q050 aggregate v0](reports/QWEN_WEBLLM_FOREGROUND_CLEAN_Q001_Q050_AGGREGATE_V0.md)
 - [Source-audited 15-row expansion summary v0](reports/SOURCE_AUDITED_50_EXPANSION_15_SUMMARY_V0.md)
 - [Source-audited 26-row structural expansion summary v0](reports/SOURCE_AUDITED_50_STRUCTURAL_EXPANSION_26_SUMMARY_V0.md)
+- [Source-audited 50-query gate summary v0](reports/SOURCE_AUDITED_50_GATE_50_SUMMARY_V0.md)
 - [Methodology build plan](docs/METHODOLOGY_BUILD_PLAN.md)
 - [Paper narrative draft](docs/PAPER_NARRATIVE_DRAFT.md)
 - [Paper positioning decisions](docs/PAPER_POSITIONING_DECISIONS.md)

@@ -100,12 +100,51 @@ For these rows:
 - `image_state_label` remains a metadata-derived label, not an image-content
   claim.
 
+## Third Family: Museum Metadata
+
+`museum_metadata` is introduced through official Metropolitan Museum of Art
+Collection API records. These rows are useful because they are partial rather
+than complete rights records:
+
+- title, date, repository, and object URL are available;
+- `isPublicDomain=false` is visible in the object metadata;
+- `rightsAndReproduction` is empty for the selected records;
+- no primary image URL is provided by the API for these selected records.
+
+The fixture therefore marks Met rows as `source_audit_status=partial` and
+records `rights_label` and `reuse_permission` as `missing`. This creates
+controlled partial-evidence cases without inventing rights claims.
+
+| Query range | Met object(s) | Lane purpose |
+|---|---|---|
+| `q027`-`q031` | `853621`, `916015`, `922252`, `922247`, `966971` | Partial source/rights, mixed, and explanation rows |
+| `q032`-`q034` | Reused Met records | Comparison and recommendation rows where rights fields are not decisive |
+| `q038`, `q040`, `q043`, `q045`, `q048`, `q050` | Reused Met records | Earliest refusal, cross-source comparison, partial mixed, and source/rights rows |
+
+This family also required a consistency-checker correction: a partial
+source-audit record may support a query-level `sufficient` evidence state when
+the missing fields are not decisive for that query.
+
+## Completion Of The 50-Query Gate
+
+The current `source_audited_50` gate contains:
+
+- 50 query rows;
+- 23 source-audit manifest records;
+- 3 source families (`loc_metadata`, `wikimedia_commons_metadata`,
+  `museum_metadata`);
+- 32 sufficient-evidence rows;
+- 10 missing-evidence deterministic-refusal rows;
+- 8 partial-evidence rows.
+
+This completes the first mechanically valid 50-query source-audited fixture
+gate. It does not yet create a paper-facing Qwen/WebLLM result.
+
 ## Next Families To Consider
 
 The next source-family candidates should diversify beyond LOC:
 
 - DPLA provider metadata for aggregator/source-provenance ambiguity;
-- museum metadata where rights fields are present but reuse terms differ;
 - Europeana metadata if rights fields are consistently accessible without
   requiring image download.
 

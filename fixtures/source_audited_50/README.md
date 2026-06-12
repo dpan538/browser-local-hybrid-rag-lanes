@@ -1,8 +1,15 @@
 # Source-Audited 50 Fixture
 
-This directory is reserved for the Paper v1 source-audited 50-query gate.
+This directory holds the Paper v1 source-audited 50-query gate.
 
 Do not add synthetic fixture rows here.
+
+Current gate status:
+
+- 50 query-plan rows;
+- 23 source-audit manifest rows;
+- 3 source families;
+- 1 explicit warmup row.
 
 Target files:
 
@@ -20,7 +27,7 @@ The source-audit manifest must validate with:
 ```bash
 .venv/bin/python scripts/validate_source_audit_manifest.py \
   fixtures/source_audited_50/source_audit_manifest_v0.jsonl \
-  --min-rows 50 \
+  --min-rows 23 \
   --allow-partial
 ```
 
@@ -28,13 +35,17 @@ Use `--require-pass` only for a strict all-audited bundle. Paper v1 may include
 `partial` rows when they are deliberate partial/missing/contradictory evidence
 cases.
 
-The query plan and manifest must align before compilation:
+The query-plan gate, not the source-record count, is the 50-row unit:
 
 ```bash
 .venv/bin/python scripts/validate_source_audited_query_plan.py \
   fixtures/source_audited_50/query_plan_v0.jsonl \
   --min-rows 50
+```
 
+The query plan and manifest must align before compilation:
+
+```bash
 .venv/bin/python scripts/sync_query_manifest.py \
   --manifest fixtures/source_audited_50/source_audit_manifest_v0.jsonl \
   --query-plan fixtures/source_audited_50/query_plan_v0.jsonl
@@ -43,7 +54,7 @@ The query plan and manifest must align before compilation:
 Compile after the manifest and query plan are ready:
 
 ```bash
-.venv/bin/python scripts/compile_source_audited_fixture.py
+.venv/bin/python scripts/compile_source_audited_fixture.py --warmup-count 1
 .venv/bin/python scripts/check_source_audited_consistency.py \
   --expected-rows 50 \
   --require-explicit-warmup

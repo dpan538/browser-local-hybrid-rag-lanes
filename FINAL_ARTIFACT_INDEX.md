@@ -24,9 +24,9 @@ exploratory are useful evidence but are not, by themselves, journal-ready.
 
 | Artifact | Target Path | Status |
 |---|---|---|
-| Source-audited fixture | `fixtures/source_audited_50/` | Expansion in progress, 26/50 query rows from 18 audited metadata rows |
-| Runtime view for Paper v1 | `fixtures/source_audited_50/runtime_view.jsonl` | Expansion generated, 26 rows |
-| Evaluation view for Paper v1 | `fixtures/source_audited_50/evaluation_view.jsonl` | Expansion generated, 26 rows |
+| Source-audited fixture | `fixtures/source_audited_50/` | 50-query gate generated from 23 metadata records |
+| Runtime view for Paper v1 | `fixtures/source_audited_50/runtime_view.jsonl` | Source-audited gate generated, 50 rows |
+| Evaluation view for Paper v1 | `fixtures/source_audited_50/evaluation_view.jsonl` | Source-audited gate generated, 50 rows |
 | Warmup queries for Paper v1 | `fixtures/source_audited_50/warmup_queries.jsonl` | First batch generated, 1 warmup row |
 | Freeze manifest | `manifests/protocol_v1_freeze_manifest.json` | Missing |
 | Paper v1 raw run records | `runs/paper_v1_qwen_webllm_50_clean/` | Missing |
@@ -44,6 +44,7 @@ exploratory are useful evidence but are not, by themselves, journal-ready.
 | Source-audited 26-to-50 expansion expectation | `docs/SOURCE_AUDITED_50_26_TO_50_EXPANSION_EXPECTATION_V0.md` | Added as next expansion pre-run backup |
 | Source-audited 15-row expansion summary | `reports/SOURCE_AUDITED_50_EXPANSION_15_SUMMARY_V0.md` | Added as post-run expansion summary |
 | Source-audited 26-row structural expansion summary | `reports/SOURCE_AUDITED_50_STRUCTURAL_EXPANSION_26_SUMMARY_V0.md` | Added as structural expansion summary |
+| Source-audited 50-query gate summary | `reports/SOURCE_AUDITED_50_GATE_50_SUMMARY_V0.md` | Added as first complete source-audited 50-query gate summary |
 | Source audit manifest schema | `schemas/source_audit_manifest_schema.json` | Added as provenance validation schema |
 | Source-audited query plan schema | `schemas/source_audited_query_plan_schema.json` | Added as query authoring schema |
 | Source audit manifest validator | `scripts/validate_source_audit_manifest.py` | Added as provenance validation script |
