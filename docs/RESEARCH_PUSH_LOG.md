@@ -1639,3 +1639,26 @@ Current stance:
 - This is still a source-audited fixture authoring milestone, not a model run.
 - Next expansion should introduce refusal/earliest and comparison rows plus a
   second source family.
+
+## 2026-06-12: Source-audited structural expansion pre-run backup
+
+Purpose:
+
+- Back up the clean 15-row state before adding refusal, earliest, comparison,
+  and second-source-family rows.
+- Record that the next target is structural coverage rather than more LOC-only
+  source/rights success cases.
+- Allow script/gate patches during the run if no-record or multi-record rows
+  expose compiler or consistency gaps.
+
+Added file:
+
+```text
+docs/SOURCE_AUDITED_50_STRUCTURAL_EXPANSION_EXPECTATION_V0.md
+```
+
+Expected validation before push:
+
+- worktree is clean before this pre-run note;
+- this note is committed and pushed before structural expansion begins;
+- no fixture rows or runtime code are changed by this pre-run backup.
