@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dpan538/browser-local-hybrid-rag-lanes/schemas/source_audited_query_plan_schema.json",
+  "title": "Source-Audited Query Plan Row",
+  "type": "object",
+  "required": [
+    "plan_version",
+    "query_id",
+    "role",
+    "stratum",
+    "query_text",
+    "intent_label",
+    "primary_lane",
+    "mixed_intent",
+    "decisive_fields",
+    "refusal_policy"
+  ],
+  "properties": {
+    "plan_version": { "type": "string", "const": "paper_v1_query_plan_v0" },
+    "query_id": { "type": "string", "pattern": "^q[0-9]{3}$" },
+    "role": { "type": "string", "enum": ["dev", "eval", "warmup"] },
+    "stratum": {
+      "type": "string",
+      "enum": [
+        "source_rights",
+        "no_evidence_refusal",
+        "first_earliest_refusal",
+        "comparison",
+        "recommendation",
+        "explanation",
+        "more_context",
+        "mixed_intent"
+      ]
+    },
+    "query_text": { "type": "string", "minLength": 1 },
+    "intent_label": {
+      "type": "string",
+      "enum": [
+        "source/rights",
+        "refusal_required",
+        "comparison",
+        "recommendation",
+        "explanation",
+        "mixed"
+      ]
+    },
+    "primary_lane": {
+      "type": "string",
+      "enum": [
+        "deterministic_exact",
+        "deterministic_refusal",
+        "generative",
+        "compound"
+      ]
+    },
+    "secondary_lanes": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "mixed_intent": { "type": "boolean" },
+    "decisive_fields": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "manifest_ids": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^sa_[a-z0-9_\\-]+$" },
+      "uniqueItems": true
+    },
+    "allow_no_records": { "type": "boolean", "default": false },
+    "refusal_policy": {
+      "type": "string",
+      "enum": ["matrix", "always", "never"]
+    },
+    "authoring_notes": { "type": "string" }
+  },
+  "additionalProperties": false
+}

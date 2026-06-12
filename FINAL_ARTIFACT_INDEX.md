@@ -41,7 +41,11 @@ exploratory are useful evidence but are not, by themselves, journal-ready.
 | Journal target strategy | `docs/JOURNAL_TARGET_STRATEGY.md` | Active venue ladder |
 | Paper v1 fixture provenance plan | `docs/PAPER_V1_FIXTURE_PROVENANCE_PLAN.md` | Added as provenance gate |
 | Source audit manifest schema | `schemas/source_audit_manifest_schema.json` | Added as provenance validation schema |
+| Source-audited query plan schema | `schemas/source_audited_query_plan_schema.json` | Added as query authoring schema |
 | Source audit manifest validator | `scripts/validate_source_audit_manifest.py` | Added as provenance validation script |
+| Source-audited fixture compiler | `scripts/compile_source_audited_fixture.py` | Added as source-audit to fixture compiler |
+| Source-audited consistency checker | `scripts/check_source_audited_consistency.py` | Added as cross-artifact validation |
+| Source family registry | `config/source_families.yaml` | Added as source-family configuration |
 
 ## Artifact Rule
 

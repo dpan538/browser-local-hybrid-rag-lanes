@@ -5,6 +5,7 @@
   "type": "object",
   "required": [
     "audit_version",
+    "manifest_id",
     "fixture_target",
     "query_id",
     "record_id",
@@ -18,13 +19,21 @@
     "source_audit_status",
     "audit_scope",
     "fields",
-    "field_audit",
     "checked_at",
     "checked_by"
   ],
   "properties": {
     "audit_version": { "type": "string", "const": "paper_v1_source_audit_v0" },
-    "fixture_target": { "type": "string", "enum": ["source_audited_50", "source_audited_100", "source_audited_200", "source_audited_300"] },
+    "manifest_id": { "type": "string", "pattern": "^sa_[a-z0-9_\\-]+$" },
+    "fixture_target": {
+      "type": "string",
+      "enum": [
+        "source_audited_50",
+        "source_audited_100",
+        "source_audited_200",
+        "source_audited_300"
+      ]
+    },
     "query_id": { "type": "string", "pattern": "^q[0-9]{3}$" },
     "record_id": { "type": "string", "minLength": 1 },
     "source_family_id": { "type": "string", "minLength": 1 },
@@ -39,7 +48,7 @@
     },
     "source_audit_status": {
       "type": "string",
-      "enum": ["pass", "fail", "uncertain"]
+      "enum": ["audited", "partial", "failed"]
     },
     "audit_scope": {
       "type": "string",
@@ -58,42 +67,18 @@
         "image_state_label"
       ],
       "properties": {
-        "title": { "type": "string" },
-        "date_text": { "type": "string" },
-        "source": { "type": "string" },
-        "source_citation": { "type": "string" },
-        "rights_label": { "type": "string" },
-        "reuse_permission": { "type": "string" },
-        "public_domain_status": { "type": "string" },
-        "image_state_label": { "type": "string" }
+        "title": { "$ref": "#/$defs/audited_field" },
+        "date_text": { "$ref": "#/$defs/audited_field" },
+        "source": { "$ref": "#/$defs/audited_field" },
+        "source_citation": { "$ref": "#/$defs/audited_field" },
+        "rights_label": { "$ref": "#/$defs/audited_field" },
+        "reuse_permission": { "$ref": "#/$defs/audited_field" },
+        "public_domain_status": { "$ref": "#/$defs/audited_field" },
+        "image_state_label": { "$ref": "#/$defs/image_state_field" }
       },
       "additionalProperties": false
     },
-    "field_audit": {
-      "type": "object",
-      "required": [
-        "title",
-        "date_text",
-        "source",
-        "source_citation",
-        "rights_label",
-        "reuse_permission",
-        "public_domain_status",
-        "image_state_label"
-      ],
-      "properties": {
-        "title": { "$ref": "#/$defs/field_state" },
-        "date_text": { "$ref": "#/$defs/field_state" },
-        "source": { "$ref": "#/$defs/field_state" },
-        "source_citation": { "$ref": "#/$defs/field_state" },
-        "rights_label": { "$ref": "#/$defs/field_state" },
-        "reuse_permission": { "$ref": "#/$defs/field_state" },
-        "public_domain_status": { "$ref": "#/$defs/field_state" },
-        "image_state_label": { "$ref": "#/$defs/field_state" }
-      },
-      "additionalProperties": false
-    },
-    "audit_notes": { "type": "string" },
+    "auditor_notes": { "type": "string" },
     "checked_at": { "type": "string", "format": "date-time" },
     "checked_by": { "type": "string", "minLength": 1 }
   },
@@ -101,6 +86,37 @@
     "field_state": {
       "type": "string",
       "enum": ["verified", "missing", "conflicting", "not_applicable"]
+    },
+    "audited_field": {
+      "type": "object",
+      "required": ["state", "value", "evidence_note"],
+      "properties": {
+        "state": { "$ref": "#/$defs/field_state" },
+        "value": { "type": "string" },
+        "evidence_note": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "image_state_field": {
+      "type": "object",
+      "required": ["state", "value", "evidence_note"],
+      "properties": {
+        "state": { "$ref": "#/$defs/field_state" },
+        "value": {
+          "type": "string",
+          "enum": [
+            "",
+            "image_public_domain",
+            "image_restricted",
+            "image_copyrighted",
+            "image_rights_unknown",
+            "no_image_available",
+            "metadata_only_not_applicable"
+          ]
+        },
+        "evidence_note": { "type": "string" }
+      },
+      "additionalProperties": false
     }
   },
   "additionalProperties": false

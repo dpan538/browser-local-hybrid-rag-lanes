@@ -36,6 +36,9 @@ DEFAULT_FILES = [
     "scripts/aggregate_qwen_webllm_runs.py",
     "scripts/analysis.py",
     "scripts/validate_source_audit_manifest.py",
+    "scripts/compile_source_audited_fixture.py",
+    "scripts/check_source_audited_consistency.py",
+    "scripts/fetch_metadata_example.py",
     "schemas/run_record_schema.json",
     "schemas/environment_stability_log_schema.json",
     "schemas/condition_prompt_pack_schema.json",
@@ -43,8 +46,19 @@ DEFAULT_FILES = [
     "schemas/evaluation_fixture_view_schema.json",
     "schemas/golden_answers_schema.json",
     "schemas/source_audit_manifest_schema.json",
+    "schemas/source_audited_query_plan_schema.json",
     "review/golden_answers.json",
     "fixtures/source_audited_50/README.md",
+    "config/source_families.yaml",
+]
+
+PAPER_V1_SOURCE_AUDITED_FILES = [
+    "fixtures/source_audited_50/source_audit_manifest_v0.jsonl",
+    "fixtures/source_audited_50/query_plan_v0.jsonl",
+    "fixtures/source_audited_50/experiment_fixture.jsonl",
+    "fixtures/source_audited_50/runtime_view.jsonl",
+    "fixtures/source_audited_50/evaluation_view.jsonl",
+    "fixtures/source_audited_50/warmup_queries.jsonl",
 ]
 
 
@@ -88,9 +102,18 @@ def main() -> int:
         dest="files",
         help="Additional file to include. Can be repeated.",
     )
+    parser.add_argument(
+        "--profile",
+        choices=["current", "paper-v1-source-audited"],
+        default="current",
+        help="Freeze profile. paper-v1-source-audited includes generated source-audited fixture artifacts.",
+    )
     args = parser.parse_args()
 
-    files = DEFAULT_FILES + (args.files or [])
+    files = list(DEFAULT_FILES)
+    if args.profile == "paper-v1-source-audited":
+        files.extend(PAPER_V1_SOURCE_AUDITED_FILES)
+    files.extend(args.files or [])
     manifest = build_manifest(files)
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)

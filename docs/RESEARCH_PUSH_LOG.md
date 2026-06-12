@@ -1435,3 +1435,44 @@ Current stance:
   metadata without downloading images.
 - Paper-facing promotion requires the manifest to pass with `--min-rows 50`
   and `--require-pass`.
+
+## 2026-06-12: Source-audit compilation hardening
+
+Purpose:
+
+- Harden the source-audit manifest from separate `fields`/`field_audit`
+  objects into per-field `{state, value, evidence_note}` objects.
+- Define `audited`, `partial`, and `failed` source-audit statuses and require
+  status/field-state consistency before compilation.
+- Add a source family registry so audit rows cannot silently invent source
+  families.
+- Add a source-audited query plan schema so query wording and lane labels are
+  separated from metadata audit rows.
+- Add a compiler that produces `experiment_fixture.jsonl`, runtime view,
+  evaluation view, and warmup rows from the manifest and query plan.
+- Add a cross-artifact consistency checker and an example public-metadata
+  helper that does not download images.
+- Add a `paper-v1-source-audited` freeze-manifest profile that hashes the
+  generated source-audited bundle when those files exist.
+
+Added/updated files:
+
+```text
+config/source_families.yaml
+schemas/source_audit_manifest_schema.json
+schemas/source_audited_query_plan_schema.json
+scripts/validate_source_audit_manifest.py
+scripts/compile_source_audited_fixture.py
+scripts/check_source_audited_consistency.py
+scripts/fetch_metadata_example.py
+scripts/freeze_manifest.py
+docs/PAPER_V1_FIXTURE_PROVENANCE_PLAN.md
+fixtures/source_audited_50/README.md
+```
+
+Current stance:
+
+- Source-audited data rows still have not been authored.
+- The next experiment-blocking gate is now mechanical: source manifest,
+  query plan, compiler, consistency checker, and paper-v1 freeze profile must
+  all pass before any Paper v1 Qwen/WebLLM run.

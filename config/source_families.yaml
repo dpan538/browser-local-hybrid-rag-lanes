@@ -1,0 +1,94 @@
+version: source_families_v0
+audit_scope: metadata_only_no_image_download
+field_state_definitions:
+  verified: The public metadata directly supports the recorded value.
+  missing: The public metadata does not provide the field; value must be empty.
+  conflicting: Public metadata contains conflicting values or mutually inconsistent statements.
+  not_applicable: The field is not applicable to this source record or query task.
+image_state_label_definition: >
+  Metadata-level label for whether the source metadata describes the image as
+  public-domain, restricted/copyrighted, unavailable, or unknown. It does not
+  require downloading or visually inspecting the image.
+allowed_image_state_labels:
+  - image_public_domain
+  - image_restricted
+  - image_copyrighted
+  - image_rights_unknown
+  - no_image_available
+  - metadata_only_not_applicable
+source_families:
+  - id: loc_metadata
+    name: Library of Congress metadata
+    source_type: public_metadata
+    typical_url_patterns:
+      - https://www.loc.gov/*
+    expected_fields:
+      - title
+      - date_text
+      - source
+      - source_citation
+      - rights_label
+      - reuse_permission
+      - public_domain_status
+      - image_state_label
+    notes: Use metadata pages or JSON endpoints only; do not download images.
+  - id: dpla_metadata
+    name: Digital Public Library of America metadata
+    source_type: public_metadata
+    typical_url_patterns:
+      - https://dp.la/item/*
+    expected_fields:
+      - title
+      - date_text
+      - source
+      - source_citation
+      - rights_label
+      - reuse_permission
+      - public_domain_status
+      - image_state_label
+    notes: Use public item metadata and provider/source links.
+  - id: europeana_metadata
+    name: Europeana metadata
+    source_type: public_metadata
+    typical_url_patterns:
+      - https://www.europeana.eu/*
+    expected_fields:
+      - title
+      - date_text
+      - source
+      - source_citation
+      - rights_label
+      - reuse_permission
+      - public_domain_status
+      - image_state_label
+    notes: Use metadata and rights statements exposed by the record page or API.
+  - id: wikimedia_commons_metadata
+    name: Wikimedia Commons file metadata
+    source_type: public_metadata
+    typical_url_patterns:
+      - https://commons.wikimedia.org/wiki/File:*
+    expected_fields:
+      - title
+      - date_text
+      - source
+      - source_citation
+      - rights_label
+      - reuse_permission
+      - public_domain_status
+      - image_state_label
+    notes: Use file page metadata/license text; do not download media files.
+  - id: museum_metadata
+    name: Museum or collection metadata
+    source_type: public_metadata
+    typical_url_patterns:
+      - https://*
+    expected_fields:
+      - title
+      - date_text
+      - source
+      - source_citation
+      - rights_label
+      - reuse_permission
+      - public_domain_status
+      - image_state_label
+    notes: Use only stable public record pages with explicit metadata fields.

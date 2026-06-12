@@ -8,6 +8,7 @@ Target files:
 
 ```text
 source_audit_manifest_v0.jsonl
+query_plan_v0.jsonl
 experiment_fixture.jsonl
 runtime_view.jsonl
 evaluation_view.jsonl
@@ -21,6 +22,21 @@ The source-audit manifest must validate with:
   fixtures/source_audited_50/source_audit_manifest_v0.jsonl \
   --min-rows 50 \
   --require-pass
+```
+
+Compile after the manifest and query plan are ready:
+
+```bash
+.venv/bin/python scripts/compile_source_audited_fixture.py
+.venv/bin/python scripts/check_source_audited_consistency.py
+```
+
+Freeze the full source-audited bundle with:
+
+```bash
+.venv/bin/python scripts/freeze_manifest.py \
+  --profile paper-v1-source-audited \
+  --output manifests/protocol_v1_freeze_manifest.json
 ```
 
 The audit scope is metadata-only. Do not download or commit images, browser

@@ -1,0 +1,145 @@
+#!/usr/bin/env python3
+"""Example helper for turning public metadata JSON into an audit manifest row.
+
+This is intentionally conservative: it reads either a local JSON file or an
+explicit metadata URL, maps a small set of common metadata keys, and writes one
+metadata-only source-audit row. It does not download images.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import urllib.request
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any, Dict
+
+
+FIELD_KEYS = {
+    "title": ["title", "name"],
+    "date_text": ["date", "date_text", "created", "dateCreated"],
+    "source": ["source", "provider", "institution"],
+    "source_citation": ["citation", "source_citation", "identifier"],
+    "rights_label": ["rights", "rights_label", "license"],
+    "reuse_permission": ["reuse_permission", "usageTerms", "rights"],
+    "public_domain_status": ["public_domain_status", "publicDomain", "rights"],
+}
+
+
+def load_metadata(input_json: str | None, metadata_url: str | None) -> Dict[str, Any]:
+    if input_json:
+        return json.loads(Path(input_json).read_text(encoding="utf-8"))
+    if not metadata_url:
+        raise ValueError("Either --input-json or --metadata-url is required")
+    with urllib.request.urlopen(metadata_url, timeout=20) as response:
+        return json.loads(response.read().decode("utf-8"))
+
+
+def first_value(data: Dict[str, Any], keys: list[str]) -> str:
+    for key in keys:
+        if key not in data:
+            continue
+        value = data[key]
+        if isinstance(value, list):
+            value = value[0] if value else ""
+        if isinstance(value, dict):
+            value = value.get("name") or value.get("label") or value.get("@value") or ""
+        if value is not None and str(value).strip():
+            return str(value).strip()
+    return ""
+
+
+def audited_field(value: str, source_key_note: str) -> Dict[str, str]:
+    if value:
+        return {
+            "state": "verified",
+            "value": value,
+            "evidence_note": source_key_note,
+        }
+    return {
+        "state": "missing",
+        "value": "",
+        "evidence_note": "Field not found in supplied metadata JSON.",
+    }
+
+
+def infer_image_state(rights_value: str) -> Dict[str, str]:
+    lowered = rights_value.lower()
+    if "public domain" in lowered or "pdm" in lowered or "cc0" in lowered:
+        return {
+            "state": "verified",
+            "value": "image_public_domain",
+            "evidence_note": "Inferred from metadata rights statement; image not downloaded.",
+        }
+    if "copyright" in lowered or "restricted" in lowered:
+        return {
+            "state": "verified",
+            "value": "image_restricted",
+            "evidence_note": "Inferred from metadata rights statement; image not downloaded.",
+        }
+    return {
+        "state": "missing",
+        "value": "",
+        "evidence_note": "Image rights state not explicit in supplied metadata JSON.",
+    }
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--input-json")
+    parser.add_argument("--metadata-url")
+    parser.add_argument("--source-url", required=True)
+    parser.add_argument("--manifest-id", required=True)
+    parser.add_argument("--query-id", required=True)
+    parser.add_argument("--record-id", required=True)
+    parser.add_argument("--source-family-id", required=True)
+    parser.add_argument("--source-name", required=True)
+    parser.add_argument("--source-domain", required=True)
+    parser.add_argument("--source-record-id", required=True)
+    parser.add_argument("--checked-by", default="codex")
+    parser.add_argument("--output", required=True)
+    args = parser.parse_args()
+
+    data = load_metadata(args.input_json, args.metadata_url)
+    fields = {}
+    for field_name, keys in FIELD_KEYS.items():
+        value = first_value(data, keys)
+        fields[field_name] = audited_field(value, f"Mapped from candidate keys: {', '.join(keys)}")
+    rights_value = fields["rights_label"]["value"] or fields["reuse_permission"]["value"]
+    fields["image_state_label"] = infer_image_state(rights_value)
+
+    row = {
+        "audit_version": "paper_v1_source_audit_v0",
+        "manifest_id": args.manifest_id,
+        "fixture_target": "source_audited_50",
+        "query_id": args.query_id,
+        "record_id": args.record_id,
+        "source_family_id": args.source_family_id,
+        "source_name": args.source_name,
+        "source_domain": args.source_domain,
+        "source_url": args.source_url,
+        "metadata_url": args.metadata_url or Path(args.input_json).resolve().as_uri(),
+        "source_record_id": args.source_record_id,
+        "record_origin": "derived_from_public_source",
+        "source_audit_status": "partial" if any(
+            item["state"] == "missing" for item in fields.values()
+        ) else "audited",
+        "audit_scope": "metadata_only_no_image_download",
+        "fields": fields,
+        "auditor_notes": "Generated by fetch_metadata_example.py; review before use.",
+        "checked_at": datetime.now(timezone.utc).isoformat(),
+        "checked_by": args.checked_by,
+    }
+
+    output = Path(args.output)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    with output.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(row, ensure_ascii=False, separators=(",", ":")))
+        handle.write("\n")
+    print(f"Wrote source-audit manifest row to {output}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -91,6 +91,23 @@ The row schema is:
 schemas/source_audit_manifest_schema.json
 ```
 
+Each audited field uses the same object shape:
+
+```json
+{
+  "state": "verified",
+  "value": "Public Domain Mark 1.0",
+  "evidence_note": "Stated in the public metadata rights field."
+}
+```
+
+`source_audit_status` has three values:
+
+- `audited`: all applicable fields are verified or not applicable;
+- `partial`: at least one applicable field is missing or uncertain, but the
+  row may still support a partial-evidence fixture case;
+- `failed`: the row must not be promoted into a paper-facing fixture.
+
 The validator is:
 
 ```text
@@ -143,6 +160,18 @@ Allowed field states:
 - `conflicting`;
 - `not_applicable`.
 
+`image_state_label` is metadata-only. It means the source metadata describes
+the image as one of:
+
+- `image_public_domain`;
+- `image_restricted`;
+- `image_copyrighted`;
+- `image_rights_unknown`;
+- `no_image_available`;
+- `metadata_only_not_applicable`.
+
+It does not mean the image file was downloaded or visually inspected.
+
 The fixture compiler must not invent a value for a missing audited field. If a
 field is required by a deterministic lane but absent in the public metadata,
 the fixture should either use a placeholder or mark the row as partial/missing
@@ -174,6 +203,64 @@ Candidate sources should provide:
 - no requirement to download images for the audit.
 
 Candidate source families should be recorded before row authoring begins.
+
+The source family registry is:
+
+```text
+config/source_families.yaml
+```
+
+The manifest validator checks that each `source_family_id` exists in that
+registry.
+
+## Query Plan And Compilation
+
+The source audit manifest records public metadata. Query wording and lane
+intent belong in a separate query plan:
+
+```text
+fixtures/source_audited_50/query_plan_v0.jsonl
+schemas/source_audited_query_plan_schema.json
+```
+
+Compile source-audited artifacts with:
+
+```bash
+.venv/bin/python scripts/compile_source_audited_fixture.py \
+  --manifest fixtures/source_audited_50/source_audit_manifest_v0.jsonl \
+  --query-plan fixtures/source_audited_50/query_plan_v0.jsonl \
+  --output fixtures/source_audited_50/experiment_fixture.jsonl \
+  --runtime-output fixtures/source_audited_50/runtime_view.jsonl \
+  --evaluation-output fixtures/source_audited_50/evaluation_view.jsonl \
+  --warmup-output fixtures/source_audited_50/warmup_queries.jsonl
+```
+
+The compiler maps field states as follows:
+
+| Source audit state | Fixture field checklist state | Runtime behavior |
+|---|---|---|
+| `verified` | `present_and_consistent` | render value if lane requires it |
+| `missing` | `absent` | omit optional field; deterministic renderer falls back to placeholder |
+| `conflicting` | `present_but_conflicting` | mark aggregate evidence as contradictory |
+| `not_applicable` | `not_applicable` | ignore for task evidence state |
+
+`refusal_expected` is derived from `refusal_policy` in the query plan and
+`config/refusal_decision_matrix.csv`, rather than typed manually into the
+source audit manifest.
+
+After compilation, run:
+
+```bash
+.venv/bin/python scripts/check_source_audited_consistency.py
+```
+
+For a Paper v1 freeze, generate:
+
+```bash
+.venv/bin/python scripts/freeze_manifest.py \
+  --profile paper-v1-source-audited \
+  --output manifests/protocol_v1_freeze_manifest.json
+```
 
 ## Promotion Gate
 

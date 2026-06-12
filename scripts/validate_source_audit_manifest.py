@@ -8,7 +8,7 @@ import json
 import sys
 from collections import Counter
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, Iterable, List, Set
 
 try:
     import jsonschema
@@ -16,10 +16,21 @@ except ImportError:
     print("Error: jsonschema is required. Run: pip install -r requirements.txt")
     sys.exit(1)
 
+try:
+    import yaml
+except ImportError:
+    print("Error: PyYAML is required. Run: pip install -r requirements.txt")
+    sys.exit(1)
+
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR.parent
 SCHEMA_PATH = REPO_ROOT / "schemas" / "source_audit_manifest_schema.json"
+SOURCE_FAMILIES_PATH = REPO_ROOT / "config" / "source_families.yaml"
+
+COMPLETE_STATUSES = {"audited"}
+INCOMPLETE_FIELD_STATES = {"missing", "conflicting"}
+ALLOWED_ORIGINS = {"source_audited", "derived_from_public_source"}
 
 
 def load_json(path: Path) -> Dict[str, Any]:
@@ -36,12 +47,20 @@ def load_jsonl(path: Path) -> List[Dict[str, Any]]:
     return rows
 
 
-def validate_rows(rows: List[Dict[str, Any]], schema: Dict[str, Any]) -> List[str]:
+def load_source_family_ids(path: Path) -> Set[str]:
+    data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    return {
+        str(item["id"])
+        for item in data.get("source_families", [])
+        if "id" in item
+    }
+
+
+def validate_schema(rows: Iterable[Dict[str, Any]], schema: Dict[str, Any]) -> List[str]:
     errors: List[str] = []
     validator_cls = jsonschema.validators.validator_for(schema)
     validator_cls.check_schema(schema)
-    validator = validator_cls(schema)
-    seen_record_ids: set[str] = set()
+    validator = validator_cls(schema, format_checker=jsonschema.FormatChecker())
 
     for index, row in enumerate(rows, start=1):
         try:
@@ -49,24 +68,71 @@ def validate_rows(rows: List[Dict[str, Any]], schema: Dict[str, Any]) -> List[st
         except jsonschema.ValidationError as exc:
             dotted_path = ".".join(str(part) for part in exc.path)
             errors.append(f"line {index}: {exc.message} (path: {dotted_path})")
-            continue
+    return errors
 
-        record_id = row["record_id"]
+
+def validate_consistency(
+    rows: List[Dict[str, Any]],
+    source_family_ids: Set[str],
+    require_pass: bool,
+) -> List[str]:
+    errors: List[str] = []
+    seen_manifest_ids: Set[str] = set()
+    seen_record_ids: Set[str] = set()
+
+    for index, row in enumerate(rows, start=1):
+        manifest_id = row.get("manifest_id", f"line_{index}")
+        record_id = row.get("record_id", "")
+
+        if manifest_id in seen_manifest_ids:
+            errors.append(f"{manifest_id}: duplicate manifest_id")
+        seen_manifest_ids.add(manifest_id)
+
         if record_id in seen_record_ids:
-            errors.append(f"line {index}: duplicate record_id '{record_id}'")
+            errors.append(f"{manifest_id}: duplicate record_id '{record_id}'")
         seen_record_ids.add(record_id)
 
-        if row["source_audit_status"] == "pass":
-            for field, state in row["field_audit"].items():
-                value = row["fields"].get(field, "")
-                if state == "verified" and not value.strip():
-                    errors.append(
-                        f"line {index}: field '{field}' is verified but empty"
-                    )
-                if state == "missing" and value.strip():
-                    errors.append(
-                        f"line {index}: field '{field}' is missing but has a value"
-                    )
+        origin = row.get("record_origin")
+        if origin not in ALLOWED_ORIGINS:
+            errors.append(f"{manifest_id}: invalid record_origin '{origin}'")
+
+        family_id = row.get("source_family_id")
+        if source_family_ids and family_id not in source_family_ids:
+            errors.append(f"{manifest_id}: source_family_id '{family_id}' not in config")
+
+        status = row.get("source_audit_status")
+        field_states = {
+            field_name: field.get("state")
+            for field_name, field in row.get("fields", {}).items()
+        }
+        incomplete_fields = [
+            field_name
+            for field_name, state in field_states.items()
+            if state in INCOMPLETE_FIELD_STATES
+        ]
+        if status in COMPLETE_STATUSES and incomplete_fields:
+            errors.append(
+                f"{manifest_id}: status '{status}' cannot contain incomplete fields: "
+                + ", ".join(sorted(incomplete_fields))
+            )
+
+        for field_name, field in row.get("fields", {}).items():
+            state = field.get("state")
+            value = str(field.get("value", ""))
+            note = str(field.get("evidence_note", ""))
+            if state == "verified" and not value.strip():
+                errors.append(f"{manifest_id}: field '{field_name}' is verified but empty")
+            if state == "missing" and value.strip():
+                errors.append(f"{manifest_id}: field '{field_name}' is missing but has a value")
+            if state in {"verified", "conflicting"} and not note.strip():
+                errors.append(
+                    f"{manifest_id}: field '{field_name}' is {state} but has no evidence_note"
+                )
+
+        if require_pass and status != "audited":
+            errors.append(
+                f"{manifest_id}: require-pass set but source_audit_status is '{status}'"
+            )
 
     return errors
 
@@ -75,11 +141,12 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("manifest", help="Source-audit manifest JSONL file.")
     parser.add_argument("--schema", default=str(SCHEMA_PATH))
+    parser.add_argument("--source-families", default=str(SOURCE_FAMILIES_PATH))
     parser.add_argument("--min-rows", type=int, default=0)
     parser.add_argument(
         "--require-pass",
         action="store_true",
-        help="Require every row to have source_audit_status=pass.",
+        help="Require every row to have source_audit_status=audited.",
     )
     args = parser.parse_args()
 
@@ -90,21 +157,19 @@ def main() -> int:
 
     rows = load_jsonl(manifest_path)
     schema = load_json(Path(args.schema))
-    errors = validate_rows(rows, schema)
+    source_family_ids = (
+        load_source_family_ids(Path(args.source_families))
+        if Path(args.source_families).exists()
+        else set()
+    )
+
+    errors: List[str] = []
+    errors.extend(validate_schema(rows, schema))
+    if not errors:
+        errors.extend(validate_consistency(rows, source_family_ids, args.require_pass))
 
     if len(rows) < args.min_rows:
         errors.append(f"row count {len(rows)} is below required minimum {args.min_rows}")
-
-    if args.require_pass:
-        failing = [
-            row["record_id"]
-            for row in rows
-            if row.get("source_audit_status") != "pass"
-        ]
-        if failing:
-            errors.append(
-                "require-pass set but non-pass rows exist: " + ", ".join(failing[:20])
-            )
 
     if errors:
         print("Source-audit manifest validation failed:")
@@ -114,10 +179,12 @@ def main() -> int:
 
     status_counts = Counter(row["source_audit_status"] for row in rows)
     origin_counts = Counter(row["record_origin"] for row in rows)
+    family_counts = Counter(row["source_family_id"] for row in rows)
     print("Source-audit manifest validation passed.")
     print(f"Rows: {len(rows)}")
     print(f"Audit status counts: {dict(sorted(status_counts.items()))}")
     print(f"Record origin counts: {dict(sorted(origin_counts.items()))}")
+    print(f"Source family counts: {dict(sorted(family_counts.items()))}")
     return 0
 
 
