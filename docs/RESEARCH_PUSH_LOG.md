@@ -1569,3 +1569,25 @@ Current stance:
 - This is a first batch, not the complete 50-query gate.
 - Rights fields preserve LOC wording (`No known restrictions on publication.`)
   and explicitly do not assert legal public-domain status.
+
+## 2026-06-12: Source-audited 50 expansion pre-run backup
+
+Purpose:
+
+- Back up the experiment-start state before expanding beyond the first five
+  LOC source-audited rows.
+- Record expected expansion behavior, self-audit checks, and stop conditions.
+- Make clear that the next cycle may patch validation/compiler loopholes before
+  continuing row authoring.
+
+Added file:
+
+```text
+docs/SOURCE_AUDITED_50_EXPANSION_EXPECTATION_V0.md
+```
+
+Expected validation before push:
+
+- working tree is clean before this pre-run note;
+- this note is committed and pushed before further row expansion;
+- no experiment data or runtime code is changed by this pre-run backup.
