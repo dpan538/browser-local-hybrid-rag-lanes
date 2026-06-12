@@ -7,7 +7,7 @@ must generalize along four dimensions:
 
 | Dimension | Current Limitation | Expansion Requirement |
 |---|---|---|
-| Sample size | 50-query exploratory fixture | 100-query calibration, 200-query review pilot, 300-query final run |
+| Sample size | 50-query exploratory fixture | 100-query calibration, 200-query JIS candidate, 300-query stronger/stretch run |
 | Evidence | Synthetic, not source-audited records | Source-audited or public-derived evidence |
 | Lane coverage | Strongest signal currently comes from refusal rows | Enough rows per lane to test allocation, not only refusal |
 | Environment | Browser latency is sensitive to cold/warm state, GC, and backgrounding | Clean runs plus sensitivity analysis |
@@ -92,12 +92,14 @@ Human review:
 - do not use this review as the final paper-facing human review if rules,
   prompts, fixture construction, or outputs later change.
 
-## Stage 3: 200-Query Formal Review Pilot
+## Stage 3: 200-Query JIS Candidate
 
 Purpose:
 
-- validate lane distribution, failure patterns, review workflow, and
-  reviewer agreement before the final 300-query run.
+- produce the primary paper-facing evidence package for Journal of
+  Information Science;
+- validate lane distribution, failure patterns, review workflow, and reviewer
+  agreement under a frozen protocol.
 
 Add:
 
@@ -114,16 +116,16 @@ Human review:
 
 Boundary:
 
-- can support a strong internal methods decision;
-- should not be treated as the final OIR/AJIM evidence package if the 300-query
-  run is planned.
+- can support the JIS submission route if the source audit, run quality,
+  automatic metrics, and human review are strong;
+- remains below the preferred OIR/AJIM stretch evidence package.
 
-## Stage 4: 300-Query OIR/AJIM Candidate
+## Stage 4: 300-Query Stronger Version / Stretch Candidate
 
 Purpose:
 
-- produce the final paper-facing evidence package for the OIR/AJIM stretch
-  route.
+- produce a stronger JIS version, revision reserve, or OIR/AJIM stretch
+  package if time allows.
 
 Requirements:
 
@@ -157,8 +159,8 @@ Recommended split:
 ```text
 50 dev queries: adjust rule table, prompt pack, and review rubric
 100 calibration queries: source-audited calibration and rubric testing
-200 pilot queries: formal review workflow and pattern check
-300 final queries: OIR/AJIM candidate evidence package
+200 paper-facing queries: JIS candidate evidence package
+300 final queries: stronger JIS / OIR-AJIM stretch package
 ```
 
 If resources are limited:
@@ -180,6 +182,8 @@ Do not begin formal human review until all of the following are true:
 5. Blind review pack is generated.
 6. Any system change after human review triggers a rerun and a new review pack.
 
-Before this gate, only calibration review is appropriate. For the OIR/AJIM
-route, the formal paper-facing human review should be attached to the final
-300-query run rather than the 100-query calibration set.
+Before this gate, only calibration review is appropriate. For the JIS route,
+the formal paper-facing human review begins after the 200-query run. If the
+study later expands to 300 queries, the review package must be rerun or
+extended rather than treating the 200-query review as final evidence for the
+larger run.

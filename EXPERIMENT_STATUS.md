@@ -30,6 +30,23 @@ Evidence:
 - `reports/QWEN_WEBLLM_FOREGROUND_CLEAN_Q001_Q050_AGGREGATE_V0.md`
 - `reports/qwen_webllm_foreground_clean_q001_q050_aggregate_v0.json`
 
+## Publication Target State
+
+The active publication route is:
+
+```text
+Journal of Information Science -> The Electronic Library ->
+Open Information Science / Digital Library Perspectives
+```
+
+Online Information Review and Aslib Journal of Information Management remain
+stretch targets only.
+
+The minimum JIS candidate requires 200 source-audited queries, 600 condition
+outputs, a frozen protocol manifest, all-output automatic contract metrics,
+paired analysis by query, and two-rater blinded semantic review on 180 sampled
+outputs. A 300-query run remains the preferred stronger version if time allows.
+
 ## Readiness Ledger
 
 | Item | Current Status | Paper v1 Requirement |

@@ -67,28 +67,36 @@ Not allowed:
 - stable generalization claims;
 - OIR/AJIM-level empirical claims.
 
-### Source-audited 200-query formal pilot
-
-Allowed if rules remain frozen:
-
-- the pattern and review workflow remained plausible across a broader
-  source-audited fixture;
-- reviewer disagreement patterns can identify ambiguous lane boundaries.
-
-Still not final for OIR/AJIM if a 300-query run is planned.
-
-### Source-audited 300-query OIR/AJIM candidate
+### Source-audited 200-query JIS candidate
 
 Allowed if the freeze, clean run, automatic metrics, and two-rater blinded
 review pass:
 
-- full hybrid answer lanes reduced refusal-alignment failures and unnecessary
-  generation in a controlled source-audited information-assistance fixture;
+- hybrid answer-lane allocation reduced specific automatic contract failures
+  and under-refusal in a controlled browser-local RAG setting;
+- bounded generation remained available for explanation, comparison, and
+  research-guidance tasks;
+- human review on 180 blinded sampled outputs did not show an unacceptable
+  usefulness collapse;
+- reviewer disagreement patterns can identify ambiguous lane boundaries;
+- latency claims remain pinned to the declared browser/model/hardware
+  environment.
+
+This is the minimum Journal of Information Science candidate level, not the
+preferred OIR/AJIM stretch level.
+
+### Source-audited 300-query stronger/stretch candidate
+
+Allowed if the freeze, clean run, automatic metrics, and two-rater blinded
+review pass:
+
+- the 200-query JIS claim pattern remained stable or became clearer in a
+  larger source-audited fixture;
 - the effect was evaluated across 900 condition outputs;
 - human review on 240-300 blinded sampled outputs did not show an unacceptable
   usefulness collapse;
-- latency claims remain pinned to the declared browser/model/hardware
-  environment.
+- the package may support a stronger JIS submission, revision response, or
+  OIR/AJIM stretch submission.
 
 Still forbidden:
 

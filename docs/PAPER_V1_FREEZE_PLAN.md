@@ -17,11 +17,11 @@ Produce a reproducible Paper v1 package for:
 - latency attribution;
 - blinded usability review.
 
-The active stretch targets are Online Information Review and Aslib Journal of
-Information Management. For those venues, the minimum target is a 300-query
-source-audited final run. A source-audited 50-query clean run is the entry
-gate, and a 100-query run is a calibration stage, not the final journal
-package.
+The active primary target is Journal of Information Science. The paper-facing
+minimum for that route is a 200-query source-audited run. A source-audited
+50-query clean run is the entry gate, and a 100-query run is a calibration
+stage, not the final journal package. A 300-query run remains the preferred
+stronger version and the stretch route for OIR/AJIM.
 
 ## Research Questions
 
@@ -84,7 +84,7 @@ Recommended path:
 
 ```text
 synthetic 50 -> source-audited 50 -> source-audited 100 calibration ->
-source-audited 200 pilot -> source-audited 300 final
+source-audited 200 JIS candidate -> source-audited 300 stronger/stretch
 ```
 
 Do not treat sample-size expansion as the only form of generalization. Paper
@@ -137,9 +137,9 @@ Requirements:
 Segmented runs are acceptable if every segment uses the same freeze manifest.
 
 The 50-query clean run is used to prove the source-audited protocol. The
-100-query run calibrates the fixture and review process. The preferred
-OIR/AJIM paper-facing study then expands to 300 queries with balanced lane
-coverage.
+100-query run calibrates the fixture and review process. The 200-query run is
+the JIS paper-facing candidate. The 300-query run is the preferred stronger
+version, revision reserve, or OIR/AJIM stretch package.
 
 ### Gate 4: Automatic Analysis
 
@@ -182,16 +182,17 @@ Formal human review starts only after:
 
 Before this gate, use only calibration review.
 
-For a 300-query OIR/AJIM candidate run, review a paired stratified sample:
+For a 200-query JIS candidate run, review a paired stratified sample:
 
 ```text
-80-100 queries x 3 condition outputs = 240-300 blinded review rows
+60 queries x 3 condition outputs = 180 blinded review rows
 ```
 
 Include all automatic contract-failure rows, anomaly rows, enough
 refusal-expected rows, enough mixed-intent rows, and stratified remaining rows
-by lane. Use the 100-query stage only for calibration unless the submission
-target is explicitly lowered.
+by lane. Use the 100-query stage only for calibration. If the study expands to
+300 queries, rerun or extend the review sample to 80-100 queries x 3 condition
+outputs.
 
 ## Stop Conditions
 
@@ -211,8 +212,9 @@ Do not call a run paper-facing if:
 3. Create the Paper v1 freeze manifest.
 4. Run the clean browser Qwen/WebLLM 50-query gate.
 5. If the gate passes, expand to source-audited 100-query calibration.
-6. Use the 200-query stage to validate review workflow and failure pattern.
-7. Run the 300-query OIR/AJIM candidate experiment.
-8. Generate blind review packs for 240-300 sampled outputs.
-9. Run two-rater review.
-10. Produce final claim ledger.
+6. Run the 200-query JIS candidate experiment.
+7. Generate blind review packs for 180 sampled outputs.
+8. Run two-rater review.
+9. Produce final claim ledger.
+10. If time allows, expand to 300 queries as a stronger version or stretch
+    venue package.

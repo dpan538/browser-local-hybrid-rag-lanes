@@ -2,19 +2,19 @@
 
 Generated: 2026-06-12
 
-This document supersedes the earlier Information Research first-target plan.
-Information Research remains useful as a historical style reference, but it is
-not the first submission target because its current submission page is closed
-and the active archive state is uncertain.
+This document supersedes the earlier Information Research first-target plan
+and the later OIR/AJIM stretch-target plan. The active strategy prioritizes
+successful publication in a strong information science venue while still
+keeping a high-standard experimental path.
 
 Primary sources checked on 2026-06-12:
 
-- Online Information Review: https://www.emeraldgrouppublishing.com/journal/oir
-- Aslib Journal of Information Management: https://www.emeraldgrouppublishing.com/journal/ajim
 - Journal of Information Science: https://journals.sagepub.com/home/jis
 - The Electronic Library: https://www.emeraldgrouppublishing.com/journal/el
 - Open Information Science: https://www.degruyterbrill.com/journal/key/opis/html
 - Digital Library Perspectives: https://www.emeraldgrouppublishing.com/journal/dlp
+- Online Information Review: https://www.emeraldgrouppublishing.com/journal/oir
+- Aslib Journal of Information Management: https://www.emeraldgrouppublishing.com/journal/ajim
 - Information Research submissions: https://informationr.net/infres/about/submissions
 - Information Research archive: https://informationr.net/infres/issue/archive
 
@@ -22,19 +22,119 @@ Primary sources checked on 2026-06-12:
 
 | Tier | Venue | Role | Risk |
 |---|---|---|---|
-| Stretch | Online Information Review | First target | High competition; requires socio-technical framing and strong empirical package |
-| Stretch | Aslib Journal of Information Management | Second target | Also high competition; requires information management/governance framing |
-| Realistic | Journal of Information Science | Backup if theory/method remains information-science strong | Still selective |
-| Realistic | The Electronic Library | Backup if contribution is strongest as information organisation/system method | Needs clear non-local contribution |
+| Primary | Journal of Information Science | First target | Strong but more controllable than OIR/AJIM |
+| Backup | The Electronic Library | Second target | Good fit for information organisation and digital-library systems |
 | Safer | Open Information Science | Broad OA fallback | APC and lower selectivity; useful if higher targets fail |
-| Safer/domain | Digital Library Perspectives | Backup if final framing becomes digital-library/archive specific | Best for digital library application angle |
+| Safer/domain | Digital Library Perspectives | Digital-library/archive fallback | Best if final framing becomes archive/digital-library specific |
+| Stretch | Online Information Review | High-end target | Requires stronger socio-technical theory and larger empirical package |
+| Stretch | Aslib Journal of Information Management | High-end target | Requires stronger information management/governance contribution |
 
 Information Research is removed from the active target ladder because the
 official submission page currently says the journal is not accepting
 submissions, and the current archive page reports no published issues in the
 new OJS instance.
 
-## First Target: Online Information Review
+## First Target: Journal of Information Science
+
+Journal of Information Science is the active primary target because it is a
+peer-reviewed international information science journal, remains active, and
+fits a method paper about information-system allocation.
+
+Official indicators checked on 2026-06-12:
+
+- 2024 Impact Factor: 1.7.
+- 5-year Impact Factor: 2.3.
+- 2026 OnlineFirst articles are present on the journal page.
+
+JIS framing:
+
+```text
+Browser-local RAG is not only a generation problem. It is an
+information-system allocation problem: when should an answer be generated,
+rendered from evidence, or refused?
+```
+
+Use these concepts:
+
+- information science method;
+- information-system allocation;
+- evidence-bounded AI assistance;
+- answer mode;
+- source and rights clarity;
+- refusal boundary;
+- evidence-to-output fidelity;
+- bounded generative synthesis.
+
+Preferred core claim:
+
+```text
+Hybrid answer-lane allocation reduces specific contract failures and
+under-refusal in a controlled browser-local RAG setting, while preserving
+bounded generative synthesis for tasks that require explanation or comparison.
+```
+
+Avoid claiming:
+
+```text
+Hybrid lanes solve hallucination in browser-local RAG.
+```
+
+## Second Target: The Electronic Library
+
+The Electronic Library is the second target if the paper becomes more strongly
+about information organisation, answer organisation, or digital-library
+systems.
+
+Official indicators checked on 2026-06-12:
+
+- 2024 Impact Factor: 1.5.
+- 5-year Impact Factor: 1.7.
+- Time to first decision: 32 days.
+- Acceptance rate: 14.6%.
+
+TEL framing:
+
+```text
+Hybrid answer lanes as an answer-organisation method for AI-mediated
+information access.
+```
+
+TEL is a strong backup if the manuscript emphasizes:
+
+- information organisation;
+- answer organisation;
+- digital-library systems;
+- source, rights, and provenance display;
+- rigorous methodology with more than local interest.
+
+## Safer Backup Targets
+
+### Open Information Science
+
+Keep as a broad OA fallback.
+
+Official page checked on 2026-06-12:
+
+- Active volumes listed through 2026.
+- 2024 CiteScore: 2.6.
+- Scope is broad across information science, libraries, archives, digital
+  libraries, cultural heritage, information technology, and research methods.
+
+Use when the goal becomes getting a sound artifact/method paper published
+rather than maximizing venue rank.
+
+### Digital Library Perspectives
+
+Use if the final paper becomes most naturally a digital-library/archive
+application.
+
+Official scope includes digital libraries, digital heritage, metadata, digital
+humanities, usability, human-computer interaction, and digital libraries as
+socio-technical systems.
+
+## Stretch Targets
+
+### Online Information Review
 
 Online Information Review should be treated as a stretch target, not a safe
 Q2/Q3 outlet.
@@ -65,22 +165,7 @@ Use these concepts:
 - source and rights transparency;
 - socio-technical information systems.
 
-Avoid presenting the paper as only:
-
-```text
-We ran a 300-query RAG ablation.
-```
-
-Preferred core claim:
-
-```text
-Browser-local RAG should not be evaluated only as a generation problem. It is
-also an answer-allocation problem: systems must decide which parts of an answer
-should be generated, which should be rendered from evidence, and which should
-be refused.
-```
-
-## Second Target: Aslib Journal of Information Management
+### Aslib Journal of Information Management
 
 AJIM is also a stretch target, not a fallback guarantee.
 
@@ -109,104 +194,46 @@ Use these concepts:
 - source/provenance preservation;
 - rule-table auditability.
 
-AJIM is stronger if the paper emphasizes contract-bearing evidence fields,
-source/rights/provenance preservation, and the separation of evidence
-correctness from evidence-to-output fidelity.
-
-## Backup Targets
-
-### Journal of Information Science
-
-Use if the manuscript remains a general information-science method paper.
-
-Official page checked on 2026-06-12:
-
-- Impact Factor: 1.7.
-- 5-year Impact Factor: 2.3.
-
-Suggested framing:
-
-```text
-Answer-lane allocation as an information science method for evidence-bounded
-AI assistance.
-```
-
-### The Electronic Library
-
-Use if the contribution is strongest as information organisation or answer
-organisation.
-
-Official scope language emphasizes well thought-out problems in information
-organisation, rigorous methodology, more than local interest, and new
-knowledge for the readership.
-
-Suggested framing:
-
-```text
-Hybrid answer lanes as an answer-organisation method for AI-mediated
-information access.
-```
-
-### Open Information Science
-
-Keep as a broad OA fallback.
-
-Official page checked on 2026-06-12:
-
-- Active volumes listed through 2026.
-- 2024 CiteScore: 2.6.
-- Scope is broad across information science, libraries, archives, digital
-  libraries, cultural heritage, information technology, and research methods.
-
-Use when the goal becomes getting a sound artifact/method paper published
-rather than maximizing venue rank.
-
-### Digital Library Perspectives
-
-Use if the final paper becomes most naturally a digital-library/archive
-application.
-
-Official scope includes digital libraries, digital heritage, metadata, digital
-humanities, usability, human-computer interaction, and digital libraries as
-socio-technical systems.
-
 ## Submission Route
 
-1. Submit to OIR if the final manuscript has a strong socio-technical argument,
-   source-audited 300-query evidence, and two-rater blinded semantic review.
-2. If OIR rejects for theory/framing fit, revise toward information
-   management/governance and submit to AJIM.
-3. If AJIM is not suitable, choose:
-   - Journal of Information Science if the theory/method remains broad;
-   - The Electronic Library if the system/method is strongest as information
-     organisation;
+1. Submit to Journal of Information Science if the manuscript is a clear
+   information science method paper with source-audited evidence, frozen
+   protocol, paired analysis, and blinded semantic review.
+2. If JIS rejects for fit, revise toward information/answer organisation and
+   submit to The Electronic Library.
+3. If TEL is not suitable, choose:
    - Open Information Science for broad OA fallback;
    - Digital Library Perspectives if the final contribution is
      digital-library/archive specific.
+4. Use OIR or AJIM only if the evidence package grows strong enough for a
+   stretch attempt and the manuscript can carry the needed socio-technical or
+   information-governance argument.
 
-## Minimum OIR/AJIM Evidence Standard
+## Minimum JIS Evidence Standard
 
-Do not target OIR or AJIM with a 100-query exploratory package.
+Do not target JIS with only the current 50-query synthetic or 100-query
+calibration package.
 
-Minimum target:
+Minimum paper-facing target:
 
 ```text
-300 source-audited queries
+200 source-audited queries
 3 conditions per query
-900 outputs total
+600 outputs total
 frozen protocol manifest
 clean Qwen/WebLLM browser-local run
 automatic contract metrics on all outputs
-two-rater blinded semantic review on 240-300 sampled outputs
-clear socio-technical or information-governance framing
+two-rater blinded semantic review on 60 sampled queries x 3 outputs = 180 rows
+paired analysis by query
 ```
 
-Human review should be stratified, not exhaustive:
+Preferred stronger version:
 
 ```text
-80-100 sampled queries x 3 condition outputs = 240-300 blinded rows
+300 source-audited queries
+900 outputs total
+human review on 80-100 sampled queries x 3 outputs = 240-300 rows
 ```
 
-Review all automatic contract-failure and anomaly rows. Do not require
-reviewers to score all 900 outputs unless a future protocol gives a specific
-reason.
+The 300-query version should be treated as a stronger JIS version, a revision
+reserve, or the evidence threshold for OIR/AJIM stretch submission.

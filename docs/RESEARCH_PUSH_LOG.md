@@ -1371,3 +1371,37 @@ Current stance:
   contract metrics, and sampled blinded semantic review.
 - The 100-query stage is now calibration, and the 200-query stage is a formal
   review/workflow pilot rather than the final paper-facing run.
+
+## 2026-06-12: JIS-first publication strategy
+
+Purpose:
+
+- Reorder the publication strategy around successful publication rather than
+  stretch-first venue selection.
+- Promote Journal of Information Science to the primary target.
+- Promote The Electronic Library to the second target.
+- Keep Open Information Science and Digital Library Perspectives as safer
+  backup routes.
+- Keep Online Information Review and Aslib Journal of Information Management
+  as stretch targets only.
+
+Updated files:
+
+```text
+docs/JOURNAL_TARGET_STRATEGY.md
+docs/PAPER_V1_FREEZE_PLAN.md
+docs/SOURCE_AUDITED_EXPANSION_ROADMAP.md
+CLAIMS_AND_NON_CLAIMS.md
+FINAL_ARTIFACT_INDEX.md
+README.md
+```
+
+Current stance:
+
+- The minimum JIS candidate is 200 source-audited queries, 600 condition
+  outputs, all-output automatic contract metrics, and two-rater blinded
+  semantic review on 180 sampled outputs.
+- The 300-query version remains preferred if time allows, and becomes the
+  stronger JIS/revision reserve or OIR/AJIM stretch package.
+- The immediate next implementation step remains the source-audited 50-query
+  fixture/provenance gate.
