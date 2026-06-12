@@ -63,11 +63,47 @@ item-level metadata records:
 This expansion also treats `source_citation` and `image_state_label` as
 contract-bearing deterministic fields when listed in a row's decisive fields.
 
+## Structural Expansion To 26 Rows
+
+The structural expansion keeps the 15 LOC metadata records and adds rows that
+exercise fixture shapes needed before a Paper v1 run:
+
+| Query range | Fixture shape | Purpose |
+|---|---|---|
+| `q016`-`q018` | 0-record no-evidence cases | Deterministic refusal when the evidence packet is missing |
+| `q019`-`q020` | 1-record earliest/superlative cases | Refusal when a comparison corpus is unavailable |
+| `q021`-`q023` | 2-record LOC comparison cases | Multi-record generative comparison over audited metadata |
+| `q024`-`q026` | Wikimedia Commons metadata cases | Second source family for source/rights, mixed, and explanation lanes |
+
+This expansion intentionally adds structural diversity before simply adding
+more LOC source/rights successes. It does not complete the 50-query Paper v1
+gate.
+
+## Second Family: Wikimedia Commons Metadata
+
+`wikimedia_commons_metadata` is selected as the second family because Wikimedia
+Commons file metadata exposes title, date, source, author/credit, and license
+metadata through public file pages and the official API. The current batch uses
+metadata-only rows for WPA or public-health poster files:
+
+| Query | Commons record | Lane purpose |
+|---|---|---|
+| `q024` | `commons_11160794` | Source/rights exact field delivery |
+| `q025` | `commons_127390131` | Compound rights plus bounded public-health interpretation |
+| `q026` | `commons_46307977` | Bounded explanation using Commons metadata |
+
+For these rows:
+
+- `rights_label` and `reuse_permission` preserve source-visible license terms;
+- `public_domain_status` records only the metadata-level status;
+- no media file is downloaded or visually inspected;
+- `image_state_label` remains a metadata-derived label, not an image-content
+  claim.
+
 ## Next Families To Consider
 
 The next source-family candidates should diversify beyond LOC:
 
-- Wikimedia Commons metadata for explicit license fields;
 - DPLA provider metadata for aggregator/source-provenance ambiguity;
 - museum metadata where rights fields are present but reuse terms differ;
 - Europeana metadata if rights fields are consistently accessible without

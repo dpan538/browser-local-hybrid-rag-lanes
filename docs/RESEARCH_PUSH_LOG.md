@@ -1662,3 +1662,50 @@ Expected validation before push:
 - worktree is clean before this pre-run note;
 - this note is committed and pushed before structural expansion begins;
 - no fixture rows or runtime code are changed by this pre-run backup.
+
+## 2026-06-12: Source-audited structural expansion to 26 rows
+
+Purpose:
+
+- Expand the Paper v1 source-audited fixture from 15 LOC-only rows to 26 query
+  rows with broader lane structure.
+- Add no-evidence refusal rows, earliest/superlative refusal rows,
+  multi-record comparison rows, and a second source family.
+- Add three Wikimedia Commons metadata rows without downloading media files.
+- Regenerate experiment, runtime, evaluation, and warmup views from the
+  manifest and query plan.
+- Record a post-run structural expansion summary so the main-branch backup has
+  a human-readable description, not only JSONL diffs.
+
+Added/updated files:
+
+```text
+fixtures/source_audited_50/source_audit_manifest_v0.jsonl
+fixtures/source_audited_50/query_plan_v0.jsonl
+fixtures/source_audited_50/experiment_fixture.jsonl
+fixtures/source_audited_50/runtime_view.jsonl
+fixtures/source_audited_50/evaluation_view.jsonl
+reports/SOURCE_AUDITED_50_STRUCTURAL_EXPANSION_26_SUMMARY_V0.md
+docs/SOURCE_FAMILY_SELECTION_V0.md
+FINAL_ARTIFACT_INDEX.md
+README.md
+```
+
+Validation target before push:
+
+- source audit manifest passes with `--min-rows 18 --allow-partial`;
+- query plan passes with `--min-rows 26`;
+- manifest/query sync passes;
+- source-audited compiler emits 26 rows and 1 warmup row;
+- source-audited consistency passes with `--expected-rows 26`;
+- compiled experiment fixture passes `validate_fixture.py`;
+- protocol bundle validation passes;
+- paper-v1 source-audited freeze profile can hash the 26-row bundle;
+- `git diff --check` passes.
+
+Current stance:
+
+- This is still fixture/provenance construction, not a Qwen/WebLLM model run.
+- The Paper v1 50-query gate remains incomplete at 26/50 query rows.
+- The structural expansion is important because it prevents the source-audited
+  fixture from becoming only a set of source/rights success cases.
