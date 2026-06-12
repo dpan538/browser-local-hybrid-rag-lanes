@@ -136,6 +136,7 @@ The first can be checked mechanically. The second requires source audit.
 - [Paper positioning decisions](docs/PAPER_POSITIONING_DECISIONS.md)
 - [Paper v1 freeze plan](docs/PAPER_V1_FREEZE_PLAN.md)
 - [Paper v1 fixture provenance plan](docs/PAPER_V1_FIXTURE_PROVENANCE_PLAN.md)
+- [Source family selection v0](docs/SOURCE_FAMILY_SELECTION_V0.md)
 - [Journal target strategy](docs/JOURNAL_TARGET_STRATEGY.md)
 - [Superseded Information Research target plan](docs/INFORMATION_RESEARCH_TARGET_PLAN.md)
 - [Source-audited expansion roadmap](docs/SOURCE_AUDITED_EXPANSION_ROADMAP.md)

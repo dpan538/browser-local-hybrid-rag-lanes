@@ -1526,3 +1526,46 @@ Current stance:
 - This hardening still does not claim Paper v1 data exists.
 - The next step after push is source family selection and the first
   `source_audited_50` manifest/query-plan rows from public metadata.
+
+## 2026-06-12: Source-audited 50 first LOC batch
+
+Purpose:
+
+- Begin the formal Paper v1 source-family selection and provenance row
+  authoring phase.
+- Select `loc_metadata` as the first source family because LOC item-level JSON
+  gives stable title, date, repository, call number, rights, and image-resource
+  metadata without image download.
+- Add five metadata-only LOC Prints and Photographs WPA public-health poster
+  manifest rows.
+- Add matching query-plan rows covering source/rights, bounded explanation,
+  and mixed/compound answer lanes.
+- Compile the first batch into experiment, runtime, evaluation, and warmup
+  views.
+
+Added files:
+
+```text
+docs/SOURCE_FAMILY_SELECTION_V0.md
+fixtures/source_audited_50/source_audit_manifest_v0.jsonl
+fixtures/source_audited_50/query_plan_v0.jsonl
+fixtures/source_audited_50/experiment_fixture.jsonl
+fixtures/source_audited_50/runtime_view.jsonl
+fixtures/source_audited_50/evaluation_view.jsonl
+fixtures/source_audited_50/warmup_queries.jsonl
+```
+
+Validation target before push:
+
+- source audit manifest passes with `--min-rows 5 --require-pass`;
+- query plan passes with `--min-rows 5`;
+- manifest/query sync passes;
+- compiler emits 5 fixture rows and 1 explicit warmup row;
+- source-audited consistency check passes with `--expected-rows 5`;
+- paper-v1 source-audited freeze profile can hash the first-batch files.
+
+Current stance:
+
+- This is a first batch, not the complete 50-query gate.
+- Rights fields preserve LOC wording (`No known restrictions on publication.`)
+  and explicitly do not assert legal public-domain status.
