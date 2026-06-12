@@ -30,6 +30,7 @@ exploratory are useful evidence but are not, by themselves, journal-ready.
 | Warmup queries for Paper v1 | `fixtures/source_audited_50/warmup_queries.jsonl` | First batch generated, 1 warmup row |
 | Freeze manifest | `manifests/protocol_v1_freeze_manifest.json` | Missing |
 | Paper v1 raw run records | `runs/paper_v1_qwen_webllm_50_clean/` | Missing |
+| Source-audited 50 Qwen/WebLLM pre-run expectation | `docs/QWEN_WEBLLM_SOURCE_AUDITED_50_EXPECTATION_V0.md` | Added as pre-run backup |
 | Paper v1 aggregate report | `reports/PAPER_V1_QWEN_WEBLLM_50_AGGREGATE.md` | Missing |
 | Blind review pack | `review/paper_v1_blind_pack.json` | Missing |
 | Reviewer A scores | `review/paper_v1_reviewer_A.jsonl` | Missing |

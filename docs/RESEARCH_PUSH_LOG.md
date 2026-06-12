@@ -1789,3 +1789,31 @@ Current stance:
   Wikimedia Commons, and Met metadata.
 - The next step is a pre-run backup for a clean browser-local Qwen/WebLLM run
   over this source-audited runtime view.
+
+## 2026-06-12: Source-audited 50 Qwen/WebLLM pre-run backup
+
+Purpose:
+
+- Back up the run expectation before executing the first browser-local
+  Qwen/WebLLM experiment on the completed `source_audited_50` fixture gate.
+- Require Flask to serve `fixtures/source_audited_50/runtime_view.jsonl` and
+  `fixtures/source_audited_50/evaluation_view.jsonl` through environment
+  variables.
+- Declare the run id `qwen_webllm_source_audited_50_v0` and expected
+  50-query x 3-condition output.
+- Keep the model boundary pinned to `Qwen/Qwen3.5-0.8B` through
+  `Qwen3.5-0.8B-q4f16_1-MLC`.
+
+Added file:
+
+```text
+docs/QWEN_WEBLLM_SOURCE_AUDITED_50_EXPECTATION_V0.md
+```
+
+Expected validation before push:
+
+- source-audited fixture gate remains valid;
+- protocol bundle validation passes;
+- `git diff --check` passes;
+- no run records, model artifacts, image downloads, or browser cache are
+  committed by this pre-run backup.

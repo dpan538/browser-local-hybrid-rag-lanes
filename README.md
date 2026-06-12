@@ -161,6 +161,7 @@ The first can be checked mechanically. The second requires source audit.
 - [Qwen WebLLM foreground q036-q050 expectation v0](docs/QWEN_WEBLLM_FOREGROUND_Q036_Q050_EXPECTATION_V0.md)
 - [Qwen WebLLM foreground q036-q050 split rerun expectation v0](docs/QWEN_WEBLLM_FOREGROUND_Q036_Q050_SPLIT_RERUN_EXPECTATION_V0.md)
 - [Qwen WebLLM foreground q036-q042 focus rerun expectation v0](docs/QWEN_WEBLLM_FOREGROUND_Q036_Q042_FOCUS_RERUN_EXPECTATION_V0.md)
+- [Qwen WebLLM source-audited 50 expectation v0](docs/QWEN_WEBLLM_SOURCE_AUDITED_50_EXPECTATION_V0.md)
 - [Fixture expansion plan v0](docs/FIXTURE_EXPANSION_PLAN_V0.md)
 - [Source audit and promotion gate v0](docs/SOURCE_AUDIT_AND_PROMOTION_GATE_V0.md)
 - [Source-audited 26-to-50 expansion expectation v0](docs/SOURCE_AUDITED_50_26_TO_50_EXPANSION_EXPECTATION_V0.md)
